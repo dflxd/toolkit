@@ -14,6 +14,28 @@ body {
     height: 100%;
 }
 
+button {
+    border: 2px solid #FFF000;
+    border-radius: 10px;
+    background: inherit;
+    color: #FFF000;
+    cursor: pointer;
+    padding: 5px;
+    
+    &:hover {
+        background-color: rgba(255, 240, 0, 0.5);
+        color: white;
+    }
+}
+
+input {
+    border: 2px solid #FFF000;
+    border-radius: 10px;
+    background: inherit;
+    color: white;
+    padding: 5px;
+}
+
 header {
     margin: 0;
     padding: 20px;
@@ -58,6 +80,18 @@ header {
         }
     }
     
+    .numbers {
+        border: 2px solid #FF7F00;
+        height: 220px;
+        margin-left: 8px;
+        margin-right: 8px;
+        padding: 5px;
+        
+        &:hover {
+            background-color: rgba(255, 127, 0, 0.5);
+        }
+    }
+    
     h2 {
         transform: rotate(-90deg);  
         position: relative;
@@ -73,15 +107,17 @@ header {
         top: 10px;
     }
     
-    span {
+    figcaption {
+        text-align: center;
         color: white;
-        position: relative;
-        top: 30px;
-        left: 28%;        
+        margin-top: 20px;
+        font-weight: 600;
     }
+    
     a, a:hover, a:link, a:focus {
-    text-decoration: none;     
-}
+        text-decoration: none;  
+        color: #3498DB;
+    }
 }
 
 .about {
