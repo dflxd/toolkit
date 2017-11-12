@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>subnetting</title>
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/subnetting.css">
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.5.3/vue.js"></script>
+
+  </head>
+  <body>
+    <h1>subnetting</h1>
+    <div id="subnetting">
+      <div class="main">
+      Subnetting network
+      <input type="text" v-model="baseIP">
+      <input type="text" v-model="basePrefix">
+        max hosts {{hostsMax}} and {{baseIPBit}}
+      <table v-if="subnets.length > 0">
+        <tr>
+          <td>Name</td>
+          <td>Hosts</td>
+          <td>Address</td>
+          <td>Broadcast</td>
+          <td>Prefix</td>
+        </tr>
+        <tr v-for="item in subnets">
+          <td>{{item.name}}</td>
+          <td>{{item.hosts}}</td>
+          <td><input type="text" v-model="item.inFirstA"></td>
+          <td><input type="text" v-model="item.inLastA"></td>
+          <td><input type="text" v-model="item.inPrefix"></td>
+        </tr>
+
+      </table>
+      <h2>results</h2>
+      <table>
+        <tr>
+          <td>Name</td>
+          <td>Hosts</td>
+          <td>Address</td>
+          <td>Broadcast</td>
+          <td>Prefix</td>
+        </tr>
+        <tr v-for="item in subnetsResults">
+          <td>{{item.name}}</td>
+          <td>{{item.hosts}}</td>
+          <td><input type="text" v-model="item.firstA"></td>
+          <td><input type="text" v-model="item.lastA"></td>
+          <td><input type="text" v-model="item.prefix"></td>
+        </tr>
+      </table>
+      </div>
+      <button type="button" name="button" @click="generate">Nový příklad</button>
+    </div>
+<script src="subnetting.js"></script>
+  </body>
+</html>

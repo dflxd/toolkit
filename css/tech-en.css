@@ -1,0 +1,80 @@
+.choose {
+  margin-bottom: 15px;
+  margin-top: 15px;
+  position: relative;
+  top: 120px;
+  color: white;
+}
+.choose .jednot-lekce .fa-folder {
+  display: inline;
+}
+.choose .jednot-lekce .fa-folder-open {
+  display: none;
+}
+.choose .jednot-lekce:hover .fa-folder {
+  display: none;
+}
+.choose .jednot-lekce:hover .fa-folder-open {
+  display: inline;
+}
+.choose h2 {
+  transform: rotate(-90deg);
+  position: relative;
+  top: 55px;
+  height: 10px;
+  margin-right: 10px;
+}
+.choose i {
+  color: white;
+  position: relative;
+  left: 28%;
+  top: 10px;
+}
+.choose figcaption {
+  text-align: center;
+  color: white;
+  margin-top: 20px;
+  font-weight: 600;
+}
+.choose a,
+.choose a:hover,
+.choose a:link,
+.choose a:focus {
+  text-decoration: none;
+  color: white;
+  cursor: pointer;
+}
+.box {
+  margin-top: 20px;
+  position: relative;
+  top: 110px;
+}
+.box .in-folder .info-lekce {
+  margin: 10px;
+  padding: 10px;
+  border-bottom: 2px solid #fff000;
+  border-top: 2px solid #fff000;
+  color: white;
+}
+.box .in-folder a:hover {
+  color: #fff000;
+}
+.box h3 {
+  color: white;
+  text-align: center;
+}
+.box a,
+.box a:hover,
+.box a:link,
+.box a:focus {
+  text-decoration: none;
+  color: white;
+  cursor: pointer;
+  padding: 5px;
+  margin: 5px;
+  min-width: 100px;
+  text-align: center;
+  min-height: 100px;
+  position: relative;
+  left: 25%;
+}
