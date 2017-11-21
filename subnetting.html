@@ -3,57 +3,104 @@
   <head>
     <meta charset="utf-8">
     <title>subnetting</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
     <link rel="stylesheet" href="css/main.css">
     <link rel="stylesheet" href="css/subnetting.css">
+    <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet">
     <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.5.3/vue.js"></script>
-
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
   </head>
   <body>
-    <h1>subnetting</h1>
-    <div id="subnetting">
-      <div class="main">
-      Subnetting network
-      <input type="text" v-model="baseIP">
-      <input type="text" v-model="basePrefix">
-        max hosts {{hostsMax}} and {{baseIPBit}}
-      <table v-if="subnets.length > 0">
-        <tr>
-          <td>Name</td>
-          <td>Hosts</td>
-          <td>Address</td>
-          <td>Broadcast</td>
-          <td>Prefix</td>
-        </tr>
-        <tr v-for="item in subnets">
-          <td>{{item.name}}</td>
-          <td>{{item.hosts}}</td>
-          <td><input type="text" v-model="item.inFirstA"></td>
-          <td><input type="text" v-model="item.inLastA"></td>
-          <td><input type="text" v-model="item.inPrefix"></td>
-        </tr>
 
-      </table>
-      <h2>results</h2>
-      <table>
-        <tr>
-          <td>Name</td>
-          <td>Hosts</td>
-          <td>Address</td>
-          <td>Broadcast</td>
-          <td>Prefix</td>
-        </tr>
-        <tr v-for="item in subnetsResults">
-          <td>{{item.name}}</td>
-          <td>{{item.hosts}}</td>
-          <td><input type="text" v-model="item.firstA"></td>
-          <td><input type="text" v-model="item.lastA"></td>
-          <td><input type="text" v-model="item.prefix"></td>
-        </tr>
-      </table>
+
+
+      <div id="subnetting">
+        <div class="settings">
+          <div class="container">
+            <div class="area">
+              <h1>Subnetting</h1>
+              <div class="ip">IP Adresa</div>
+              <span>&nbsp;</span>
+              <div class="prefix">Prefix</div>
+
+              <input type="text" v-model="baseIP" class="ip">
+              <span>/</span>
+              <input type="text" v-model="basePrefix" class="prefix">
+
+              <div class="diff">
+                <input type="radio" name="diff" id="z" value="2" v-model="picked">
+                <label for="z" class="desc">
+                  <span>začátečník</span>
+                  <span>2-3 subnety</span>
+                </label>
+                <input type="radio" name="diff" id="p" value="4" v-model="picked">
+                <label for="p" class="desc">
+                  <span>pokročilý</span>
+                  <span>4-5 subnetů</span>
+                </label>
+                <input type="radio" name="diff" id="e" value="6" v-model="picked">
+                <label for="e" class="desc">
+                  <span>expert</span>
+                  <span>6-7 subnetů</span>
+                </label>
+                <input type="radio" name="diff" id="c" value="custom"  v-model="picked">
+                <label for="c" class="desc">
+                  <span id="switch">
+                    <span id="custom">custom</span>
+                    <input type="text" placeholder="2-15">
+                    <span></span>
+                  </span>
+                  <span></span>
+                </label>
+              </div>
+              <div class="opts">
+                <button type="button" name="button" @click="generate" :disabled="diffChosen">
+                  Nový příklad <i class="fa fa-arrow-right" aria-hidden="true"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="main">
+          <div class="container">
+          <h1>Subnetting</h1>
+          <h2>Rozdělte síť {{baseIP}} na podsítě dle následujícího schématu:</h2>
+
+          <img src="img/schema.png" id="schema">
+
+          <table v-if="subnets.length > 0">
+            <tr>
+              <td>Název</td>
+              <td>Počet hostů</td>
+              <td><span v-if="answers">Zadaná<br></span>Adresa</td>
+              <td v-if="answers">Adresa<br>správně</td>
+              <td><span v-if="answers">Zadaný<br></span>Broadcast</td>
+              <td v-if="answers">Broadcast<br>správně</td>
+              <td class="prefixCell"><span v-if="answers">Zadaný<br></span>Prefix</td>
+              <td v-if="answers">Prefix<br>správně</td>
+            </tr>
+            <tr v-for="item in subnets">
+              <td>{{item.name}}</td>
+              <td>{{item.hosts}}</td>
+              <td><input type="text" v-model="item.inFirstA" @input="resetFirstA(item)" :style="{ 'border-color': item.firstACheckColor }"></td>
+              <td v-if="answers">{{item.firstA}}</td>
+              <td><input type="text" v-model="item.inLastA" @input="resetLastA(item)" :style="{ 'border-color': item.lastACheckColor }"></td>
+              <td v-if="answers">{{item.lastA}}</td>
+              <td class="prefixCell"><input type="text" v-model="item.inPrefix" @input="resetPrefix(item)" class="prefix" :style="{ 'border-color': item.prefixCheckColor }"></td>
+              <td v-if="answers">{{item.prefix}}</td>
+            </tr>
+          </table>
+
+          <div class="buttons">
+            <button @click="check">Zkontrolovat</button>
+            <button @click="showResults">Zobrazit řešení</button>
+            <button @click="generate">Další příklad <i class="fa fa-arrow-right" aria-hidden="true"></i></button>
+          </div>
+        </div>
+
       </div>
-      <button type="button" name="button" @click="generate">Nový příklad</button>
     </div>
-<script src="subnetting.js"></script>
+    <script src="subnetting.js"></script>
   </body>
 </html>

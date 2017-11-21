@@ -18,6 +18,25 @@ function bitFloor(number) {
   return floor;
 }
 
+function shuffle(array) {
+  var currentIndex = array.length, temporaryValue, randomIndex;
+
+  // While there remain elements to shuffle...
+  while (0 !== currentIndex) {
+
+    // Pick a remaining element...
+    randomIndex = Math.floor(Math.random() * currentIndex);
+    currentIndex -= 1;
+
+    // And swap it with the current element.
+    temporaryValue = array[currentIndex];
+    array[currentIndex] = array[randomIndex];
+    array[randomIndex] = temporaryValue;
+  }
+
+  return array;
+}
+
 String.prototype.replaceAt = function(index, replacement) {
   return this.substr(0, index) + replacement + this.substr(index + replacement.length);
 };
@@ -26,24 +45,17 @@ var subnetting = new Vue({
   data: {
     baseIP: "192.0.2.0",
     basePrefix: 24,
-    subnets: [
-    /*{
-        name: "",
-        hosts: 0,
-        bitCeil: 0,
-        parent: "",
-        prefix: 24,
-        inStart: "",
-        inEnd: "",
-        inPrefix: ""
-      }*/
-    ],
-    subnetsResults: [],
+    subnets: [],
+    picked: null,
     subnetCountMin: 3,
     subnetCountMax: 8,
     subnetsCount: "00000000000000000000000000000000",
+    answers: false
   },
   computed: {
+    diffChosen: function() {
+      return !this.picked;
+    },
     hostsMax: function() {
       return Math.pow(2, 32 - parseInt(this.basePrefix));
     },
@@ -144,6 +156,7 @@ var subnetting = new Vue({
     randInBitRange: function(range) {
       console.warn("range" + range);
       console.log("rand(" + (Math.pow(2, range - 1) - 1) + "," + (Math.pow(2, range) - 2) + ");");
+      if(range == 2) return 2;
       return rand(Math.pow(2, range - 1) - 1, Math.pow(2, range) - 2);
     },
     bitFloor: function(number) {
@@ -170,6 +183,21 @@ var subnetting = new Vue({
       this.subnetsCount = this.subnetsCount.replaceAt(position - 1, (parseInt(this.subnetsCount.charAt(position - 1)) + 1).toString());
     },
     generate: function() {
+      this.answers = false;
+      $(".settings").hide();
+      var chosenSubnetsCount = $('input[name=diff]:checked', '.diff').val();
+      if(chosenSubnetsCount == "custom") {
+        this.subnetCountMin = parseInt($("#custom").text());
+        this.subnetCountMax = parseInt($("#custom").text());
+      }
+      else {
+        this.subnetCountMin = parseInt(chosenSubnetsCount);
+        this.subnetCountMax = this.subnetCountMin + 1;
+      }
+
+      this.subnets = [];
+      this.subnetsCount = "00000000000000000000000000000000";
+
       var subnetCount = rand(this.subnetCountMin, this.subnetCountMax);
       for (var i = 0; i < subnetCount; i++) {
         if (this.countHosts() >= this.hostsMax) {
@@ -197,12 +225,20 @@ var subnetting = new Vue({
           lastA: "",
           inFirstA: "",
           inLastA: "",
-          inPrefix: ""
+          inPrefix: "",
+          firstACheckColor: "",
+          lastACheckColor: "",
+          prefixCheckColor: ""
         });
 
       }
-      this.subnetsResults = this.subnets.slice(0);
-      this.subnetsResults.sort(function(a, b) {
+      this.subnets = shuffle(this.subnets);
+      for(i = 0; i < this.subnets.length; i++) {
+        this.subnets[i].name = "Subnet " + 'abcdefghijklmnopqrstuvwxyz' [i].toUpperCase();
+      }
+
+
+      this.subnets.sort(function(a, b) {
         if (a.prefix < b.prefix) return -1;
         if (a.prefix > b.prefix) return 1;
         return 0;
@@ -210,17 +246,103 @@ var subnetting = new Vue({
 
       var base = this.baseIPBit;
       var that = this;
-      this.subnetsResults.forEach(function(item) {
+      this.subnets.forEach(function(item) {
         item.firstA = that.bitToA(base);
         base = that.bitAdd(base, that.prefixToBit(item.prefix));
         item.lastA = that.bitToA(that.bitDeduct(base, "00000000000000000000000000000001"));
       });
-      this.subnetsResults.sort(function(a, b) {
+      this.subnets.sort(function(a, b) {
         if (a.name[7] < b.name[7]) return -1;
         if (a.name[7] > b.name[7]) return 1;
         return 0;
       });
 
+    },
+    check: function() {
+      var rightColor = "green";
+      var notRightColor = "#f33";
+
+
+      for (var i = 0; i < this.subnets.length; i++) {
+        if(this.subnets[i].firstA == this.subnets[i].inFirstA) {
+          this.subnets[i].firstACheckColor = rightColor;
+        }
+        else {
+          this.subnets[i].firstACheckColor = notRightColor;
+        }
+
+        console.log(this.subnets[i].lastA);
+        if(this.subnets[i].lastA == this.subnets[i].inLastA) {
+          this.subnets[i].lastACheckColor = rightColor;
+        }
+        else {
+          this.subnets[i].lastACheckColor = notRightColor;
+        }
+
+        if(this.subnets[i].prefix == this.subnets[i].inPrefix.replace('/', '')) {
+          this.subnets[i].prefixCheckColor = rightColor;
+        }
+        else {
+          this.subnets[i].prefixCheckColor = notRightColor;
+        }
+      }
+    },
+    showResults: function() {
+      this.answers = true;
+    },
+    resetFirstA: function(item) {
+      item.firstACheckColor = "";
+    },
+    resetLastA: function(item) {
+      item.lastACheckColor = "";
+    },
+    resetPrefix: function(item) {
+      item.prefixCheckColor = "";
     }
   }
 });
+$(".desc").click(function() {
+  if($(this).is($(".diff .desc").eq(3))) {
+    $("#switch span").eq(0).hide();
+    $("#switch span").eq(1).text("");
+    $("#switch input").show();
+    $("#switch input").focus();
+    $("#switch input").focusout(function(){
+      save();
+
+    });
+    $(document).keypress(function(e) {
+        if(e.which == 13) {
+          save();
+        }
+    });
+  }
+});
+function save() {
+  var input = $("#switch input").val();
+  var valid = true;
+  if(!isNumeric(input)) valid = false;
+  if(input < 2 || input > 15) valid = false;
+
+  console.log(input);
+  if(valid) {
+    $("#switch span").eq(0).text($("#switch input").val());
+    if($("#switch input").val() <= 4) $("#switch span").eq(1).text("subnety");
+    else $("#switch span").eq(1).text("subnetů");
+
+    $("#switch input").hide();
+    $("#switch span").eq(0).show();
+  }
+  else {
+    subnetting.picked = null;
+    $("#switch span").eq(0).text("custom");
+    $("#switch span").eq(1).text("");
+    $("#switch input").val("");
+    $("#switch input").hide();
+    $("#switch span").eq(0).show();
+    $("#c").prop('checked', false);
+  }
+}
+function isNumeric(n) {
+  return !isNaN(parseFloat(n)) && isFinite(n);
+}

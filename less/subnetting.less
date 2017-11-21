@@ -3,3 +3,205 @@
 body {
   color: white;
 }
+#subnetting {
+  text-align: center;
+  .main {
+    //display: none;
+  }
+  .settings {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-image: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url(../img/header.jpg);
+    .container  {
+      height: 100%;
+    }
+
+    .area {
+      width: 700px;
+      padding: 50px;
+      display: inline-block;
+      position: relative;
+      top: 50%;
+      transform: translateY(-50%);
+      button {
+        border-color: white;
+      }
+      div {
+        display: inline-block;
+      }
+      .ip {
+        width: calc(~"80% - 20px");
+      }
+      .prefix {
+        width: calc(~"20% - 20px");
+      }
+      >input, >div {
+        text-align: center;
+        margin: 5px;
+        padding: 5px;
+        border-color: white;
+      }
+      .diff {
+        display: flex;
+        padding: 0;
+        margin-top: 30px;
+        input[type="radio"] {
+          display: none;
+        }
+        .desc {
+          background: rgba(0, 0, 0, 0.3);
+          display: block;
+          flex: 1;
+          padding: 20px 0px;
+          margin: 0px 5px;
+          cursor: pointer;
+          span:nth-child(2) {
+            font-size: 16px;
+            display: inline-block;
+          }
+          &:nth-child(2) {
+            margin-left: 0;
+            border-radius: 10px 0 0 10px;
+            box-shadow:inset 0px 0px 0px 2px rgba(0, 128, 0, 0.5);
+            position: relative;
+            z-index: 1;
+            &:before {
+              content: "";
+              display: block;
+              border-radius: 10px 0 0 10px;
+              position: absolute;
+              width: 100%;
+              height: 100%;
+              left: 0;
+              top: 0;
+              background: rgba(0, 128, 0, 0.2);
+              border: 2px solid rgba(0, 128, 0, 1);
+              opacity: 0;
+            }
+          }
+          &:nth-child(4) {
+            box-shadow:inset 0px 0px 0px 2px rgba(255, 255, 0, 0.5);
+            position: relative;
+            z-index: 1;
+            &:before {
+              content: "";
+              display: block;
+              position: absolute;
+              width: 100%;
+              height: 100%;
+              left: 0;
+              top: 0;
+              background: rgba(255, 255, 0, 0.2);
+              border: 2px solid rgba(255, 255, 0, 1);
+              opacity: 0;
+            }
+          }
+          &:nth-child(6) {
+            box-shadow:inset 0px 0px 0px 2px rgba(255, 0, 0, 0.5);
+            position: relative;
+            z-index: 1;
+            &:before {
+              content: "";
+              display: block;
+              position: absolute;
+              width: 100%;
+              height: 100%;
+              left: 0;
+              top: 0;
+              background: rgba(255, 0, 0, 0.2);
+              border: 2px solid rgba(255, 0, 0, 1);
+              opacity: 0;
+            }
+          }
+          &:nth-child(8) {
+            #switch {
+              display: inline-block;
+              top: 50%;
+              left: 50%;
+              position: absolute;
+              transform: translate(-50%,-50%);
+              input {
+                width: 100px;
+              }
+            }
+            margin-right: 0;
+            border-radius: 0 10px 10px 0;
+            box-shadow:inset 0px 0px 0px 2px rgba(192, 192, 192, 0.5);
+            position: relative;
+            z-index: 1;
+            &:before {
+              content: "";
+              display: block;
+              position: absolute;
+              border-radius: 0 10px 10px 0;
+              width: 100%;
+              height: 100%;
+              left: 0;
+              top: 0;
+              background: rgba(192, 192, 192, 0.2);
+              border: 2px solid rgba(255, 255, 255, 1);
+              opacity: 0;
+            }
+            input {
+              display: none;
+              width: 60%;
+              height: 50px;
+              text-align: center;
+              border-color: white;
+              background: rgba(0, 0, 0, 0.5);
+            }
+          }
+
+        }
+        input[type="radio"]:checked + label:before {
+          opacity: 0.7;
+          z-index: -1;
+        }
+      }
+      .opts {
+        width: 100%;
+
+        margin-top: 20px;
+
+        button {
+          float: right;
+          margin: 5px;
+          padding: 10px;
+        }
+      }
+    }
+  }
+  table {
+    width: 100%;
+  }
+  td {
+    padding: 5px;
+    margin: 5px;
+    &:nth-child(1) {
+      width: 100px;
+    }
+    &.prefixCell {
+      width: 100px;
+      input {
+        text-align: center;
+      }
+    }
+    
+    input {
+      transition: all 0.2s;
+      width: 100%;
+    }
+  }
+  #schema {
+    margin-bottom: 50px;
+  }
+  .buttons {
+    margin: 50px 0;
+
+    float: right;
+    button {
+      margin-left: 5px;
+    }
+  }
+}

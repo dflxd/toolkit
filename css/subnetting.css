@@ -1,3 +1,197 @@
 body {
   color: white;
 }
+#subnetting {
+  text-align: center;
+}
+#subnetting .settings {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-image: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url(../img/header.jpg);
+}
+#subnetting .settings .container {
+  height: 100%;
+}
+#subnetting .settings .area {
+  width: 700px;
+  padding: 50px;
+  display: inline-block;
+  position: relative;
+  top: 50%;
+  transform: translateY(-50%);
+}
+#subnetting .settings .area button {
+  border-color: white;
+}
+#subnetting .settings .area div {
+  display: inline-block;
+}
+#subnetting .settings .area .ip {
+  width: calc(80% - 20px);
+}
+#subnetting .settings .area .prefix {
+  width: calc(20% - 20px);
+}
+#subnetting .settings .area > input,
+#subnetting .settings .area > div {
+  text-align: center;
+  margin: 5px;
+  padding: 5px;
+  border-color: white;
+}
+#subnetting .settings .area .diff {
+  display: flex;
+  padding: 0;
+  margin-top: 30px;
+}
+#subnetting .settings .area .diff input[type="radio"] {
+  display: none;
+}
+#subnetting .settings .area .diff .desc {
+  background: rgba(0, 0, 0, 0.3);
+  display: block;
+  flex: 1;
+  padding: 20px 0px;
+  margin: 0px 5px;
+  cursor: pointer;
+}
+#subnetting .settings .area .diff .desc span:nth-child(2) {
+  font-size: 16px;
+  display: inline-block;
+}
+#subnetting .settings .area .diff .desc:nth-child(2) {
+  margin-left: 0;
+  border-radius: 10px 0 0 10px;
+  box-shadow: inset 0px 0px 0px 2px rgba(0, 128, 0, 0.5);
+  position: relative;
+  z-index: 1;
+}
+#subnetting .settings .area .diff .desc:nth-child(2):before {
+  content: "";
+  display: block;
+  border-radius: 10px 0 0 10px;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  left: 0;
+  top: 0;
+  background: rgba(0, 128, 0, 0.2);
+  border: 2px solid #008000;
+  opacity: 0;
+}
+#subnetting .settings .area .diff .desc:nth-child(4) {
+  box-shadow: inset 0px 0px 0px 2px rgba(255, 255, 0, 0.5);
+  position: relative;
+  z-index: 1;
+}
+#subnetting .settings .area .diff .desc:nth-child(4):before {
+  content: "";
+  display: block;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  left: 0;
+  top: 0;
+  background: rgba(255, 255, 0, 0.2);
+  border: 2px solid #ffff00;
+  opacity: 0;
+}
+#subnetting .settings .area .diff .desc:nth-child(6) {
+  box-shadow: inset 0px 0px 0px 2px rgba(255, 0, 0, 0.5);
+  position: relative;
+  z-index: 1;
+}
+#subnetting .settings .area .diff .desc:nth-child(6):before {
+  content: "";
+  display: block;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  left: 0;
+  top: 0;
+  background: rgba(255, 0, 0, 0.2);
+  border: 2px solid #ff0000;
+  opacity: 0;
+}
+#subnetting .settings .area .diff .desc:nth-child(8) {
+  margin-right: 0;
+  border-radius: 0 10px 10px 0;
+  box-shadow: inset 0px 0px 0px 2px rgba(192, 192, 192, 0.5);
+  position: relative;
+  z-index: 1;
+}
+#subnetting .settings .area .diff .desc:nth-child(8) #switch {
+  display: inline-block;
+  top: 50%;
+  left: 50%;
+  position: absolute;
+  transform: translate(-50%, -50%);
+}
+#subnetting .settings .area .diff .desc:nth-child(8) #switch input {
+  width: 100px;
+}
+#subnetting .settings .area .diff .desc:nth-child(8):before {
+  content: "";
+  display: block;
+  position: absolute;
+  border-radius: 0 10px 10px 0;
+  width: 100%;
+  height: 100%;
+  left: 0;
+  top: 0;
+  background: rgba(192, 192, 192, 0.2);
+  border: 2px solid #ffffff;
+  opacity: 0;
+}
+#subnetting .settings .area .diff .desc:nth-child(8) input {
+  display: none;
+  width: 60%;
+  height: 50px;
+  text-align: center;
+  border-color: white;
+  background: rgba(0, 0, 0, 0.5);
+}
+#subnetting .settings .area .diff input[type="radio"]:checked + label:before {
+  opacity: 0.7;
+  z-index: -1;
+}
+#subnetting .settings .area .opts {
+  width: 100%;
+  margin-top: 20px;
+}
+#subnetting .settings .area .opts button {
+  float: right;
+  margin: 5px;
+  padding: 10px;
+}
+#subnetting table {
+  width: 100%;
+}
+#subnetting td {
+  padding: 5px;
+  margin: 5px;
+}
+#subnetting td:nth-child(1) {
+  width: 100px;
+}
+#subnetting td.prefixCell {
+  width: 100px;
+}
+#subnetting td.prefixCell input {
+  text-align: center;
+}
+#subnetting td input {
+  transition: all 0.2s;
+  width: 100%;
+}
+#subnetting #schema {
+  margin-bottom: 50px;
+}
+#subnetting .buttons {
+  margin: 50px 0;
+  float: right;
+}
+#subnetting .buttons button {
+  margin-left: 5px;
+}
