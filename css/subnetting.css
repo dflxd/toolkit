@@ -5,7 +5,7 @@ body {
   text-align: center;
 }
 #subnetting .settings {
-  position: absolute;
+  position: fixed;
   width: 100%;
   height: 100%;
   background-image: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url(../img/header.jpg);
@@ -14,6 +14,8 @@ body {
   height: 100%;
 }
 #subnetting .settings .area {
+  animation: zoomIn 0.2s ease-out;
+  transform-origin: top;
   width: 700px;
   padding: 50px;
   display: inline-block;
@@ -33,8 +35,8 @@ body {
 #subnetting .settings .area .prefix {
   width: calc(20% - 20px);
 }
-#subnetting .settings .area > input,
-#subnetting .settings .area > div {
+#subnetting .settings .area div > input,
+#subnetting .settings .area div > div {
   text-align: center;
   margin: 5px;
   padding: 5px;
@@ -194,4 +196,14 @@ body {
 }
 #subnetting .buttons button {
   margin-left: 5px;
+}
+@keyframes zoomIn {
+  from {
+    opacity: 0;
+    transform: scale(2) translateY(-50%);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(-50%);
+  }
 }

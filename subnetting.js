@@ -1,45 +1,37 @@
+String.prototype.replaceAt = function(index, replacement) {
+  return this.substr(0, index) + replacement + this.substr(index + replacement.length);
+};
+
 function rand(min, max) {
   return Math.floor(Math.random() * (max - min + 1) + min);
 }
 
-function bitCeil(number) {
-  var ceil = 1;
-  while (ceil < number) {
-    ceil *= 2;
-  }
-  return ceil;
+function isNumeric(n) {
+  return !isNaN(parseFloat(n)) && isFinite(n);
 }
 
 function bitFloor(number) {
-  var floor = Math.pow(2, 8);
-  while (floor - 2 > number) {
+  if (number <= 0) return 0;
+  var floor = Math.pow(2, 32);
+  while (floor > number) {
     floor /= 2;
   }
   return floor;
 }
 
 function shuffle(array) {
-  var currentIndex = array.length, temporaryValue, randomIndex;
-
-  // While there remain elements to shuffle...
+  var currentIndex = array.length,
+    temporaryValue, randomIndex;
   while (0 !== currentIndex) {
-
-    // Pick a remaining element...
     randomIndex = Math.floor(Math.random() * currentIndex);
     currentIndex -= 1;
-
-    // And swap it with the current element.
     temporaryValue = array[currentIndex];
     array[currentIndex] = array[randomIndex];
     array[randomIndex] = temporaryValue;
   }
-
   return array;
 }
 
-String.prototype.replaceAt = function(index, replacement) {
-  return this.substr(0, index) + replacement + this.substr(index + replacement.length);
-};
 var subnetting = new Vue({
   el: '#subnetting',
   data: {
@@ -47,10 +39,12 @@ var subnetting = new Vue({
     basePrefix: 24,
     subnets: [],
     picked: null,
-    subnetCountMin: 3,
-    subnetCountMax: 8,
+    subnetCountMin: 0,
+    subnetCountMax: 0,
     subnetsCount: "00000000000000000000000000000000",
-    answers: false
+    answers: false,
+    settings: true,
+    inputDisabled: false,
   },
   computed: {
     diffChosen: function() {
@@ -83,10 +77,28 @@ var subnetting = new Vue({
     }
   },
   methods: {
+    changeSettings: function() {
+      this.inputDisabled = false;
+      $("#c").prop('checked', false);
+      this.picked = false;
+      this.subnets = [];
+    },
+    swapSettings: function() {
+      if (this.inputDisabled) {
+        this.settings = !this.settings;
+      }
+    },
+    convertToBit: function(n) {
+      var bit = 0;
+      while (n > 1) {
+        n /= 2;
+        bit++;
+      }
+      return bit;
+    },
     prefixToBit: function(prefix) {
       var str = "00000000000000000000000000000000";
       return str.replaceAt(prefix - 1, "1");
-
     },
     bitToA: function(bit) {
       var a = "";
@@ -100,28 +112,21 @@ var subnetting = new Vue({
       var result = "";
       var leftover = 0;
       for (var i = 31; i >= 0; i--) {
-
         var sum = parseInt(a[i]) - parseInt(b[i]) - leftover;
-
-
         if (sum == -1) {
           sum = 1;
           leftover = 1;
         } else {
           leftover = 0;
         }
-
         result = sum.toString() + result;
-
       }
       return result;
     },
     bitAdd: function(a, b) {
-
       var result = "";
       var leftover = 0;
       for (var i = 31; i >= 0; i--) {
-
         var sum = parseInt(a[i]) + parseInt(b[i]) + leftover;
         leftover = 0;
         if (sum >= 2) {
@@ -134,7 +139,6 @@ var subnetting = new Vue({
             alert("error (binAdd)");
             result = "error";
           }
-
         } else {
           result = sum.toString() + result;
         }
@@ -154,14 +158,10 @@ var subnetting = new Vue({
       return parseInt(bin, 2);
     },
     randInBitRange: function(range) {
-      console.warn("range" + range);
-      console.log("rand(" + (Math.pow(2, range - 1) - 1) + "," + (Math.pow(2, range) - 2) + ");");
-      if(range == 2) return 2;
+      if (range == 2) return 2;
       return rand(Math.pow(2, range - 1) - 1, Math.pow(2, range) - 2);
     },
     bitFloor: function(number) {
-
-
       var a = 0;
       var b = this.hostsMax;
       while (number <= b) {
@@ -169,7 +169,6 @@ var subnetting = new Vue({
         a = a + 1;
         if (a > 32) return false;
       }
-
       return (a);
     },
     countHosts: function() {
@@ -182,38 +181,39 @@ var subnetting = new Vue({
     addToSubnetsCount: function(position) {
       this.subnetsCount = this.subnetsCount.replaceAt(position - 1, (parseInt(this.subnetsCount.charAt(position - 1)) + 1).toString());
     },
-    generate: function() {
-      this.answers = false;
-      $(".settings").hide();
+    generateNew: function() {
+      this.settings = false;
+      this.inputDisabled = true;
       var chosenSubnetsCount = $('input[name=diff]:checked', '.diff').val();
-      if(chosenSubnetsCount == "custom") {
+      if (chosenSubnetsCount == "custom") {
         this.subnetCountMin = parseInt($("#custom").text());
         this.subnetCountMax = parseInt($("#custom").text());
-      }
-      else {
+      } else {
         this.subnetCountMin = parseInt(chosenSubnetsCount);
         this.subnetCountMax = this.subnetCountMin + 1;
       }
-
+      this.generate();
+    },
+    generate: function() {
+      this.answers = false;
+      $(".settings").hide();
       this.subnets = [];
       this.subnetsCount = "00000000000000000000000000000000";
-
       var subnetCount = rand(this.subnetCountMin, this.subnetCountMax);
       for (var i = 0; i < subnetCount; i++) {
         if (this.countHosts() >= this.hostsMax) {
-          alert("Víc podsítí nelze v této síti vytvořit");
+          alert("Víc podsítí nelze vytvořit");
           break;
         }
-        var limit = (subnetCount - i + 1) + Math.pow((subnetCount - i - 1), 2);
-        if (i == subnetCount - 1) {
-          limit = 0;
+        var limit;
+        if (this.basePrefix <= 24) {
+          limit = (subnetCount - i + 1) + Math.pow((subnetCount - i - 1), 2);
+        } else {
+          limit = (subnetCount - i - 1) * 4;
         }
-        var max = this.hostsMaxBit - this.bitFloor(this.hostsMax - this.countHosts());
-        var bitRange;
-        do {
-          bitRange = rand(2, max);
-        } while (limit < this.countHosts + Math.pow(2, bitRange));
-
+        var max = this.convertToBit(bitFloor(this.hostsMax - this.countHosts() - limit));
+        if (max < 2) max = 2;
+        var bitRange = rand(2, max);
         this.addToSubnetsCount(bitRange);
         this.subnets.push({
           name: "Subnet " + 'abcdefghijklmnopqrstuvwxyz' [this.subnets.length].toUpperCase(),
@@ -230,20 +230,16 @@ var subnetting = new Vue({
           lastACheckColor: "",
           prefixCheckColor: ""
         });
-
       }
       this.subnets = shuffle(this.subnets);
-      for(i = 0; i < this.subnets.length; i++) {
+      for (i = 0; i < this.subnets.length; i++) {
         this.subnets[i].name = "Subnet " + 'abcdefghijklmnopqrstuvwxyz' [i].toUpperCase();
       }
-
-
       this.subnets.sort(function(a, b) {
         if (a.prefix < b.prefix) return -1;
         if (a.prefix > b.prefix) return 1;
         return 0;
       });
-
       var base = this.baseIPBit;
       var that = this;
       this.subnets.forEach(function(item) {
@@ -256,33 +252,24 @@ var subnetting = new Vue({
         if (a.name[7] > b.name[7]) return 1;
         return 0;
       });
-
     },
     check: function() {
       var rightColor = "green";
       var notRightColor = "#f33";
-
-
       for (var i = 0; i < this.subnets.length; i++) {
-        if(this.subnets[i].firstA == this.subnets[i].inFirstA) {
+        if (this.subnets[i].firstA == this.subnets[i].inFirstA) {
           this.subnets[i].firstACheckColor = rightColor;
-        }
-        else {
+        } else {
           this.subnets[i].firstACheckColor = notRightColor;
         }
-
-        console.log(this.subnets[i].lastA);
-        if(this.subnets[i].lastA == this.subnets[i].inLastA) {
+        if (this.subnets[i].lastA == this.subnets[i].inLastA) {
           this.subnets[i].lastACheckColor = rightColor;
-        }
-        else {
+        } else {
           this.subnets[i].lastACheckColor = notRightColor;
         }
-
-        if(this.subnets[i].prefix == this.subnets[i].inPrefix.replace('/', '')) {
+        if (this.subnets[i].prefix == this.subnets[i].inPrefix.replace('/', '')) {
           this.subnets[i].prefixCheckColor = rightColor;
-        }
-        else {
+        } else {
           this.subnets[i].prefixCheckColor = notRightColor;
         }
       }
@@ -298,51 +285,44 @@ var subnetting = new Vue({
     },
     resetPrefix: function(item) {
       item.prefixCheckColor = "";
+    },
+    save: function() {
+      var input = $("#switch input").val();
+      var valid = true;
+      if (!isNumeric(input)) valid = false;
+      if (input < 2 || input > 15) valid = false;
+      if (valid) {
+        $("#switch span").eq(0).text($("#switch input").val());
+        if ($("#switch input").val() <= 4) $("#switch span").eq(1).text("subnety");
+        else $("#switch span").eq(1).text("subnetů");
+        $("#switch input").hide();
+        $("#switch span").eq(0).show();
+      } else {
+        subnetting.picked = null;
+        $("#switch span").eq(0).text("custom");
+        $("#switch span").eq(1).text("");
+        $("#switch input").val("");
+        $("#switch input").hide();
+        $("#switch span").eq(0).show();
+        $("#c").prop('checked', false);
+      }
+    },
+    abc: function() {
+      if (!this.inputDisabled) {
+        var that = this;
+        $("#switch span").eq(0).hide();
+        $("#switch span").eq(1).text("");
+        $("#switch input").show();
+        $("#switch input").focus();
+        $("#switch input").focusout(function() {
+          that.save();
+        });
+        $(document).keypress(function(e) {
+          if (e.which == 13) {
+            that.save();
+          }
+        });
+      }
     }
   }
 });
-$(".desc").click(function() {
-  if($(this).is($(".diff .desc").eq(3))) {
-    $("#switch span").eq(0).hide();
-    $("#switch span").eq(1).text("");
-    $("#switch input").show();
-    $("#switch input").focus();
-    $("#switch input").focusout(function(){
-      save();
-
-    });
-    $(document).keypress(function(e) {
-        if(e.which == 13) {
-          save();
-        }
-    });
-  }
-});
-function save() {
-  var input = $("#switch input").val();
-  var valid = true;
-  if(!isNumeric(input)) valid = false;
-  if(input < 2 || input > 15) valid = false;
-
-  console.log(input);
-  if(valid) {
-    $("#switch span").eq(0).text($("#switch input").val());
-    if($("#switch input").val() <= 4) $("#switch span").eq(1).text("subnety");
-    else $("#switch span").eq(1).text("subnetů");
-
-    $("#switch input").hide();
-    $("#switch span").eq(0).show();
-  }
-  else {
-    subnetting.picked = null;
-    $("#switch span").eq(0).text("custom");
-    $("#switch span").eq(1).text("");
-    $("#switch input").val("");
-    $("#switch input").hide();
-    $("#switch span").eq(0).show();
-    $("#c").prop('checked', false);
-  }
-}
-function isNumeric(n) {
-  return !isNaN(parseFloat(n)) && isFinite(n);
-}
