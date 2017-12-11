@@ -3,19 +3,21 @@
 }
 body,
 html {
+  min-width: 1366px;
   margin: 0!important;
   padding: 0!important;
-  overflow-x: hidden;
-  height: 100%;
   font-family: 'Nunito', sans-serif;
   font-size: 20px;
 }
 body {
-  background-image: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url(../img/header.jpg);
+  background-color: #383838;
+  background-image: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url("../img/header.jpg");
+  background-size: 1920px;
+  background-attachment: fixed;
+  height: 100%;
 }
 ::selection {
   background: #49eeff;
-  border: 1px solid red;
 }
 button {
   border: 2px solid #49eeff;
@@ -71,14 +73,14 @@ h1 {
   padding-top: 15px;
   margin-bottom: 15px;
 }
-h2 {
-  font-size: 1.5rem;
+.subtitle {
+  font-size: 24px;
   margin-bottom: 15px;
 }
 .smallMenu {
   user-select: none;
   z-index: 1;
-  position: absolute;
+  position: fixed;
   top: 20px;
   left: 20px;
   font-size: 35px;
@@ -98,6 +100,7 @@ h2 {
   display: inline-block;
   width: 100%;
   height: 100%;
+  text-align: center;
 }
 .smallMenu div:not(:first-child) {
   border-left: 1px solid #ddd;
@@ -110,6 +113,11 @@ h2 {
 .smallMenu div.menuSettings i {
   position: relative;
   top: 1px;
+}
+.smallMenu div.menuSubnettingHelp i {
+  position: relative;
+  line-height: 50px;
+  font-size: 40px;
 }
 .smallMenu div:hover {
   background: #16a;
@@ -125,8 +133,12 @@ h2 {
 .smallMenu div.active a {
   color: #16a;
 }
+.smallMenu div.border {
+  border: none!important;
+  border-left: 1px solid #444!important;
+}
 .smallMenu div.disabled {
-  opacity: .5;
+  opacity: 0.5;
 }
 .modules {
   margin-bottom: 15px;
@@ -134,6 +146,19 @@ h2 {
   position: relative;
   top: 120px;
   color: white;
+}
+.modules a div,
+.modules i,
+.modules figcaption {
+  transition: 1s;
+}
+.modules a:hover div,
+.modules a:hover i,
+.modules a:hover figcaption {
+  transform: rotateZ(180deg);
+}
+.modules a:hover div {
+  transform: rotateZ(180deg) translateY(-40px);
 }
 .modules .tech-en {
   border: 2px solid #3498DB;
@@ -185,9 +210,9 @@ h2 {
   font-weight: 600;
 }
 .modules a,
+.modules a:focus,
 .modules a:hover,
-.modules a:link,
-.modules a:focus {
+.modules a:link {
   text-decoration: none;
   color: #3498DB;
 }
@@ -207,4 +232,16 @@ footer {
   bottom: -210px;
   text-align: center;
   color: #b1b1b1;
+}
+@media screen and (min-width: 1921px) {
+  body {
+    background-image: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url("../img/header.jpg");
+    background-size: cover;
+    background-attachment: fixed;
+  }
+}
+@media screen and (max-width: 1366px) {
+  .container {
+    min-width: 1110px!important;
+  }
 }

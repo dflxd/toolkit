@@ -45,10 +45,62 @@ var subnetting = new Vue({
     answers: false,
     settings: true,
     inputDisabled: false,
+    help: false,
+    fillAll: "",
   },
   computed: {
-    diffChosen: function() {
-      return !this.picked;
+    ipValid: function() {
+      var valid = true;
+      var ip = this.baseIP;
+
+      var octets = ip.split(".");
+      if(octets.length != 4) {
+        valid = false;
+      }
+      else {
+        octets.forEach(function(octet) {
+          console.log(octet);
+          if(!isNumeric(octet) || parseInt(octet) < 0 || parseInt(octet) > 255) valid = false;
+        });
+      }
+      return valid;
+    },
+    prefixValid: function() {
+      var valid = true;
+      var prefix = this.basePrefix;
+
+      if(!isNumeric(prefix) || parseInt(prefix) < 0 || parseInt(prefix) > 29 || prefix%1 != 0) valid = false;
+
+      return valid;
+    },
+    comboValid: function() {
+      var ip = this.baseIPBit;
+      var prefix = this.basePrefixBit;
+      var valid = true;
+      console.log(ip);
+      console.log(prefix);
+      if(ip.length == 32 && prefix.length == 32) {
+        for (var i = 0; i < 32; i++) {
+          if(prefix.charAt(i) == 0 && ip.charAt(i) == 1) {
+            valid = false;
+            break;
+          }
+        }
+      }
+      else {
+        valid = false;
+      }
+      return valid;
+    },
+    baseIPColor: function() {
+      if(!this.ipValid) return "red";
+      else if(!this.comboValid) return "#f40";
+      else return "";
+    },
+    basePrefixColor: function() {
+      if(!this.prefixValid) return "red";
+      else if(!this.comboValid) return "#f40";
+      else return "";
     },
     hostsMax: function() {
       return Math.pow(2, 32 - parseInt(this.basePrefix));
@@ -66,17 +118,32 @@ var subnetting = new Vue({
       return str;
     },
     baseIPBit: function() {
+      console.log("start");
       var str = "";
       var i = 0;
       var octets = this.baseIP.split(".");
       var that = this;
+      console.log("start");
       octets.forEach(function(octet) {
-        str += that.dec2bin(parseInt(octet));
+        if(that.dec2bin(parseInt(octet)).length == 8) {
+          str += that.dec2bin(parseInt(octet));
+        }
+        else {
+          str += "00000000";
+        }
+
       });
+        console.log("stop");
       return str;
     }
   },
   methods: {
+    fillAllTrigger: function() {
+      for (var i = 0; i < this.subnets.length; i++) {
+        this.subnets[i].inFirstA = this.fillAll;
+        this.subnets[i].inLastA = this.fillAll;
+      }
+    },
     changeSettings: function() {
       this.inputDisabled = false;
       $("#c").prop('checked', false);
@@ -87,6 +154,11 @@ var subnetting = new Vue({
       if (this.inputDisabled) {
         this.settings = !this.settings;
       }
+    },
+    swapSubnettingHelp: function() {
+      if(!this.help)$(".help").hide().slideDown(300);
+      else $(".help").slideUp(300);
+      this.help = !this.help;
     },
     convertToBit: function(n) {
       var bit = 0;
@@ -148,7 +220,8 @@ var subnetting = new Vue({
     dec2bin: function(dec) {
       var str = "";
       var zeros = 8 - dec.toString(2).length;
-      while (zeros--) {
+
+      while (zeros-- > 0) {
         str += "0";
       }
       str += dec.toString(2);
@@ -178,8 +251,20 @@ var subnetting = new Vue({
       }
       return hosts;
     },
-    addToSubnetsCount: function(position) {
-      this.subnetsCount = this.subnetsCount.replaceAt(position - 1, (parseInt(this.subnetsCount.charAt(position - 1)) + 1).toString());
+    addToSubnetsCount: function(position, change) {
+      this.subnetsCount = this.subnetsCount.replaceAt(position - 1, (parseInt(this.subnetsCount.charAt(position - 1)) + change).toString());
+      if(parseInt(this.subnetsCount.charAt(position - 1)) >= 2) {
+        this.addToSubnetsCount(position, -2);
+        this.addToSubnetsCount(position+1, 1);
+      }
+      /*zaloha puvodni verze funkce
+      if(parseInt(this.subnetsCount.charAt(position - 1)) >= 1) {
+        this.subnetsCount = this.subnetsCount.replaceAt(position, (parseInt(this.subnetsCount.charAt(position)) + 1).toString());
+        this.subnetsCount = this.subnetsCount.replaceAt(position - 1, (parseInt(this.subnetsCount.charAt(position - 1)) - 1).toString());
+      }
+      else {
+          this.subnetsCount = this.subnetsCount.replaceAt(position - 1, (parseInt(this.subnetsCount.charAt(position - 1)) + 1).toString());
+      }*/
     },
     generateNew: function() {
       this.settings = false;
@@ -201,6 +286,7 @@ var subnetting = new Vue({
       this.subnetsCount = "00000000000000000000000000000000";
       var subnetCount = rand(this.subnetCountMin, this.subnetCountMax);
       for (var i = 0; i < subnetCount; i++) {
+        console.log(this.countHosts());
         if (this.countHosts() >= this.hostsMax) {
           alert("Víc podsítí nelze vytvořit");
           break;
@@ -214,7 +300,8 @@ var subnetting = new Vue({
         var max = this.convertToBit(bitFloor(this.hostsMax - this.countHosts() - limit));
         if (max < 2) max = 2;
         var bitRange = rand(2, max);
-        this.addToSubnetsCount(bitRange);
+        console.log("bitrange max: " + max);
+        this.addToSubnetsCount(bitRange,1);
         this.subnets.push({
           name: "Subnet " + 'abcdefghijklmnopqrstuvwxyz' [this.subnets.length].toUpperCase(),
           hosts: this.randInBitRange(bitRange),
@@ -256,18 +343,27 @@ var subnetting = new Vue({
     check: function() {
       var rightColor = "green";
       var notRightColor = "#f33";
+
       for (var i = 0; i < this.subnets.length; i++) {
-        if (this.subnets[i].firstA == this.subnets[i].inFirstA) {
+        var inFirstA = this.subnets[i].inFirstA.replace(/\s/g, '');
+        var inLastA = this.subnets[i].inLastA.replace(/\s/g, '');
+        var inPrefix = this.subnets[i].inPrefix.replace(/\s/g, '');
+        var firstA = this.subnets[i].firstA;
+        var lastA = this.subnets[i].lastA;
+        var prefix = this.subnets[i].prefix;
+
+
+        if (firstA == inFirstA) {
           this.subnets[i].firstACheckColor = rightColor;
         } else {
           this.subnets[i].firstACheckColor = notRightColor;
         }
-        if (this.subnets[i].lastA == this.subnets[i].inLastA) {
+        if (lastA == inLastA) {
           this.subnets[i].lastACheckColor = rightColor;
         } else {
           this.subnets[i].lastACheckColor = notRightColor;
         }
-        if (this.subnets[i].prefix == this.subnets[i].inPrefix.replace('/', '')) {
+        if (prefix == inPrefix.replace('/', '')) {
           this.subnets[i].prefixCheckColor = rightColor;
         } else {
           this.subnets[i].prefixCheckColor = notRightColor;
@@ -289,7 +385,8 @@ var subnetting = new Vue({
     save: function() {
       var input = $("#switch input").val();
       var valid = true;
-      if (!isNumeric(input)) valid = false;
+
+      if (!isNumeric(input) || input%1 != 0) valid = false;
       if (input < 2 || input > 15) valid = false;
       if (valid) {
         $("#switch span").eq(0).text($("#switch input").val());
@@ -307,7 +404,7 @@ var subnetting = new Vue({
         $("#c").prop('checked', false);
       }
     },
-    abc: function() {
+    cust: function() {
       if (!this.inputDisabled) {
         var that = this;
         $("#switch span").eq(0).hide();
@@ -317,12 +414,14 @@ var subnetting = new Vue({
         $("#switch input").focusout(function() {
           that.save();
         });
-        $(document).keypress(function(e) {
-          if (e.which == 13) {
-            that.save();
-          }
-        });
+
       }
     }
   }
 });
+$(document).keypress(function(e) {
+  if (e.which == 13) {
+    subnetting.save();
+  }
+});
+$(".main").css("visibility","visible");

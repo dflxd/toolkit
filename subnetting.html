@@ -16,10 +16,26 @@
 <body>
   <div id="subnetting">
     <div class="smallMenu">
-      <div class="menuBack"><a href="index.html"><i class="fa fa-chevron-left" aria-hidden="true"></i></a></div>
-      <div class="menuSettings" @click="swapSettings" v-bind:class="{'active': settings}"><i class="fa fa-wrench" aria-hidden="true"></i></div>
+      <div class="menuBack" title="Zpět na úvodní stránku"><a href="index.html"><i class="fa fa-chevron-left" aria-hidden="true"></i></a></div>
+      <div class="menuSettings" title="Nastavení" @click="swapSettings" v-bind:class="{'active': settings}"><i class="fa fa-wrench" aria-hidden="true"></i></div>
+      <div class="menuSubnettingHelp" title="Nápověda" @click="swapSubnettingHelp" v-bind:class="{'active': help, 'border': this.help && this.settings}"><i class="fa fa-question" aria-hidden="true"></i></div>
     </div>
-    <div class="settings" v-if="settings">
+    <div class="help">
+      <div class="">
+        <div class="title">Základní pravidla pro tvorbu subnetů</div>
+        <ul>
+          <li>a</li>
+          <li>b</li>
+          <li>c</li>
+          <li>b</li>
+          <li>c</li>
+          <li>b</li>
+          <li>c</li>
+        </ul>
+      </div>
+
+    </div>
+    <div class="settings" v-show="settings">
       <div class="container">
         <div class="area">
           <div class="inputs" :style="{ 'opacity': inputDisabled ? 0.5 : 1.0 }">
@@ -27,9 +43,9 @@
             <div class="ip">IP Adresa</div>
             <span>&nbsp;</span>
             <div class="prefix">Prefix</div>
-            <input type="text" v-model="baseIP" class="ip" :disabled="inputDisabled">
+            <input type="text" v-model="baseIP" class="ip" :disabled="inputDisabled" :style="{'border-color': baseIPColor }">
             <span>/</span>
-            <input type="text" v-model="basePrefix" class="prefix" :disabled="inputDisabled">
+            <input type="text" v-model="basePrefix" class="prefix" :disabled="inputDisabled" :style="{ 'border-color': basePrefixColor }">
             <div class="diff">
               <input type="radio" name="diff" id="z" value="2" v-model="picked" :disabled="inputDisabled">
               <label for="z" class="desc">
@@ -47,7 +63,7 @@
                 <span>6-7 subnetů</span>
               </label>
               <input type="radio" name="diff" id="c" value="custom" v-model="picked" :disabled="inputDisabled">
-              <label for="c" class="desc" id="customLabel" @click="abc">
+              <label for="c" class="desc" id="customLabel" @click="cust">
                 <span id="switch">
                   <span id="custom">custom</span>
                   <input type="text" placeholder="2-15">
@@ -58,7 +74,7 @@
             </div>
           </div>
           <div class="opts">
-            <button type="button" @click="generateNew" :disabled="diffChosen" v-if="!inputDisabled">
+            <button type="button" @click="generateNew" :disabled="!picked || !ipValid || !prefixValid || !comboValid" v-if="!inputDisabled">
               Nový příklad <i class="fa fa-arrow-right" aria-hidden="true"></i>
             </button>
             <button type="button" name="button" @click="changeSettings" v-if="inputDisabled">
@@ -71,10 +87,10 @@
         </div>
       </div>
     </div>
-    <div class="main">
+    <div class="main" v-show="!settings" v-cloak>
       <div class="container">
         <h1>Subnetting</h1>
-        <h2>Rozdělte síť {{baseIP}} na podsítě dle následujícího schématu:</h2>
+        <div class="subtitle">Rozdělte síť s adresou <span class="highlight">{{baseIP}} /{{basePrefix}}</span> na podsítě dle následujícího schématu:</div>
 
         <img src="img/schema.png" id="schema">
 
@@ -101,10 +117,16 @@
           </tr>
         </table>
 
-        <div class="buttons">
-          <button @click="check">Zkontrolovat</button>
-          <button @click="showResults">Zobrazit řešení</button>
-          <button @click="generate">Další příklad <i class="fa fa-arrow-right" aria-hidden="true"></i></button>
+        <div class="buttons clearfix">
+          <div class="sectionL">
+            <input type="text"  v-model="fillAll" placeholder="dosadit do všech">
+            <button type="button" @click="fillAllTrigger"><i class="fa fa-chevron-up" aria-hidden="true"></i></button>
+          </div>
+          <div class="sectionR">
+            <button @click="check">Zkontrolovat</button>
+            <button @click="showResults">Zobrazit řešení</button>
+            <button @click="generate">Další příklad <i class="fa fa-arrow-right" aria-hidden="true"></i></button>
+          </div>
         </div>
       </div>
     </div>

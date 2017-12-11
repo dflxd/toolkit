@@ -4,11 +4,33 @@ body {
 #subnetting {
   text-align: center;
 }
+#subnetting .highlight {
+  border: 1px dashed #4ef;
+  padding: 0 7px;
+  background: rgba(0, 0, 0, 0.2);
+}
+#subnetting .help {
+  display: none;
+  position: fixed;
+  background: rgba(34, 34, 34, 0.9);
+  border: 2px solid #ddd;
+  border-radius: 0 10px 10px 10px;
+  top: 72px;
+  left: 20px;
+  z-index: 1;
+  padding: 30px;
+  text-align: left;
+}
+#subnetting .help .title {
+  font-size: 28px;
+}
 #subnetting .settings {
   position: fixed;
   width: 100%;
   height: 100%;
   background-image: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url(../img/header.jpg);
+  background-size: 1920px;
+  background-attachment: fixed;
 }
 #subnetting .settings .container {
   height: 100%;
@@ -192,10 +214,32 @@ body {
 }
 #subnetting .buttons {
   margin: 50px 0;
+  width: 100%;
+}
+#subnetting .buttons .sectionL {
+  position: relative;
+  float: left;
+}
+#subnetting .buttons .sectionL input {
+  height: 50px;
+}
+#subnetting .buttons .sectionL button {
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+#subnetting .buttons .sectionL button:active {
+  transform: none;
+  border-color: white;
+}
+#subnetting .buttons .sectionR {
   float: right;
 }
-#subnetting .buttons button {
+#subnetting .buttons .sectionR button {
   margin-left: 5px;
+}
+.main {
+  visibility: hidden;
 }
 @keyframes zoomIn {
   from {
@@ -205,5 +249,12 @@ body {
   to {
     opacity: 1;
     transform: scale(1) translateY(-50%);
+  }
+}
+@media screen and (min-width: 1921px) {
+  #subnetting .settings {
+    background-image: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url("../img/header.jpg");
+    background-size: cover;
+    background-attachment: fixed;
   }
 }
