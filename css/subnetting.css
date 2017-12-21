@@ -4,12 +4,66 @@ body {
 #subnetting {
   text-align: center;
 }
-#subnetting .highlight {
+#subnetting .highlightArea {
+  position: relative;
+}
+#subnetting .highlightArea .highlight {
+  cursor: default;
   border: 1px dashed #4ef;
   padding: 0 7px;
   background: rgba(0, 0, 0, 0.2);
+  position: relative;
+}
+#subnetting .highlightArea .highlight:hover {
+  background: rgba(0, 0, 0, 0.4);
+}
+#subnetting .highlightArea .highlight:hover + .popout {
+  opacity: 1;
+  transition: all .2s;
+  transition-delay: .2s;
+}
+#subnetting .highlightArea .popout {
+  position: absolute;
+  font-size: 14px;
+  background: rgba(0, 0, 0, 0.7);
+  top: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%);
+  border-radius: 10px;
+  opacity: 0;
+  transition: .1s all;
+  margin: 0;
+  padding: 5px;
+}
+#subnetting .highlightArea .popout tr:not(:first-child) {
+  text-align: left;
+}
+#subnetting .highlightArea .popout tr:not(:first-child) td:nth-child(1) {
+  padding-right: 10px;
+}
+#subnetting .highlightArea .popout td + td {
+  letter-spacing: 2px;
+}
+#subnetting .highlightArea .popout td + td span {
+  white-space: nowrap;
+}
+#subnetting .highlightArea .popout td + td span:not(:first-child):before {
+  content: " . ";
+  letter-spacing: 0px;
+  margin-left: -2px;
+}
+#subnetting .highlightArea .popout:before {
+  content: "";
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  margin-left: -7px;
+  border-width: 7px;
+  border-style: solid;
+  border-color: transparent transparent rgba(0, 0, 0, 0.7) transparent;
 }
 #subnetting .help {
+  width: 500px;
   display: none;
   position: fixed;
   background: rgba(34, 34, 34, 0.9);
@@ -184,28 +238,45 @@ body {
   width: 100%;
   margin-top: 20px;
 }
+#subnetting .settings .area .opts .additional {
+  float: left;
+  position: relative;
+}
+#subnetting .settings .area .opts .additional i {
+  /* line-height: 216px; */
+  vertical-align: middle;
+  margin: 0 5px;
+  margin-top: -3px;
+  /* margin: 0 10px; */
+  top: 0px;
+  font-size: 24px;
+  bottom: 0px;
+  right: 0;
+  left: 0;
+  /* position: absolute; */
+}
 #subnetting .settings .area .opts button {
   float: right;
   margin: 5px;
   padding: 10px;
 }
-#subnetting table {
+#subnetting table.inter {
   width: 100%;
 }
-#subnetting td {
+#subnetting table.inter td {
   padding: 5px;
   margin: 5px;
 }
-#subnetting td:nth-child(1) {
+#subnetting table.inter td:nth-child(1) {
   width: 100px;
 }
-#subnetting td.prefixCell {
+#subnetting table.inter td.prefixCell {
   width: 100px;
 }
-#subnetting td.prefixCell input {
+#subnetting table.inter td.prefixCell input {
   text-align: center;
 }
-#subnetting td input {
+#subnetting table.inter td input {
   transition: all 0.2s;
   width: 100%;
 }

@@ -22,15 +22,17 @@
     </div>
     <div class="help">
       <div class="">
-        <div class="title">Základní pravidla pro tvorbu subnetů</div>
+        <div class="title">Základní pravidla pro subnetting</div>
+        <ol>
+          <li>Určit velikost subnetu (co nejmenší možný počet adres, zohlednit adresu a broadcast subnetu (2 adresy navíc)).</li>
+          <li>Přidělit místo. A to nejdříve těm největším subnetům. Při stejné velikosti postupovat podle abecedy.</li>
+          <li>Určit rozsah podsítě. První adresa je adresou podsítě, poslední je broadcastem.</li>
+        </ol>
+        <br>
+        Příklad
         <ul>
           <li>a</li>
           <li>b</li>
-          <li>c</li>
-          <li>b</li>
-          <li>c</li>
-          <li>b</li>
-          <li>c</li>
         </ul>
       </div>
 
@@ -66,7 +68,7 @@
               <label for="c" class="desc" id="customLabel" @click="cust">
                 <span id="switch">
                   <span id="custom">custom</span>
-                  <input type="text" placeholder="2-15">
+                  <input type="text" placeholder="2-14">
                   <span></span>
                 </span>
                 <span></span>
@@ -74,13 +76,19 @@
             </div>
           </div>
           <div class="opts">
+
+            <button type="button" class="additional">
+              <i class="fa fa-cog" aria-hidden="true"></i>wip
+            </button>
+
+
             <button type="button" @click="generateNew" :disabled="!picked || !ipValid || !prefixValid || !comboValid" v-if="!inputDisabled">
               Nový příklad <i class="fa fa-arrow-right" aria-hidden="true"></i>
             </button>
-            <button type="button" name="button" @click="changeSettings" v-if="inputDisabled">
-              Změnit nastavení <i class="fa fa-cog" aria-hidden="true"></i>
+            <button type="button" @click="changeSettings" v-if="inputDisabled">
+              Změnit nastavení <i class="fa fa-wrench" aria-hidden="true"></i>
             </button>
-            <button type="button" name="button" @click="swapSettings" v-if="inputDisabled">
+            <button type="button" @click="swapSettings" v-if="inputDisabled">
               <i class="fa fa-arrow-left" aria-hidden="true"></i> zpět
             </button>
           </div>
@@ -90,11 +98,30 @@
     <div class="main" v-show="!settings" v-cloak>
       <div class="container">
         <h1>Subnetting</h1>
-        <div class="subtitle">Rozdělte síť s adresou <span class="highlight">{{baseIP}} /{{basePrefix}}</span> na podsítě dle následujícího schématu:</div>
+        <div class="subtitle">Rozdělte síť s adresou <span class="highlightArea"><span class="highlight">{{baseIP}} /{{basePrefix}}</span>
+          <div class="popout">
+            <table>
+              <tr>
+                <td colspan="2">K dispozici až {{hostsMax}} adres ({{baseIP}} - {{lastIP}})</td>
+              </tr>
+              <tr>
+                <td>Adresa: </td>
+                <td>
+                  <span v-for="item in baseIPShow">{{item}}</span>
+                </td>
+              </tr>
+              <tr>
+                <td>Maska: </td>
+                <td><span v-for="item in basePrefixShow">{{item}}</span></td>
+              </tr>
+            </table>
+          </div>
+          </span>
+           na podsítě dle následujícího schématu:</div>
 
-        <img src="img/schema.png" id="schema">
+        <canvas id="canvas" width="1110" height="520"></canvas>
 
-        <table v-if="subnets.length > 0">
+        <table v-if="subnets.length > 0" class="inter">
           <tr>
             <td>Název</td>
             <td>Počet hostů</td>
@@ -133,5 +160,4 @@
   </div>
   <script src="subnetting.js"></script>
 </body>
-
 </html>

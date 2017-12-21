@@ -76,6 +76,7 @@ h1 {
 .subtitle {
   font-size: 24px;
   margin-bottom: 15px;
+  position: relative;
 }
 .smallMenu {
   user-select: none;

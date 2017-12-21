@@ -6,12 +6,79 @@
   #subnetting {
 
     text-align: center;
-    .highlight {
-      border: 1px dashed #4ef;
-      padding: 0 7px;
-      background: rgba(0,0,0,0.2);
+    .highlightArea {
+      position: relative;
+      .highlight {
+        cursor: default;
+        border: 1px dashed #4ef;
+
+        padding: 0 7px;
+        background: rgba(0,0,0,0.2);
+        position: relative;
+
+        &:hover {
+          background: rgba(0,0,0,0.4);
+          + .popout {
+              opacity: 1;
+              transition: all .2s;
+
+              transition-delay: .2s;
+            }
+        }
+
+        }
+
+
+      .popout {
+
+        position: absolute;
+        font-size: 14px;
+        background: rgba(0,0,0,0.7);
+        //border: 2px solid rgba(0,0,0,0.3);
+        top: calc(~"100% + 8px");
+        left: 50%;
+        transform: translateX(-50%);
+        border-radius: 10px;
+        opacity: 0;
+        transition: .1s all;
+
+        margin: 0;
+        padding: 5px;
+
+        tr:not(:first-child) {
+          text-align: left;
+          td:nth-child(1) {
+            padding-right: 10px;
+          }
+        }
+        td + td {
+          letter-spacing: 2px;
+          span {
+            white-space:nowrap;
+            &:not(:first-child) {
+              &:before {
+                content: " . ";
+                letter-spacing: 0px;
+                margin-left: -2px;
+              }
+            }
+          }
+
+        }
+        &:before {
+          content: "";
+           position: absolute;
+           bottom: 100%;
+           left: 50%;
+           margin-left: -7px;
+           border-width: 7px;
+           border-style: solid;
+           border-color: transparent transparent rgba(0,0,0,0.7) transparent;
+        }
+      }
     }
     .help {
+      width: 500px;
       display: none;
       position: fixed;
       background: rgba(34,34,34,0.9);
@@ -185,7 +252,23 @@
           width: 100%;
 
           margin-top: 20px;
-
+          .additional {
+            float: left;
+            position: relative;
+            i {
+              /* line-height: 216px; */
+vertical-align: middle;
+margin: 0 5px;
+margin-top: -3px;
+/* margin: 0 10px; */
+top: 0px;
+font-size: 24px;
+bottom: 0px;
+right: 0;
+left: 0;
+/* position: absolute; */
+            }
+          }
           button {
             float: right;
             margin: 5px;
@@ -194,27 +277,28 @@
         }
       }
     }
-    table {
+    table.inter {
       width: 100%;
-    }
-    td {
-      padding: 5px;
-      margin: 5px;
-      &:nth-child(1) {
-        width: 100px;
-      }
-      &.prefixCell {
-        width: 100px;
+      td {
+        padding: 5px;
+        margin: 5px;
+        &:nth-child(1) {
+          width: 100px;
+        }
+        &.prefixCell {
+          width: 100px;
+          input {
+            text-align: center;
+          }
+        }
+
         input {
-          text-align: center;
+          transition: all 0.2s;
+          width: 100%;
         }
       }
-
-      input {
-        transition: all 0.2s;
-        width: 100%;
-      }
     }
+
     #schema {
       margin-bottom: 50px;
     }

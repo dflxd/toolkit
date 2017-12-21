@@ -19,8 +19,8 @@ function bitFloor(number) {
   return floor;
 }
 
-function shuffle(array) {
-  var currentIndex = array.length,
+function shuffle(array, dis) {
+  var currentIndex = array.length - dis,
     temporaryValue, randomIndex;
   while (0 !== currentIndex) {
     randomIndex = Math.floor(Math.random() * currentIndex);
@@ -54,13 +54,11 @@ var subnetting = new Vue({
       var ip = this.baseIP;
 
       var octets = ip.split(".");
-      if(octets.length != 4) {
+      if (octets.length != 4) {
         valid = false;
-      }
-      else {
+      } else {
         octets.forEach(function(octet) {
-          console.log(octet);
-          if(!isNumeric(octet) || parseInt(octet) < 0 || parseInt(octet) > 255) valid = false;
+          if (!isNumeric(octet) || parseInt(octet) < 0 || parseInt(octet) > 255) valid = false;
         });
       }
       return valid;
@@ -69,7 +67,7 @@ var subnetting = new Vue({
       var valid = true;
       var prefix = this.basePrefix;
 
-      if(!isNumeric(prefix) || parseInt(prefix) < 0 || parseInt(prefix) > 29 || prefix%1 != 0) valid = false;
+      if (!isNumeric(prefix) || parseInt(prefix) < 0 || parseInt(prefix) > 29 || prefix % 1 != 0) valid = false;
 
       return valid;
     },
@@ -77,29 +75,26 @@ var subnetting = new Vue({
       var ip = this.baseIPBit;
       var prefix = this.basePrefixBit;
       var valid = true;
-      console.log(ip);
-      console.log(prefix);
-      if(ip.length == 32 && prefix.length == 32) {
+      if (ip.length == 32 && prefix.length == 32) {
         for (var i = 0; i < 32; i++) {
-          if(prefix.charAt(i) == 0 && ip.charAt(i) == 1) {
+          if (prefix.charAt(i) == 0 && ip.charAt(i) == 1) {
             valid = false;
             break;
           }
         }
-      }
-      else {
+      } else {
         valid = false;
       }
       return valid;
     },
     baseIPColor: function() {
-      if(!this.ipValid) return "red";
-      else if(!this.comboValid) return "#f40";
+      if (!this.ipValid) return "red";
+      else if (!this.comboValid) return "#f40";
       else return "";
     },
     basePrefixColor: function() {
-      if(!this.prefixValid) return "red";
-      else if(!this.comboValid) return "#f40";
+      if (!this.prefixValid) return "red";
+      else if (!this.comboValid) return "#f40";
       else return "";
     },
     hostsMax: function() {
@@ -118,23 +113,28 @@ var subnetting = new Vue({
       return str;
     },
     baseIPBit: function() {
-      console.log("start");
       var str = "";
       var i = 0;
       var octets = this.baseIP.split(".");
       var that = this;
-      console.log("start");
       octets.forEach(function(octet) {
-        if(that.dec2bin(parseInt(octet)).length == 8) {
+        if (that.dec2bin(parseInt(octet)).length == 8) {
           str += that.dec2bin(parseInt(octet));
-        }
-        else {
+        } else {
           str += "00000000";
         }
 
       });
-        console.log("stop");
       return str;
+    },
+    lastIP: function() {
+      return this.bitToA(this.bitDeduct(this.bitAdd(this.baseIPBit, this.prefixToBit(this.basePrefix)), "00000000000000000000000000000001"));
+    },
+    basePrefixShow: function() {
+      return this.basePrefixBit.match(/.{1,8}/g);
+    },
+    baseIPShow: function() {
+      return this.baseIPBit.match(/.{1,8}/g);
     }
   },
   methods: {
@@ -156,7 +156,7 @@ var subnetting = new Vue({
       }
     },
     swapSubnettingHelp: function() {
-      if(!this.help)$(".help").hide().slideDown(300);
+      if (!this.help) $(".help").hide().slideDown(300);
       else $(".help").slideUp(300);
       this.help = !this.help;
     },
@@ -253,9 +253,9 @@ var subnetting = new Vue({
     },
     addToSubnetsCount: function(position, change) {
       this.subnetsCount = this.subnetsCount.replaceAt(position - 1, (parseInt(this.subnetsCount.charAt(position - 1)) + change).toString());
-      if(parseInt(this.subnetsCount.charAt(position - 1)) >= 2) {
+      if (parseInt(this.subnetsCount.charAt(position - 1)) >= 2) {
         this.addToSubnetsCount(position, -2);
-        this.addToSubnetsCount(position+1, 1);
+        this.addToSubnetsCount(position + 1, 1);
       }
       /*zaloha puvodni verze funkce
       if(parseInt(this.subnetsCount.charAt(position - 1)) >= 1) {
@@ -285,23 +285,38 @@ var subnetting = new Vue({
       this.subnets = [];
       this.subnetsCount = "00000000000000000000000000000000";
       var subnetCount = rand(this.subnetCountMin, this.subnetCountMax);
+
+      //generace počtu routerů(schéma);
+      var rCountOpts = [];
+      for (var i = 1; i <= 3; i++) {
+        var limitS = (i * 2) - 1;
+        var limitE = (i * 5) - 1;
+        if (subnetCount >= limitS && subnetCount <= limitE) {
+
+          if (rCountOpts.length == 0) rCountOpts.push(i);
+          else if (rand(1, 2) == 1) rCountOpts.push(i);
+        }
+      }
+      var rCount = rCountOpts[rand(1, rCountOpts.length) - 1];
+
       for (var i = 0; i < subnetCount; i++) {
-        console.log(this.countHosts());
         if (this.countHosts() >= this.hostsMax) {
           alert("Víc podsítí nelze vytvořit");
           break;
         }
         var limit;
+        var minLimit = (subnetCount - i - 1) * 4;
         if (this.basePrefix <= 24) {
-          limit = (subnetCount - i + 1) + Math.pow((subnetCount - i - 1), 2);
+          limit = Math.ceil(((subnetCount - i - 2)) + Math.pow((subnetCount - i - 1), 1.8));
+          if (limit < minLimit) limit = minLimit;
         } else {
-          limit = (subnetCount - i - 1) * 4;
+          limit = minLimit;
         }
         var max = this.convertToBit(bitFloor(this.hostsMax - this.countHosts() - limit));
         if (max < 2) max = 2;
         var bitRange = rand(2, max);
-        console.log("bitrange max: " + max);
-        this.addToSubnetsCount(bitRange,1);
+        if (rCount > subnetCount - i) bitRange = 2;
+        this.addToSubnetsCount(bitRange, 1);
         this.subnets.push({
           name: "Subnet " + 'abcdefghijklmnopqrstuvwxyz' [this.subnets.length].toUpperCase(),
           hosts: this.randInBitRange(bitRange),
@@ -318,7 +333,7 @@ var subnetting = new Vue({
           prefixCheckColor: ""
         });
       }
-      this.subnets = shuffle(this.subnets);
+      this.subnets = shuffle(this.subnets, rCount - 1);
       for (i = 0; i < this.subnets.length; i++) {
         this.subnets[i].name = "Subnet " + 'abcdefghijklmnopqrstuvwxyz' [i].toUpperCase();
       }
@@ -339,6 +354,202 @@ var subnetting = new Vue({
         if (a.name[7] > b.name[7]) return 1;
         return 0;
       });
+
+      var imgR = new Image();
+
+      imgR.onload = function() {
+        drawImageRs();
+      }
+      imgR.src = "img/r.png";
+      var imgS = new Image();
+      imgS.onload = function() {
+        drawImageSs();
+      }
+      imgS.src = "img/s.png";
+
+      var width = 1110;
+      var height = 520;
+      var offset = 350;
+      var offsetSubnetsX = 150;
+      var offsetSubnetsY = 125;
+
+
+      var rs = [];
+      var rsBetween = [];
+      for (var i = 0; i < rCount; i++) {
+        rs.push({
+          position: {
+            x: 0,
+            y: 0
+          },
+          subnets: []
+        });
+      }
+
+      var rDistribution = [];
+      var subnetsTotal = this.subnets.length;
+
+      for (var i = 0; i < rCount; i++) {
+        var rLimitMin = subnetsTotal - (((rCount - (i + 1)) * 4) + (rCount - 1));
+
+        if (rLimitMin < 1) rLimitMin = 1;
+        var rLimitMax = subnetsTotal - (rCount - 1) - (rCount - (i + 1));
+        if (rLimitMax > 4) rLimitMax = 4;
+        var add = rand(rLimitMin, rLimitMax);
+
+        rDistribution.push(add);
+        subnetsTotal -= add;
+      }
+
+      var k = 0;
+      for (var i = 0; i < rDistribution.length; i++) {
+        for (var j = 0; j < rDistribution[i]; j++) {
+          rs[i].subnets.push({
+            name: this.subnets[k].name,
+            hosts: this.subnets[k].hosts,
+            position: {
+              x: 0,
+              y: 0
+            },
+            placement: ""
+          });
+          k++;
+        }
+      }
+      for (var i = 1; i < rCount; i++) {
+        rsBetween.push({
+          name: this.subnets[k].name,
+          hosts: this.subnets[k].hosts,
+          position: {
+            x: 0,
+            y: 0
+          },
+          placement: ""
+        });
+        k++;
+      }
+
+      for (var i = 0; i < this.subnets.length; i++) {
+        this.subnets[i]
+      }
+
+      var canvas = document.getElementById("canvas");
+      var ctx = canvas.getContext("2d");
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      if (rCount == 1) {
+        rs[0].position.x = width / 2;
+        rs[0].position.y = height / 2;
+      } else if (rCount == 2) {
+        rs[0].position.x = width / 2 - offset / 2;
+        rs[0].position.y = height / 2;
+
+        rs[1].position.x = width / 2 + offset / 2;
+        rs[1].position.y = height / 2;
+      } else if (rCount == 3) {
+        rs[0].position.x = width / 2 - offset;
+        rs[0].position.y = height / 2;
+
+        rs[1].position.x = width / 2;
+        rs[1].position.y = height / 2;
+
+        rs[2].position.x = width / 2 + offset;
+        rs[2].position.y = height / 2;
+      } else {
+        throw new Error("Diagram draw error. Out of range.");
+      }
+      for (var i = 0; i < rCount; i++) {
+        var sCount = rs[i].subnets.length;
+        var subnetsUp;
+        if (sCount % 2 != 0) {
+          if (rand(1, 2) == 1) {
+            subnetsUp = Math.ceil(sCount / 2);
+          } else {
+            subnetsUp = Math.floor(sCount / 2);
+          }
+        } else {
+          subnetsUp = sCount / 2;
+        }
+
+
+        var subnetsDown = sCount - subnetsUp;
+        if ((subnetsUp < 0 || subnetsUp > 2) || (subnetsDown < 0 || subnetsDown > 2)) throw new Error("Diagram draw error. Subnets out of range.");
+        for (var j = 0; j < subnetsUp; j++) {
+
+          var subnet = rs[i].subnets[j];
+          subnet.position.y = height / 2 - offsetSubnetsY;
+
+          if (subnetsUp == 1) {
+            subnet.position.x = rs[i].position.x;
+          } else if (subnetsUp == 2) {
+            subnet.position.x = rs[i].position.x + (j - 0.5) * offsetSubnetsX;
+          }
+          subnet.placement = "up";
+        }
+        for (var j = subnetsUp; j < sCount; j++) {
+          var subnet = rs[i].subnets[j];
+          subnet.position.y = height / 2 + offsetSubnetsY;
+          if (subnetsDown == 1) {
+            subnet.position.x = rs[i].position.x;
+          } else if (subnetsDown == 2) {
+            subnet.position.x = rs[i].position.x + (j - subnetsUp - 0.5) * offsetSubnetsX;
+          } else {
+            throw new Error("Diagram draw error. Out of range.");
+          }
+          subnet.placement = "down";
+        }
+      }
+      ctx.beginPath();
+      var wirelessSize = 7;
+      ctx.font = '18px Nunito';
+      ctx.fillStyle = "white";
+      ctx.textAlign = "center";
+      for (var i = 0; i < rCount; i++) {
+        if (i != 0) {
+          ctx.moveTo(rs[i].position.x, rs[i].position.y + wirelessSize);
+          ctx.lineTo(rs[i - 1].position.x + (offset / 2) - wirelessSize, rs[i - 1].position.y + wirelessSize);
+          ctx.lineTo(rs[i].position.x - (offset / 2) + wirelessSize, rs[i].position.y - wirelessSize);
+          ctx.lineTo(rs[i - 1].position.x, rs[i - 1].position.y - wirelessSize);
+
+          ctx.fillText(rsBetween[i - 1].name, (rs[i].position.x + rs[i - 1].position.x) / 2, rs[i].position.y - 50);
+
+          ctx.fillText(rsBetween[i - 1].hosts + " hosts", (rs[i].position.x + rs[i - 1].position.x) / 2, rs[i].position.y - 25);
+        }
+        for (var j = 0; j < rs[i].subnets.length; j++) {
+          ctx.moveTo(rs[i].position.x, rs[i].position.y);
+          ctx.lineTo(rs[i].subnets[j].position.x, rs[i].subnets[j].position.y);
+
+          var margin;
+          if (rs[i].subnets[j].placement == "up") margin = -60;
+          else margin = 45;
+
+          ctx.fillText(rs[i].subnets[j].name, rs[i].subnets[j].position.x, rs[i].subnets[j].position.y + margin);
+          /*var text;
+          if(rs[i].subnets[j].hosts > 4) text = "hostů";
+          else text = "hosti";*/
+          ctx.fillText(rs[i].subnets[j].hosts + " hosts", rs[i].subnets[j].position.x, rs[i].subnets[j].position.y + margin + 25);
+        }
+      }
+
+      ctx.lineWidth = 3;
+      ctx.strokeStyle = 'white';
+      ctx.stroke();
+
+
+
+
+      function drawImageRs() {
+        for (var i = 0; i < rCount; i++) {
+          ctx.drawImage(imgR, rs[i].position.x - imgR.width / 2, rs[i].position.y - imgR.height / 2);
+        }
+      }
+
+      function drawImageSs() {
+        for (var i = 0; i < rCount; i++) {
+          for (var j = 0; j < rs[i].subnets.length; j++) {
+            ctx.drawImage(imgS, rs[i].subnets[j].position.x - imgS.width / 2, rs[i].subnets[j].position.y - imgS.height / 2);
+          }
+        }
+      }
     },
     check: function() {
       var rightColor = "green";
@@ -386,8 +597,8 @@ var subnetting = new Vue({
       var input = $("#switch input").val();
       var valid = true;
 
-      if (!isNumeric(input) || input%1 != 0) valid = false;
-      if (input < 2 || input > 15) valid = false;
+      if (!isNumeric(input) || input % 1 != 0) valid = false;
+      if (input < 2 || input > 14) valid = false;
       if (valid) {
         $("#switch span").eq(0).text($("#switch input").val());
         if ($("#switch input").val() <= 4) $("#switch span").eq(1).text("subnety");
@@ -424,4 +635,4 @@ $(document).keypress(function(e) {
     subnetting.save();
   }
 });
-$(".main").css("visibility","visible");
+$(".main").css("visibility", "visible");
