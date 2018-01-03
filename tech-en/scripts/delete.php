@@ -1,9 +1,5 @@
 <?php
 
-header('Content-Type: application/json');
-
-$id = $_GET['id'];
-
 include_once 'dbh.inc.php';
 
 $id=$_POST['id'];
