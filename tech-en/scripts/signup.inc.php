@@ -1,9 +1,5 @@
 <?php
-/*
-*   TODO:
-*   Add salting password and second hashing
-*   Fix bug with signup user when is the inputs are bad
-*/
+
 if (isset($_POST['submit'])) {
 	
 	include 'dbh.inc.php';
