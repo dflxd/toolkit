@@ -7,19 +7,28 @@
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
   <link rel="stylesheet" href="css/main.css">
   <link rel="stylesheet" href="css/subnetting.css">
-  <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Nunito:400,700" rel="stylesheet">
   <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.5.3/vue.js"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <script defer src="https://use.fontawesome.com/releases/v5.0.4/js/all.js"></script>
 </head>
 
 <body>
   <div id="subnetting">
     <div class="smallMenu">
-      <div class="menuBack" title="Zpět na úvodní stránku"><a href="index.html"><i class="fa fa-chevron-left" aria-hidden="true"></i></a></div>
-      <div class="menuSettings" title="Nastavení" @click="swapSettings" v-bind:class="{'active': settings}"><i class="fa fa-wrench" aria-hidden="true"></i></div>
-      <div class="menuSubnettingHelp" title="Nápověda" @click="swapSubnettingHelp" v-bind:class="{'active': help, 'border': this.help && this.settings}"><i class="fa fa-question" aria-hidden="true"></i></div>
+
+
+
+
+      <div class="menuItem menuSettings" title="Nastavení" @click="swapSettings" v-bind:class="{'active': settings}"><i class="fa fa-cog" aria-hidden="true"></i></div>
+      <div class="menuItem menuSubnettingHelp" title="Nápověda" @click="swapSubnettingHelp" v-bind:class="{'active': help, 'border': this.help && this.settings}"><i class="fas fa-question-circle" aria-hidden="true"></i></div>
+      <div class="menuItem menuBack" title="zpet" v-if="settings"><a href="index.html"><i class="fas fa-home"></i><span>ToolkIT</span></a></div>
     </div>
+
+
+
+
+
     <div class="help">
       <div class="">
         <div class="title">Základní pravidla pro subnetting</div>
@@ -40,56 +49,133 @@
     <div class="settings" v-show="settings">
       <div class="container">
         <div class="area">
-          <div class="inputs" :style="{ 'opacity': inputDisabled ? 0.5 : 1.0 }">
-            <h1>Subnetting</h1>
-            <div class="ip">IP Adresa</div>
-            <span>&nbsp;</span>
-            <div class="prefix">Prefix</div>
-            <input type="text" v-model="baseIP" class="ip" :disabled="inputDisabled" :style="{'border-color': baseIPColor }">
-            <span>/</span>
-            <input type="text" v-model="basePrefix" class="prefix" :disabled="inputDisabled" :style="{ 'border-color': basePrefixColor }">
+          <div class="inputs clearfix" :style="{ 'opacity': inputDisabled ? 0.5 : 1.0 }" v-if="!specs">
+<h1>Subnetting</h1>
+            <table class="mainIn">
+              <tr>
+                <td>
+                  Počet subnetů
+                </td>
+                <td class="space">
+
+                </td>
+                <td class="ip">
+                  IP Adresa
+                </td>
+                <td>
+
+                </td>
+                <td class="prefix">
+                  Prefix
+                </td>
+
+
+              </tr>
+              <tr>
+                <td class="countHosts">
+                    <input type="text" v-model="subnetCountIn" :disabled="inputDisabled" :style="{ 'border-color': baseCountColor }" placeholder="(2-14)">
+                </td>
+                <td class="e">
+                  &nbsp;
+                </td>
+                <td class="ip">
+                  <input type="text" v-model="baseIPIn" class="ip" :disabled="inputDisabled" :style="{'border-color': baseIPColor }" placeholder="(náhodná)">
+                </td>
+                <td class="space">
+                  /
+                </td>
+                <td class="prefix">
+                  <input type="text" v-model="prefixIn" class="prefix" :disabled="inputDisabled" :style="{ 'border-color': basePrefixColor }">
+                </td>
+
+
+              </tr>
+            </table>
+
+
+
+
+            <div class="presets">
+              presets
+            </div>
             <div class="diff">
-              <input type="radio" name="diff" id="z" value="2" v-model="picked" :disabled="inputDisabled">
-              <label for="z" class="desc">
-                <span>začátečník</span>
-                <span>2-3 subnety</span>
+
+              <input type="radio" name="diff" id="z"  :disabled="inputDisabled">
+              <label for="z" class="desc" @click="setDiff1">
+                <div>
+                  <span>začátečník</span>
+                  <span>192.0.2.0 /24</span>
+                  <span>2-3 subnety</span>
+                </div>
               </label>
-              <input type="radio" name="diff" id="p" value="4" v-model="picked" :disabled="inputDisabled">
-              <label for="p" class="desc">
-                <span>pokročilý</span>
-                <span>4-5 subnetů</span>
+              <input type="radio" name="diff" id="pr" :disabled="inputDisabled" checked>
+              <label for="pr" class="desc" @click="setDiff2">
+                <div>
+                  <span>průměrný</span>
+                  <span>192.0.2.0 /24</span>
+                  <span>4-6 subnetů</span>
+                </div>
+
               </label>
-              <input type="radio" name="diff" id="e" value="6" v-model="picked" :disabled="inputDisabled">
-              <label for="e" class="desc">
-                <span>expert</span>
-                <span>6-7 subnetů</span>
+              <input type="radio" name="diff" id="po" :disabled="inputDisabled">
+              <label for="po" class="desc" @click="setDiff3">
+                <div>
+                  <span>pokročilý</span>
+                  <span>192.0.2.?</span>
+                  <span>/24 - /26</span>
+                  <span>4-8 subnetů</span>
+                </div>
               </label>
-              <input type="radio" name="diff" id="c" value="custom" v-model="picked" :disabled="inputDisabled">
-              <label for="c" class="desc" id="customLabel" @click="cust">
-                <span id="switch">
-                  <span id="custom">custom</span>
-                  <input type="text" placeholder="2-14">
-                  <span></span>
-                </span>
-                <span></span>
+              <input type="radio" name="diff" id="e" :disabled="inputDisabled">
+              <label for="e" class="desc" @click="setDiff4">
+                <div>
+                  <span>expert</span>
+                  <span>náhodná IP</span>
+                  <span>/22 - /26</span>
+                  <span>4-8 subnetů</span>
+                </div>
               </label>
             </div>
           </div>
+          <div class="specs" v-if="specs">
+            <h3>Další nastavení</h3>
+              <table>
+                <tr>
+                  <td>
+                    Upřednostnit počítání s maskou podsítě
+                  </td>
+                  <td>
+
+    <label for="cbx" class="label-cbx">
+      <input id="cbx" type="checkbox" class="invisible" v-model="specsMask">
+      <div class="checkbox">
+        <svg width="20px" height="20px" viewBox="0 0 20 20">
+          <path d="M3,1 L17,1 L17,1 C18.1045695,1 19,1.8954305 19,3 L19,17 L19,17 C19,18.1045695 18.1045695,19 17,19 L3,19 L3,19 C1.8954305,19 1,18.1045695 1,17 L1,3 L1,3 C1,1.8954305 1.8954305,1 3,1 Z"></path>
+          <polyline points="4 11 8 15 16 6"></polyline>
+        </svg>
+      </div>
+    </label>
+
+                  </td>
+                </tr>
+              </table>
+          </div>
           <div class="opts">
 
-            <button type="button" class="additional">
-              <i class="fa fa-cog" aria-hidden="true"></i>wip
+              <button type="button" class="additional" @click="swapSpecs" title="Další nastavení" v-bind:class="{'active': specs}" :disabled="inputDisabled">
+              <i class="fas fa-sliders-h" aria-hidden="true"></i>
             </button>
 
 
-            <button type="button" @click="generateNew" :disabled="!picked || !ipValid || !prefixValid || !comboValid" v-if="!inputDisabled">
-              Nový příklad <i class="fa fa-arrow-right" aria-hidden="true"></i>
+
+            <button class="dsdd" name="dsdd" type="button" @click="generateNew" :disabled="!ipValid || !prefixValid || !comboValid || !countValid" v-if="!inputDisabled">
+              Nový příklad <i class="fas fa-arrow-right" aria-hidden="true"></i>
             </button>
             <button type="button" @click="changeSettings" v-if="inputDisabled">
-              Změnit nastavení <i class="fa fa-wrench" aria-hidden="true"></i>
+              Změnit nastavení
             </button>
-            <button type="button" @click="swapSettings" v-if="inputDisabled">
-              <i class="fa fa-arrow-left" aria-hidden="true"></i> zpět
+            <button class="dsd" name="dsd" type="button" @click="swapSettings" v-if="inputDisabled">
+              zpět
             </button>
           </div>
         </div>

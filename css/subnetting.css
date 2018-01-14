@@ -99,26 +99,39 @@ body {
   top: 50%;
   transform: translateY(-50%);
 }
-#subnetting .settings .area button {
-  border-color: white;
-}
-#subnetting .settings .area div {
-  display: inline-block;
-}
-#subnetting .settings .area .ip {
-  width: calc(80% - 20px);
-}
-#subnetting .settings .area .prefix {
-  width: calc(20% - 20px);
-}
-#subnetting .settings .area div > input,
-#subnetting .settings .area div > div {
+#subnetting .settings .area .mainIn tr td input {
+  width: 100%;
   text-align: center;
-  margin: 5px;
-  padding: 5px;
   border-color: white;
+}
+#subnetting .settings .area .mainIn tr td.ip {
+  width: 60%;
+}
+#subnetting .settings .area .mainIn tr td.prefix,
+#subnetting .settings .area .mainIn tr td.countHosts {
+  width: 20%;
+}
+#subnetting .settings .area .mainIn tr td.space {
+  padding: 0 10px;
+}
+#subnetting .settings .area .presets {
+  transform: rotate(-90deg);
+  /* float: left; */
+  font-size: 24px;
+  /* font-weight: bold; */
+  /* text-align: left; */
+  float: left;
+  text-transform: uppercase;
+  top: 115px;
+  left: -7px;
+  position: relative;
+  letter-spacing: 3px;
+  display: inline-block;
+  width: 7%;
 }
 #subnetting .settings .area .diff {
+  float: right;
+  width: 93%;
   display: flex;
   padding: 0;
   margin-top: 30px;
@@ -130,13 +143,25 @@ body {
   background: rgba(0, 0, 0, 0.3);
   display: block;
   flex: 1;
-  padding: 20px 0px;
+  padding: 12px 0px;
   margin: 0px 5px;
+  user-select: none;
   cursor: pointer;
-}
-#subnetting .settings .area .diff .desc span:nth-child(2) {
   font-size: 16px;
-  display: inline-block;
+}
+#subnetting .settings .area .diff .desc span:nth-child(2),
+#subnetting .settings .area .diff .desc span:nth-child(3) {
+  display: block;
+}
+#subnetting .settings .area .diff .desc span:nth-child(1) {
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 18px;
+}
+#subnetting .settings .area .diff .desc div {
+  position: relative;
+  top: 50%;
+  transform: translateY(-50%);
 }
 #subnetting .settings .area .diff .desc:nth-child(2) {
   margin-left: 0;
@@ -176,7 +201,7 @@ body {
   opacity: 0;
 }
 #subnetting .settings .area .diff .desc:nth-child(6) {
-  box-shadow: inset 0px 0px 0px 2px rgba(255, 0, 0, 0.5);
+  box-shadow: inset 0px 0px 0px 2px rgba(255, 96, 0, 0.5);
   position: relative;
   z-index: 1;
 }
@@ -188,77 +213,158 @@ body {
   height: 100%;
   left: 0;
   top: 0;
-  background: rgba(255, 0, 0, 0.2);
-  border: 2px solid #ff0000;
+  background: rgba(255, 96, 0, 0.2);
+  border: 2px solid #ff6000;
   opacity: 0;
 }
 #subnetting .settings .area .diff .desc:nth-child(8) {
   margin-right: 0;
-  border-radius: 0 10px 10px 0;
-  box-shadow: inset 0px 0px 0px 2px rgba(192, 192, 192, 0.5);
+  box-shadow: inset 0px 0px 0px 2px rgba(255, 0, 0, 0.5);
   position: relative;
+  border-radius: 0 10px 10px 0;
   z-index: 1;
-}
-#subnetting .settings .area .diff .desc:nth-child(8) #switch {
-  display: inline-block;
-  top: 50%;
-  left: 50%;
-  position: absolute;
-  transform: translate(-50%, -50%);
-}
-#subnetting .settings .area .diff .desc:nth-child(8) #switch input {
-  width: 100px;
 }
 #subnetting .settings .area .diff .desc:nth-child(8):before {
   content: "";
+  border-radius: 0 10px 10px 0;
   display: block;
   position: absolute;
-  border-radius: 0 10px 10px 0;
   width: 100%;
   height: 100%;
   left: 0;
   top: 0;
-  background: rgba(192, 192, 192, 0.2);
-  border: 2px solid #ffffff;
+  background: rgba(255, 0, 0, 0.2);
+  border: 2px solid #ff0000;
   opacity: 0;
-}
-#subnetting .settings .area .diff .desc:nth-child(8) input {
-  display: none;
-  width: 60%;
-  height: 50px;
-  text-align: center;
-  border-color: white;
-  background: rgba(0, 0, 0, 0.5);
 }
 #subnetting .settings .area .diff input[type="radio"]:checked + label:before {
   opacity: 0.7;
   z-index: -1;
 }
+#subnetting .settings .area .specs {
+  height: 346px;
+  width: 100%;
+  position: relative;
+}
+#subnetting .settings .area .specs h3 {
+  margin-bottom: 30px;
+}
+#subnetting .settings .area .specs table {
+  position: relative;
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: left;
+}
+#subnetting .settings .area .specs table tr td:nth-child(2) {
+  padding-left: 30px;
+}
+#subnetting .settings .area .specs .label-cbx {
+  user-select: none;
+  cursor: pointer;
+  margin-bottom: 0;
+}
+#subnetting .settings .area .specs .label-cbx input:checked + .checkbox {
+  border-color: #20C2E0;
+}
+#subnetting .settings .area .specs .label-cbx input:checked + .checkbox svg path {
+  fill: #20C2E0;
+}
+#subnetting .settings .area .specs .label-cbx input:checked + .checkbox svg polyline {
+  stroke-dashoffset: 0;
+}
+#subnetting .settings .area .specs .label-cbx:hover .checkbox svg path {
+  stroke-dashoffset: 0;
+}
+#subnetting .settings .area .specs .label-cbx .checkbox {
+  position: relative;
+  top: 2px;
+  float: left;
+  margin-right: 8px;
+  width: 20px;
+  height: 20px;
+  border: 2px solid #C8CCD4;
+  border-radius: 3px;
+}
+#subnetting .settings .area .specs .label-cbx .checkbox svg {
+  position: absolute;
+  top: -2px;
+  left: -2px;
+}
+#subnetting .settings .area .specs .label-cbx .checkbox svg path {
+  fill: none;
+  stroke: #20C2E0;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 71px;
+  stroke-dashoffset: 71px;
+  transition: all 0.6s ease;
+}
+#subnetting .settings .area .specs .label-cbx .checkbox svg polyline {
+  fill: none;
+  stroke: #FFF;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 18px;
+  stroke-dashoffset: 18px;
+  transition: all 0.3s ease;
+}
+#subnetting .settings .area .specs .label-cbx > span {
+  pointer-events: none;
+  vertical-align: middle;
+}
+#subnetting .settings .area .specs .cntr {
+  position: absolute;
+  top: 45%;
+  left: 0;
+  width: 100%;
+  text-align: center;
+}
+#subnetting .settings .area .specs .invisible {
+  position: absolute;
+  z-index: -1;
+  width: 0;
+  height: 0;
+  opacity: 0;
+}
 #subnetting .settings .area .opts {
   width: 100%;
-  margin-top: 20px;
+  margin-top: 30px;
+}
+#subnetting .settings .area .opts button:not(:first-child) {
+  margin-left: 10px;
 }
 #subnetting .settings .area .opts .additional {
   float: left;
   position: relative;
 }
-#subnetting .settings .area .opts .additional i {
-  /* line-height: 216px; */
+#subnetting .settings .area .opts .additional.active {
+  background: #49eeff;
+}
+#subnetting .settings .area .opts .additional.active svg {
+  color: #222;
+}
+#subnetting .settings .area .opts .additional.active:hover {
+  background: #49eeff;
+}
+#subnetting .settings .area .opts .additional svg {
+  color: white;
+  /* line-height: 216px;*/
   vertical-align: middle;
-  margin: 0 5px;
-  margin-top: -3px;
+  margin: 2px 0px;
   /* margin: 0 10px; */
   top: 0px;
-  font-size: 24px;
+  font-size: 26px;
   bottom: 0px;
   right: 0;
   left: 0;
   /* position: absolute; */
+  float: left;
+  position: relative;
 }
 #subnetting .settings .area .opts button {
   float: right;
-  margin: 5px;
-  padding: 10px;
 }
 #subnetting table.inter {
   width: 100%;

@@ -36,9 +36,16 @@ var subnetting = new Vue({
   el: '#subnetting',
   data: {
     baseIP: "192.0.2.0",
+    baseIPIn: "192.0.2.0",
     basePrefix: 24,
+    prefixIn: 24,
+    basePrefixMin: 24,
+    basePrefixMax: 24,
+
+
+
+    subnetCountIn: "4-6",
     subnets: [],
-    picked: null,
     subnetCountMin: 0,
     subnetCountMax: 0,
     subnetsCount: "00000000000000000000000000000000",
@@ -47,44 +54,100 @@ var subnetting = new Vue({
     inputDisabled: false,
     help: false,
     fillAll: "",
+    specsMask:false,
+    specs: false
   },
   computed: {
+    countValid: function() {
+      var valid = true;
+      var count = this.subnetCountIn;
+      if(count.toString().length <= 2) {
+        if (!isNumeric(count) || parseInt(count) < 2 || parseInt(count) > 14 || count % 1 != 0) valid = false;
+        if(valid) {
+          this.subnetCountMin = count;
+          this.subnetCountMax = count;
+        }
+      }
+      else {
+        var count1 = count.split("-")[0];
+        var count2 = count.split("-")[1];
+
+        if (!isNumeric(count1) || parseInt(count1) < 2 || parseInt(count1) > 14 || count1 % 1 != 0) valid = false;
+        if (!isNumeric(count2) || parseInt(count2) < 2 || parseInt(count2) > 14 || count2 % 1 != 0) valid = false;
+        if(parseInt(count1)  >= parseInt(count2)) valid = false;
+
+        if(valid) {
+          this.subnetCountMin = count1;
+          this.subnetCountMax = count2;
+        }
+      }
+
+      return valid;
+    },
     ipValid: function() {
       var valid = true;
-      var ip = this.baseIP;
-
+      var ip = this.baseIPIn;
+if(ip == "") {
+  ip = "?.?.?.?";
+}
       var octets = ip.split(".");
       if (octets.length != 4) {
         valid = false;
       } else {
         octets.forEach(function(octet) {
-          if (!isNumeric(octet) || parseInt(octet) < 0 || parseInt(octet) > 255) valid = false;
+          if(octet != "?") {
+              if (!isNumeric(octet) || parseInt(octet) < 0 || parseInt(octet) > 255) valid = false;
+          }
+
+
+
         });
       }
       return valid;
     },
     prefixValid: function() {
       var valid = true;
-      var prefix = this.basePrefix;
+      var prefix = this.prefixIn;
+      if(prefix.toString().length <= 2) {
+        if (!isNumeric(prefix) || parseInt(prefix) < 0 || parseInt(prefix) > 28 || prefix % 1 != 0) valid = false;
+        if(valid) {
+          this.basePrefixMin = prefix;
+          this.basePrefixMax = prefix;
+        }
+      }
+      else {
+        var prefix1 = prefix.split("-")[0];
+        var prefix2 = prefix.split("-")[1];
 
-      if (!isNumeric(prefix) || parseInt(prefix) < 0 || parseInt(prefix) > 29 || prefix % 1 != 0) valid = false;
+        if (!isNumeric(prefix1) || parseInt(prefix1) < 0 || parseInt(prefix1) > 28 || prefix1 % 1 != 0) valid = false;
+        if (!isNumeric(prefix2) || parseInt(prefix2) < 0 || parseInt(prefix2) > 28 || prefix2 % 1 != 0) valid = false;
+        if(parseInt(prefix1) >= parseInt(prefix2)) valid = false;
+
+        if(valid) {
+          this.basePrefixMin = prefix1;
+          this.basePrefixMax = prefix2;
+        }
+      }
 
       return valid;
     },
     comboValid: function() {
-      var ip = this.baseIPBit;
-      var prefix = this.basePrefixBit;
+      var ip = this.baseIPInBit;
+
+      var prefix = this.basePrefixMinBit;
       var valid = true;
-      if (ip.length == 32 && prefix.length == 32) {
-        for (var i = 0; i < 32; i++) {
-          if (prefix.charAt(i) == 0 && ip.charAt(i) == 1) {
-            valid = false;
-            break;
+
+        if (ip.length == 32 && prefix.length == 32) {
+          for (var i = 0; i < 32; i++) {
+            if (prefix.charAt(i) == 0 && ip.charAt(i) == 1) {
+              valid = false;
+              break;
+            }
           }
+        } else {
+          valid = false;
         }
-      } else {
-        valid = false;
-      }
+
       return valid;
     },
     baseIPColor: function() {
@@ -95,6 +158,11 @@ var subnetting = new Vue({
     basePrefixColor: function() {
       if (!this.prefixValid) return "red";
       else if (!this.comboValid) return "#f40";
+      else return "";
+    },
+    baseCountColor: function() {
+      if (!this.countValid) return "red";
+      else if (!this.countValid) return "#f40";
       else return "";
     },
     hostsMax: function() {
@@ -112,12 +180,31 @@ var subnetting = new Vue({
       }
       return str;
     },
-    baseIPBit: function() {
+    basePrefixMinBit: function() {
+      var str = "";
+      var i = 0;
+      while (i < 32) {
+        if (i++ < this.basePrefixMin) str += "1";
+        else str += "0";
+      }
+      return str;
+    },
+    basePrefixMaxBit: function() {
+      var str = "";
+      var i = 0;
+      while (i < 32) {
+        if (i++ < this.basePrefixMax) str += "1";
+        else str += "0";
+      }
+      return str;
+    },
+    baseIPBit: function(){
       var str = "";
       var i = 0;
       var octets = this.baseIP.split(".");
       var that = this;
       octets.forEach(function(octet) {
+        if(octet == "?") octet = 0;
         if (that.dec2bin(parseInt(octet)).length == 8) {
           str += that.dec2bin(parseInt(octet));
         } else {
@@ -126,6 +213,27 @@ var subnetting = new Vue({
 
       });
       return str;
+
+    },
+    baseIPInBit: function(){
+      var str = "";
+      var i = 0;
+      if(this.baseIPIn == "") {
+        return "00000000000000000000000000000000";
+      }
+      var octets = this.baseIPIn.split(".");
+      var that = this;
+      octets.forEach(function(octet) {
+        if(octet == "?") octet = 0;
+        if (that.dec2bin(parseInt(octet)).length == 8) {
+          str += that.dec2bin(parseInt(octet));
+        } else {
+          str += "00000000";
+        }
+
+      });
+      return str;
+
     },
     lastIP: function() {
       return this.bitToA(this.bitDeduct(this.bitAdd(this.baseIPBit, this.prefixToBit(this.basePrefix)), "00000000000000000000000000000001"));
@@ -146,8 +254,7 @@ var subnetting = new Vue({
     },
     changeSettings: function() {
       this.inputDisabled = false;
-      $("#c").prop('checked', false);
-      this.picked = false;
+
       this.subnets = [];
     },
     swapSettings: function() {
@@ -159,6 +266,9 @@ var subnetting = new Vue({
       if (!this.help) $(".help").hide().slideDown(300);
       else $(".help").slideUp(300);
       this.help = !this.help;
+    },
+    swapSpecs: function() {
+      this.specs = !this.specs;
     },
     convertToBit: function(n) {
       var bit = 0;
@@ -266,25 +376,63 @@ var subnetting = new Vue({
           this.subnetsCount = this.subnetsCount.replaceAt(position - 1, (parseInt(this.subnetsCount.charAt(position - 1)) + 1).toString());
       }*/
     },
+    toIP: function(ip) {
+      if(ip == "") ip = "?.?.?.?";
+
+      var str = "";
+      var i = 0;
+      while (i < 32) {
+        if (i++ < this.basePrefix) str += "1";
+        else str += "0";
+      }
+var basePrefixBit = str;
+
+      var newIPBit = "";
+      var newIP = "";
+      var octets = ip.split(".");
+      var i = 0;
+      if (octets.length != 4) {
+        throw "Invalid ip";
+      } else {
+        octets.forEach(function(octet)     {
+          if(octet == "?") {
+            var octetBit = "";
+            for (var j = 0; j < 8; j++) {
+
+              if(basePrefixBit.charAt(8*i+j) == 1) octetBit += rand(0,1);
+              else octetBit += "0";
+            }
+            newIP += subnetting.bin2dec(octetBit);
+          }
+          else {
+            newIP += octet;
+          }
+          i++;
+          if(i < 4) newIP += ".";
+        });
+      }
+      return newIP;
+    },
     generateNew: function() {
       this.settings = false;
       this.inputDisabled = true;
-      var chosenSubnetsCount = $('input[name=diff]:checked', '.diff').val();
-      if (chosenSubnetsCount == "custom") {
-        this.subnetCountMin = parseInt($("#custom").text());
-        this.subnetCountMax = parseInt($("#custom").text());
-      } else {
-        this.subnetCountMin = parseInt(chosenSubnetsCount);
-        this.subnetCountMax = this.subnetCountMin + 1;
-      }
       this.generate();
     },
     generate: function() {
+
+      this.basePrefix = rand( parseInt(this.basePrefixMin) , parseInt(this.basePrefixMax) );
+      var subnetCount = rand( parseInt(this.subnetCountMin) , parseInt(this.subnetCountMax) );
+      if(Math.pow(2,29-this.basePrefix) < subnetCount) {
+        subnetCount = Math.pow(2,29-this.basePrefix);
+
+      }
+
+      this.baseIP = this.toIP(this.baseIPIn);
+
       this.answers = false;
       $(".settings").hide();
       this.subnets = [];
       this.subnetsCount = "00000000000000000000000000000000";
-      var subnetCount = rand(this.subnetCountMin, this.subnetCountMax);
 
       //generace počtu routerů(schéma);
       var rCountOpts = [];
@@ -305,16 +453,17 @@ var subnetting = new Vue({
           break;
         }
         var limit;
-        var minLimit = (subnetCount - i - 1) * 4;
+        var minLimit = (subnetCount - i - 1) * 8;
         if (this.basePrefix <= 24) {
-          limit = Math.ceil(((subnetCount - i - 2)) + Math.pow((subnetCount - i - 1), 1.8));
+        //  limit = Math.ceil(((subnetCount - i - 2)) + Math.pow((subnetCount - i - 1), 1.8));
+        limit = Math.ceil(Math.pow((subnetCount - i), 2)-(i*2));
           if (limit < minLimit) limit = minLimit;
         } else {
           limit = minLimit;
         }
         var max = this.convertToBit(bitFloor(this.hostsMax - this.countHosts() - limit));
-        if (max < 2) max = 2;
-        var bitRange = rand(2, max);
+        if (max < 3) max = 3;
+        var bitRange = rand(3, max);
         if (rCount > subnetCount - i) bitRange = 2;
         this.addToSubnetsCount(bitRange, 1);
         this.subnets.push({
@@ -334,6 +483,7 @@ var subnetting = new Vue({
         });
       }
       this.subnets = shuffle(this.subnets, rCount - 1);
+
       for (i = 0; i < this.subnets.length; i++) {
         this.subnets[i].name = "Subnet " + 'abcdefghijklmnopqrstuvwxyz' [i].toUpperCase();
       }
@@ -414,9 +564,13 @@ var subnetting = new Vue({
             placement: ""
           });
           k++;
+
         }
       }
+
       for (var i = 1; i < rCount; i++) {
+
+
         rsBetween.push({
           name: this.subnets[k].name,
           hosts: this.subnets[k].hosts,
@@ -593,7 +747,36 @@ var subnetting = new Vue({
     resetPrefix: function(item) {
       item.prefixCheckColor = "";
     },
-    save: function() {
+    setDiff1: function() {
+      if(!this.inputDisabled) {
+      this.baseIPIn = "192.0.2.0";
+      this.prefixIn = "24";
+      this.subnetCountIn = "2-3";
+      }
+    },
+    setDiff2: function() {
+      if(!this.inputDisabled) {
+      this.baseIPIn = "192.0.2.0";
+      this.prefixIn = "24";
+      this.subnetCountIn = "4-6";
+      }
+    },
+    setDiff3: function() {
+      if(!this.inputDisabled) {
+      this.baseIPIn = "192.0.2.?";
+      this.prefixIn = "24-26";
+      this.subnetCountIn = "4-8";
+      }
+    },
+    setDiff4: function() {
+      if(!this.inputDisabled) {
+        this.baseIPIn = "";
+        this.prefixIn = "22-26";
+        this.subnetCountIn = "4-8";
+      }
+    },
+
+    /*save: function() {
       var input = $("#switch input").val();
       var valid = true;
 
@@ -627,12 +810,8 @@ var subnetting = new Vue({
         });
 
       }
-    }
+    }*/
   }
 });
-$(document).keypress(function(e) {
-  if (e.which == 13) {
-    subnetting.save();
-  }
-});
+
 $(".main").css("visibility", "visible");

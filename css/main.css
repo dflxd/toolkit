@@ -1,5 +1,7 @@
-.clearfix {
+.clearfix:after {
+  content: "";
   clear: both;
+  display: block;
 }
 body,
 html {
@@ -87,6 +89,11 @@ h1 {
   font-size: 35px;
   border: 2px solid #ddd;
 }
+.smallMenu.smallMenuRight {
+  top: 20px;
+  left: auto;
+  right: 20px;
+}
 .smallMenu div {
   cursor: pointer;
   width: 50px;
@@ -106,14 +113,32 @@ h1 {
 .smallMenu div:not(:first-child) {
   border-left: 1px solid #ddd;
 }
-.smallMenu div.menuBack i {
+.smallMenu div.menuItem {
   position: relative;
-  right: 1px;
-  top: 3px;
 }
-.smallMenu div.menuSettings i {
+.smallMenu div.menuItem svg {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+.smallMenu div.menuBack {
+  width: 100px;
+}
+.smallMenu div.menuBack a {
+  text-decoration: none;
+}
+.smallMenu div.menuBack span {
+  font-size: 16px;
   position: relative;
-  top: 1px;
+  left: 18px;
+  top: -4px;
+  line-height: normal;
+}
+.smallMenu div.menuBack svg {
+  font-size: 24px;
+  left: 10%;
+  transform: translate(0%, -50%);
 }
 .smallMenu div.menuSubnettingHelp i {
   position: relative;

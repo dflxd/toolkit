@@ -1,7 +1,9 @@
 //out: ../css/main.css
 
-.clearfix {
+.clearfix:after {
+  content: "";
   clear: both;
+  display: block;
 }
 
 body,
@@ -107,6 +109,12 @@ h1 {
   font-size: 35px;
   border: 2px solid #ddd;
 
+  &.smallMenuRight {
+    top: 20px;
+    left: auto;
+    right: 20px;
+  }
+
   div {
     cursor: pointer;
     width: 50px;
@@ -128,15 +136,37 @@ h1 {
       border-left: 1px solid #ddd;
     }
 
-    &.menuBack i {
-      position: relative;
-      right: 1px;
-      top: 3px;
-    }
 
-    &.menuSettings i {
+
+    &.menuItem{
       position: relative;
-      top: 1px;
+      svg {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%,-50%);
+      }
+    }
+    &.menuBack{
+      width: 100px;
+      a {
+        text-decoration: none;
+      }
+      span {
+        font-size: 16px;
+        position: relative;
+        left: 18px;
+        top: -4px;
+        line-height: normal;
+
+
+
+      }
+      svg {
+        font-size: 24px;
+      left: 10%;
+      transform: translate(0%,-50%);
+      }
     }
 
     &.menuSubnettingHelp i {
