@@ -340,13 +340,14 @@ body {
   position: relative;
 }
 #subnetting .settings .area .opts .additional.active {
-  background: #49eeff;
+  background: #ddd;
+  border-color: #15a;
 }
 #subnetting .settings .area .opts .additional.active svg {
-  color: #222;
+  color: #15a;
 }
 #subnetting .settings .area .opts .additional.active:hover {
-  background: #49eeff;
+  background: #ddd;
 }
 #subnetting .settings .area .opts .additional svg {
   color: white;

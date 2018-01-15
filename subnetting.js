@@ -41,7 +41,7 @@ var subnetting = new Vue({
     prefixIn: 24,
     basePrefixMin: 24,
     basePrefixMax: 24,
-
+    diff: "2",
 
 
     subnetCountIn: "4-6",
@@ -54,10 +54,23 @@ var subnetting = new Vue({
     inputDisabled: false,
     help: false,
     fillAll: "",
-    specsMask:false,
+    specsMask:true,
     specs: false
   },
   computed: {
+    thediff: function() {
+      var result = "";
+
+
+
+      if(this.baseIPIn == "192.0.2.0" && this.prefixIn == "24" && this.subnetCountIn == "2-3") result = "1";
+      else if(this.baseIPIn == "192.0.2.0" && this.prefixIn == "24" && this.subnetCountIn == "4-6") result = "2";
+      else if(this.baseIPIn == "192.0.2.?" && this.prefixIn == "24-26" && this.subnetCountIn == "4-8") result = "3";
+      else if(this.baseIPIn == "" && this.prefixIn == "22-26" && this.subnetCountIn == "4-8") result = "4";
+      this.diff = result;
+      return result;
+
+    },
     countValid: function() {
       var valid = true;
       var count = this.subnetCountIn;
@@ -71,7 +84,7 @@ var subnetting = new Vue({
       else {
         var count1 = count.split("-")[0];
         var count2 = count.split("-")[1];
-
+        if(count.split("-").length > 2) valid = false;
         if (!isNumeric(count1) || parseInt(count1) < 2 || parseInt(count1) > 14 || count1 % 1 != 0) valid = false;
         if (!isNumeric(count2) || parseInt(count2) < 2 || parseInt(count2) > 14 || count2 % 1 != 0) valid = false;
         if(parseInt(count1)  >= parseInt(count2)) valid = false;
@@ -119,6 +132,7 @@ if(ip == "") {
         var prefix1 = prefix.split("-")[0];
         var prefix2 = prefix.split("-")[1];
 
+        if(prefix.split("-").length > 2) valid = false;
         if (!isNumeric(prefix1) || parseInt(prefix1) < 0 || parseInt(prefix1) > 28 || prefix1 % 1 != 0) valid = false;
         if (!isNumeric(prefix2) || parseInt(prefix2) < 0 || parseInt(prefix2) > 28 || prefix2 % 1 != 0) valid = false;
         if(parseInt(prefix1) >= parseInt(prefix2)) valid = false;
@@ -246,6 +260,20 @@ if(ip == "") {
     }
   },
   methods: {
+    prefixToMask: function (prefix) {
+      var bit = "";
+      for (var i = 0; i < 32; i++) {
+        if(i < prefix) bit += "1";
+        else bit += "0";
+      }
+      var a = "";
+      a += this.bin2dec(bit.slice(0, 8)).toString() + ".";
+      a += this.bin2dec(bit.slice(8, 16)).toString() + ".";
+      a += this.bin2dec(bit.slice(16, 24)).toString() + ".";
+      a += this.bin2dec(bit.slice(24, 32)).toString();
+
+      return a;
+    },
     fillAllTrigger: function() {
       for (var i = 0; i < this.subnets.length; i++) {
         this.subnets[i].inFirstA = this.fillAll;
@@ -471,12 +499,14 @@ var basePrefixBit = str;
           hosts: this.randInBitRange(bitRange),
           bitCeil: bitRange,
           prefix: 32 - bitRange,
+          mask: this.prefixToMask(32 - bitRange),
           parent: "r1",
           firstA: "",
           lastA: "",
           inFirstA: "",
           inLastA: "",
           inPrefix: "",
+          inMask: "",
           firstACheckColor: "",
           lastACheckColor: "",
           prefixCheckColor: ""
@@ -713,9 +743,11 @@ var basePrefixBit = str;
         var inFirstA = this.subnets[i].inFirstA.replace(/\s/g, '');
         var inLastA = this.subnets[i].inLastA.replace(/\s/g, '');
         var inPrefix = this.subnets[i].inPrefix.replace(/\s/g, '');
+        var inMask = this.subnets[i].inMask.replace(/\s/g, '');
         var firstA = this.subnets[i].firstA;
         var lastA = this.subnets[i].lastA;
         var prefix = this.subnets[i].prefix;
+        var mask = this.subnets[i].mask;
 
 
         if (firstA == inFirstA) {
@@ -728,11 +760,21 @@ var basePrefixBit = str;
         } else {
           this.subnets[i].lastACheckColor = notRightColor;
         }
-        if (prefix == inPrefix.replace('/', '')) {
-          this.subnets[i].prefixCheckColor = rightColor;
-        } else {
-          this.subnets[i].prefixCheckColor = notRightColor;
+        if(!this.specsMask) {
+          if (prefix == inPrefix.replace('/', '')) {
+            this.subnets[i].prefixCheckColor = rightColor;
+          } else {
+            this.subnets[i].prefixCheckColor = notRightColor;
+          }
         }
+        else {
+          if (mask == inMask) {
+            this.subnets[i].prefixCheckColor = rightColor;
+          } else {
+            this.subnets[i].prefixCheckColor = notRightColor;
+          }
+        }
+
       }
     },
     showResults: function() {
@@ -752,6 +794,7 @@ var basePrefixBit = str;
       this.baseIPIn = "192.0.2.0";
       this.prefixIn = "24";
       this.subnetCountIn = "2-3";
+      this.diff = "1";
       }
     },
     setDiff2: function() {
@@ -759,6 +802,7 @@ var basePrefixBit = str;
       this.baseIPIn = "192.0.2.0";
       this.prefixIn = "24";
       this.subnetCountIn = "4-6";
+      this.diff = "2";
       }
     },
     setDiff3: function() {
@@ -766,6 +810,7 @@ var basePrefixBit = str;
       this.baseIPIn = "192.0.2.?";
       this.prefixIn = "24-26";
       this.subnetCountIn = "4-8";
+      this.diff = "3";
       }
     },
     setDiff4: function() {
@@ -773,6 +818,7 @@ var basePrefixBit = str;
         this.baseIPIn = "";
         this.prefixIn = "22-26";
         this.subnetCountIn = "4-8";
+        this.diff = "4";
       }
     },
 
