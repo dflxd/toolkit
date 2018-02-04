@@ -3,6 +3,7 @@ String.prototype.replaceAt = function(index, replacement) {
 };
 
 function rand(min, max) {
+
   return Math.floor(Math.random() * (max - min + 1) + min);
 }
 
@@ -54,10 +55,96 @@ var subnetting = new Vue({
     inputDisabled: false,
     help: false,
     fillAll: "",
-    specsMask:true,
-    specs: false
+    specsMask:false,
+    specs: false,
+    diffInfo: false,
+    specsReserve: 1,
+biggerFrame: "1400px",
+    exclude: [
+      {
+        ip: "0.0.0.0",
+        prefix: "/8"
+      },
+      {
+        ip: "127.0.0.0",
+        prefix: "/8"
+      },
+      {
+        ip: "169.254.0.0",
+        prefix: "/16"
+      },
+    ]
   },
   computed: {
+    reserve: function() {
+      var reserve;
+      switch(this.specsReserve) {
+        case 1:
+          reserve = 0;
+          break;
+        case 2:
+          reserve = 10;
+          break;
+        case 3:
+          reserve = 25;
+          break;
+        case 4:
+          reserve = 50;
+          break;
+        default:
+          reserve = 0
+          break;
+      }
+      return reserve;
+    },
+    reserveOut: function() {
+      var reserve;
+      switch(this.specsReserve) {
+        case 1:
+          reserve = 1;
+          break;
+        case 2:
+          reserve = 100/110;
+          break;
+        case 3:
+          reserve = 100/125;
+          break;
+        case 4:
+          reserve = 100/150;
+          break;
+        default:
+          reserve = 1
+          break;
+      }
+      return reserve;
+    },
+    specsReserveSelected: function() {
+
+      var left = 0;
+      var width;
+      for (var i = 1; i < this.specsReserve; i++) {
+        left += parseInt($(".specsReserve label").eq(i-1).outerWidth());
+      }
+      width = $(".specsReserve label").eq(this.specsReserve-1).outerWidth();
+
+      $(".specsReserve .sliderBackg").css("left",left+"px");
+      $(".specsReserve .sliderBackg").css("width",width+"px");
+    },
+    specsMaskSelected: function() {
+
+      var left = 0;
+      var width;
+      var val;
+      if(!this.specsMask) val = 1;
+      else val = 2;
+      for (var i = 1; i < val; i++) {
+        left += parseInt($(".specsMask label").eq(i-1).outerWidth());
+      }
+      width = $(".specsMask label").eq(val-1).outerWidth();
+
+      $(".specsMask .sliderBackg").css("left",left+"px");
+      $(".specsMask .sliderBackg").css("width",width+"px");
+    },
     thediff: function() {
       var result = "";
 
@@ -74,6 +161,7 @@ var subnetting = new Vue({
     countValid: function() {
       var valid = true;
       var count = this.subnetCountIn;
+      if(count.toString().split(' ').length > 1) valid = false;
       if(count.toString().length <= 2) {
         if (!isNumeric(count) || parseInt(count) < 2 || parseInt(count) > 14 || count % 1 != 0) valid = false;
         if(valid) {
@@ -100,6 +188,9 @@ var subnetting = new Vue({
     ipValid: function() {
       var valid = true;
       var ip = this.baseIPIn;
+
+      if(ip.toString().split(' ').length > 1) valid = false;
+
 if(ip == "") {
   ip = "?.?.?.?";
 }
@@ -121,8 +212,12 @@ if(ip == "") {
     prefixValid: function() {
       var valid = true;
       var prefix = this.prefixIn;
+
+      if(prefix.toString().split(' ').length > 1) valid = false;
+
       if(prefix.toString().length <= 2) {
-        if (!isNumeric(prefix) || parseInt(prefix) < 0 || parseInt(prefix) > 28 || prefix % 1 != 0) valid = false;
+        if (!isNumeric(prefix) || parseInt(prefix) < 8 || parseInt(prefix) > 28 || prefix % 1 != 0) valid = false;
+
         if(valid) {
           this.basePrefixMin = prefix;
           this.basePrefixMax = prefix;
@@ -131,10 +226,10 @@ if(ip == "") {
       else {
         var prefix1 = prefix.split("-")[0];
         var prefix2 = prefix.split("-")[1];
-
+        if(prefix.split(' ').length > 1) valid = false;
         if(prefix.split("-").length > 2) valid = false;
-        if (!isNumeric(prefix1) || parseInt(prefix1) < 0 || parseInt(prefix1) > 28 || prefix1 % 1 != 0) valid = false;
-        if (!isNumeric(prefix2) || parseInt(prefix2) < 0 || parseInt(prefix2) > 28 || prefix2 % 1 != 0) valid = false;
+        if (!isNumeric(prefix1) || parseInt(prefix1) < 8 || parseInt(prefix1) > 28 || prefix1 % 1 != 0) valid = false;
+        if (!isNumeric(prefix2) || parseInt(prefix2) < 8 || parseInt(prefix2) > 28 || prefix2 % 1 != 0) valid = false;
         if(parseInt(prefix1) >= parseInt(prefix2)) valid = false;
 
         if(valid) {
@@ -260,6 +355,32 @@ if(ip == "") {
     }
   },
   methods: {
+    downTheIP: function () {
+      var ip = this.baseIPInBit;
+      var prefix = this.basePrefixMinBit;
+
+      var i = 0;
+      while(prefix[i] == 1 && i < 32) {
+        i++;
+      }
+      var zeros = "";
+      j = i;
+      while(j < 32) {
+        zeros += "0";
+        j++;
+      }
+      this.baseIPIn = this.bitToA(ip.substr(0,i)+zeros);
+    },
+    updateSeed: function (e) {
+      var val = e.target.value;
+      if(val == "") {
+        Math.seedrandom();
+      }
+      else {
+        Math.seedrandom(val);
+      }
+      console.log("seed nastaven na "+val);
+    },
     prefixToMask: function (prefix) {
       var bit = "";
       for (var i = 0; i < 32; i++) {
@@ -370,7 +491,15 @@ if(ip == "") {
     },
     randInBitRange: function(range) {
       if (range == 2) return 2;
-      return rand(Math.pow(2, range - 1) - 1, Math.pow(2, range) - 2);
+      var reserve = this.reserveOut;
+      if(reserve == 1) {
+        return rand(Math.pow(2, range - 1) - 1, Math.pow(2, range) - 2);
+      }
+      else {
+        var min = Math.ceil((Math.pow(2, range - 1) - 1)*reserve);
+        var max = Math.floor((Math.pow(2, range) - 2)*reserve);
+        return rand(min,max);
+      }
     },
     bitFloor: function(number) {
       var a = 0;
@@ -406,38 +535,91 @@ if(ip == "") {
     },
     toIP: function(ip) {
       if(ip == "") ip = "?.?.?.?";
-
+      var ipValid = true;
       var str = "";
       var i = 0;
       while (i < 32) {
         if (i++ < this.basePrefix) str += "1";
         else str += "0";
       }
+      var prefix = this.basePrefix;
 var basePrefixBit = str;
 
       var newIPBit = "";
       var newIP = "";
       var octets = ip.split(".");
       var i = 0;
+      var first = true;
       if (octets.length != 4) {
         throw "Invalid ip";
       } else {
-        octets.forEach(function(octet)     {
-          if(octet == "?") {
-            var octetBit = "";
-            for (var j = 0; j < 8; j++) {
+        var r = 0;
+        do{
+          ipValid = true;
+          newIPBit = "";
+          newIP = "";
+          first = true;
+          i = 0;
+          octets.forEach(function(octet) {
+            if(octet == "?") {
+              var j = 0;
+              var octetBit = "";
+              if(first) {
+                if(prefix >= 24) {
+                  octetBit="110"
+                  j = 3;
+                }
+                else if(prefix >= 16) {
+                  octetBit="10"
+                  j = 2;
+                }
+                else if(prefix >= 8) {
+                  octetBit="0"
+                  j = 1;
+                }
+              }
 
-              if(basePrefixBit.charAt(8*i+j) == 1) octetBit += rand(0,1);
-              else octetBit += "0";
+              for (; j < 8; j++) {
+
+                if(basePrefixBit.charAt(8*i+j) == 1) octetBit += rand(0,1);
+                else octetBit += "0";
+              }
+              newIP += subnetting.bin2dec(octetBit);
+              newIPBit += octetBit;
             }
-            newIP += subnetting.bin2dec(octetBit);
+            else {
+              newIP += octet;
+              newIPBit += subnetting.dec2bin(octet);
+            }
+            first = false;
+            i++;
+            if(i < 4) newIP += ".";
+          });
+          //testing for excluded ranges
+          for (var i = 0; i < this.exclude.length; i++) {
+            var eIpBit = "";
+            var eOctets = this.exclude[i].ip.split(".");
+            var that = this;
+            eOctets.forEach(function(octet) {
+              if (that.dec2bin(parseInt(octet)).length == 8) {
+                eIpBit += that.dec2bin(parseInt(octet));
+              } else {
+                eIpBit += "00000000";
+              }
+            });
+            var ePrefix = this.exclude[i].prefix.substr(1);
+
+              if(newIPBit.substr(0,ePrefix) == eIpBit.substr(0,ePrefix)) {
+                ipValid = false;
+
+                console.error("Ip within excluded range. Regenerating.");
+                break;
+
+            }
           }
-          else {
-            newIP += octet;
-          }
-          i++;
-          if(i < 4) newIP += ".";
-        });
+          if(r > 100) throw "fail";
+          r++;
+        }while(!ipValid);
       }
       return newIP;
     },
@@ -860,4 +1042,21 @@ var basePrefixBit = str;
   }
 });
 
+
+
+
+var inAnim = false;
+$(".sectionL button").click(function(){
+
+  if(!inAnim) {
+    inAnim = true;
+    var theButton = $(this);
+    theButton.children().css("animation","arrowUp .5s");
+    setTimeout(function(){
+      theButton.children().css("animation","");
+      inAnim = false;
+    },500);
+  }
+
+});
 $(".main").css("visibility", "visible");

@@ -4,6 +4,9 @@ body {
 #subnetting {
   text-align: center;
 }
+#subnetting #canvas {
+  margin-top: 15px;
+}
 #subnetting .highlightArea {
   position: relative;
 }
@@ -23,6 +26,7 @@ body {
   transition-delay: .2s;
 }
 #subnetting .highlightArea .popout {
+  z-index: 1;
   position: absolute;
   font-size: 14px;
   background: rgba(0, 0, 0, 0.7);
@@ -99,27 +103,44 @@ body {
   top: 50%;
   transform: translateY(-50%);
 }
+#subnetting .settings .area h1 {
+  padding-top: 0;
+}
 #subnetting .settings .area .mainIn tr td input {
   width: 100%;
   text-align: center;
   border-color: white;
 }
 #subnetting .settings .area .mainIn tr td.ip {
-  width: 60%;
+  width: 56%;
+  position: relative;
+}
+#subnetting .settings .area .mainIn tr td.ip .downer {
+  position: absolute;
+  line-height: 15px;
+  display: inline-block;
+  top: 52%;
+  transform: translateY(-50%);
+  right: 15px;
+  animation: fadeIn 1s;
+  cursor: pointer;
+}
+#subnetting .settings .area .mainIn tr td.ip .downer svg {
+  color: #888;
+}
+#subnetting .settings .area .mainIn tr td.ip .downer:hover svg {
+  color: white;
 }
 #subnetting .settings .area .mainIn tr td.prefix,
 #subnetting .settings .area .mainIn tr td.countHosts {
-  width: 20%;
+  width: 22%;
 }
 #subnetting .settings .area .mainIn tr td.space {
   padding: 0 10px;
 }
 #subnetting .settings .area .presets {
   transform: rotate(-90deg);
-  /* float: left; */
   font-size: 24px;
-  /* font-weight: bold; */
-  /* text-align: left; */
   float: left;
   text-transform: uppercase;
   top: 115px;
@@ -129,12 +150,24 @@ body {
   display: inline-block;
   width: 7%;
 }
-#subnetting .settings .area .diff {
+#subnetting .settings .area .caption {
+  text-align: left;
+  margin-top: 20px;
+  font-size: 24px;
+}
+#subnetting .settings .area .caption span {
   float: right;
-  width: 93%;
+}
+#subnetting .settings .area .caption span svg {
+  color: rgba(255, 255, 255, 0.2);
+}
+#subnetting .settings .area .caption span:hover svg {
+  color: rgba(255, 255, 255, 0.7);
+}
+#subnetting .settings .area .diff {
   display: flex;
   padding: 0;
-  margin-top: 30px;
+  margin-top: 20px;
 }
 #subnetting .settings .area .diff input[type="radio"] {
   display: none;
@@ -143,7 +176,7 @@ body {
   background: rgba(0, 0, 0, 0.3);
   display: block;
   flex: 1;
-  padding: 12px 0px;
+  height: 90px;
   margin: 0px 5px;
   user-select: none;
   cursor: pointer;
@@ -153,10 +186,9 @@ body {
 #subnetting .settings .area .diff .desc span:nth-child(3) {
   display: block;
 }
-#subnetting .settings .area .diff .desc span:nth-child(1) {
-  font-weight: 600;
-  text-transform: uppercase;
-  font-size: 18px;
+#subnetting .settings .area .diff .desc .diffName:nth-child(1) {
+  text-transform: capitalize;
+  font-size: 20px;
 }
 #subnetting .settings .area .diff .desc div {
   position: relative;
@@ -242,9 +274,16 @@ body {
   z-index: -1;
 }
 #subnetting .settings .area .specs {
-  height: 346px;
+  height: 314px;
   width: 100%;
   position: relative;
+}
+#subnetting .settings .area .specs .info {
+  color: #aaa;
+  font-size: 80%;
+}
+#subnetting .settings .area .specs tr:not(:first-child) td {
+  padding-top: 15px;
 }
 #subnetting .settings .area .specs h3 {
   margin-bottom: 30px;
@@ -257,6 +296,45 @@ body {
 }
 #subnetting .settings .area .specs table tr td:nth-child(2) {
   padding-left: 30px;
+}
+#subnetting .settings .area .specs input[type=text] {
+  text-align: center;
+}
+#subnetting .settings .area .specs .radioChoose {
+  display: inline-block;
+  position: relative;
+}
+#subnetting .settings .area .specs .radioChoose.specsReserve .sliderBackg {
+  left: 0;
+  width: 123.25px;
+}
+#subnetting .settings .area .specs .radioChoose.specsMask .sliderBackg {
+  left: 0;
+  width: 97.95px;
+}
+#subnetting .settings .area .specs .radioChoose label {
+  cursor: pointer;
+  padding: 5px 10px;
+  margin-bottom: 0;
+  user-select: none;
+  text-align: center;
+  transition: .2s;
+}
+#subnetting .settings .area .specs .radioChoose input {
+  display: none;
+}
+#subnetting .settings .area .specs .radioChoose input:checked + label {
+  background: red;
+}
+#subnetting .settings .area .specs .radioChoose .sliderBackg {
+  z-index: -1;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  background: rgba(0, 231, 255, 0.05);
+  transition: all .2s;
+  border-radius: 10px;
+  box-shadow: 0 0 0 2px #49eeff;
 }
 #subnetting .settings .area .specs .label-cbx {
   user-select: none;
@@ -370,7 +448,14 @@ body {
 #subnetting table.inter {
   width: 100%;
 }
+#subnetting table.inter .info {
+  font-size: 12px;
+  position: absolute;
+  top: 35px;
+  left: 15px;
+}
 #subnetting table.inter td {
+  position: relative;
   padding: 5px;
   margin: 5px;
 }
@@ -405,10 +490,10 @@ body {
   position: absolute;
   right: 0;
   top: 0;
+  overflow: hidden;
 }
 #subnetting .buttons .sectionL button:active {
   transform: none;
-  border-color: white;
 }
 #subnetting .buttons .sectionR {
   float: right;
@@ -427,6 +512,28 @@ body {
   to {
     opacity: 1;
     transform: scale(1) translateY(-50%);
+  }
+}
+@keyframes arrowUp {
+  from {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-30px);
+  }
+  50.01% {
+    transform: translateY(30px);
+  }
+  to {
+    transform: translateY(0px);
+  }
+}
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
   }
 }
 @media screen and (min-width: 1921px) {

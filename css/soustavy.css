@@ -1,0 +1,48 @@
+html,
+body {
+  height: 100%;
+}
+#soustavy {
+  color: white;
+  text-align: center;
+  top: 50%;
+  position: relative;
+  transform: translateY(-50%);
+}
+#soustavy .main {
+  margin-top: 100px;
+  font-size: 28px;
+}
+#soustavy .main input {
+  width: 200px;
+}
+#soustavy .centerHax {
+  display: inline-block;
+}
+#soustavy h1 {
+  margin-bottom: 30px;
+}
+#soustavy input {
+  text-align: center;
+  width: 100px;
+  font-size: 28px;
+}
+#soustavy sub {
+  font-size: 50%;
+}
+#soustavy .settings {
+  display: inline-block;
+}
+#soustavy .settings td {
+  padding: 5px 10px;
+}
+#soustavy .settings .heading {
+  text-transform: uppercase;
+}
+#soustavy .settings .to {
+  font-size: 64px;
+  line-height: 0px;
+}
+#soustavy .settings .buttons button {
+  margin: 30px 5px 0px 5px;
+}

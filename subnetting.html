@@ -3,7 +3,7 @@
 
 <head>
   <meta charset="utf-8">
-  <title>subnetting</title>
+  <title>Subnetting | ToolkIT</title>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
   <link rel="stylesheet" href="css/main.css">
   <link rel="stylesheet" href="css/subnetting.css">
@@ -11,24 +11,18 @@
   <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.5.3/vue.js"></script>
   <script defer src="https://use.fontawesome.com/releases/v5.0.4/js/all.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/seedrandom/2.4.3/seedrandom.min.js">
+  </script>
 </head>
+
 
 <body>
   <div id="subnetting">
-
     <div class="smallMenu">
-
-
-
-
       <div class="menuItem menuSettings" title="Nastavení" @click="swapSettings" v-bind:class="{'active': settings}"><i class="fa fa-cog" aria-hidden="true"></i></div>
       <div class="menuItem menuSubnettingHelp" title="Nápověda" @click="swapSubnettingHelp" v-bind:class="{'active': help, 'border': this.help && this.settings}"><i class="fas fa-question-circle" aria-hidden="true"></i></div>
-      <div class="menuItem menuBack" title="zpet" v-if="settings"><a href="index.html"><i class="fas fa-home"></i><span>ToolkIT</span></a></div>
+      <div class="menuItem menuBack" title="Zpět na úvodní stránku" v-if="settings"><a href="index.html"><i class="fas fa-home"></i><span>ToolkIT</span></a></div>
     </div>
-
-
-
-
 
     <div class="help">
       <div class="">
@@ -38,12 +32,7 @@
           <li>Přidělit místo. A to nejdříve těm největším subnetům. Při stejné velikosti postupovat podle abecedy.</li>
           <li>Určit rozsah podsítě. První adresa je adresou podsítě, poslední je broadcastem.</li>
         </ol>
-        <br>
-        Příklad
-        <ul>
-          <li>a</li>
-          <li>b</li>
-        </ul>
+
       </div>
 
     </div>
@@ -51,11 +40,11 @@
       <div class="container">
         <div class="area">
           <div class="inputs clearfix" :style="{ 'opacity': inputDisabled ? 0.5 : 1.0 }" v-if="!specs">
-<h1>Subnetting</h1>
+            <h1>Subnetting</h1>
             <table class="mainIn">
               <tr>
                 <td>
-                  Počet subnetů
+                  Počet podsítí
                 </td>
                 <td class="space">
 
@@ -70,84 +59,94 @@
                   Prefix
                 </td>
 
-
               </tr>
               <tr>
                 <td class="countHosts">
-                    <input type="text" v-model="subnetCountIn" :disabled="inputDisabled" :style="{ 'border-color': baseCountColor }" placeholder="(2-14)">
+                  <input type="text" v-model="subnetCountIn" :disabled="inputDisabled" :style="{ 'border-color': baseCountColor }" placeholder="(2-14)">
                 </td>
-                <td class="e">
+                <td class="space e">
                   &nbsp;
                 </td>
                 <td class="ip">
                   <input type="text" v-model="baseIPIn" class="ip" :disabled="inputDisabled" :style="{'border-color': baseIPColor }" placeholder="(náhodná)">
+                  <div @click="downTheIP" class="downer" v-if="!comboValid && ipValid && prefixValid"><i class="fas fa-chevron-down"></i></div>
                 </td>
                 <td class="space">
                   /
                 </td>
                 <td class="prefix">
-                  <input type="text" v-model="prefixIn" class="prefix" :disabled="inputDisabled" :style="{ 'border-color': basePrefixColor }">
+                  <input type="text" v-model="prefixIn" class="prefix" :disabled="inputDisabled" :style="{ 'border-color': basePrefixColor }" placeholder="(1-28)">
                 </td>
-
-
               </tr>
             </table>
 
-
-
-
-            <div class="presets">
-              presets
+            <div class="caption">
+              Předvolby nastavení<span @mouseleave="diffInfo = false" @mouseover="diffInfo = true"><i class="fas fa-info-circle"></i></span>
             </div>
             <div class="diff">
 
               <input type="radio" name="diff" id="z" v-model="diff" value="1" :disabled="inputDisabled">
               <label for="z" class="desc" @click="setDiff1">
-                <div>
-                  <span>začátečník</span>
-                  <span>192.0.2.0 /24</span>
-                  <span>2-3 subnety</span>
+                <div v-if="!diffInfo">
+                  <span class="diffName">začátečník</span>
+                </div>
+                <div v-if="diffInfo">
+                  <span>192.0.2.0</span>
+                  <span>prefix /24</span>
+                  <span>2-3 podsítě</span>
                 </div>
               </label>
               <input type="radio" name="diff" id="pr" v-model="diff" value="2" :disabled="inputDisabled" checked>
               <label for="pr" class="desc" @click="setDiff2">
-                <div>
-                  <span>průměrný</span>
-                  <span>192.0.2.0 /24</span>
-                  <span>4-6 subnetů</span>
+                <div v-if="!diffInfo">
+                  <span class="diffName">průměrný</span>
+                </div>
+                <div v-if="diffInfo">
+                  <span>192.0.2.0</span>
+                  <span>prefix /24</span>
+                  <span>4-6 podsítí</span>
                 </div>
 
               </label>
               <input type="radio" name="diff" id="po" v-model="diff" value="3" :disabled="inputDisabled">
               <label for="po" class="desc" @click="setDiff3">
-                <div>
-                  <span>pokročilý</span>
+                <div v-if="!diffInfo">
+                  <span class="diffName">pokročilý</span>
+                </div>
+                <div v-if="diffInfo">
                   <span>192.0.2.?</span>
-                  <span>/24 - /26</span>
-                  <span>4-8 subnetů</span>
+                  <span>prefix /24 - /26</span>
+                  <span>4-8 podsítí</span>
                 </div>
               </label>
               <input type="radio" name="diff" id="e" v-model="diff" value="4" :disabled="inputDisabled">
               <label for="e" class="desc" @click="setDiff4">
-                <div>
-                  <span>expert</span>
+                <div v-if="!diffInfo">
+                  <span class="diffName">expert</span>
+                </div>
+                <div v-if="diffInfo">
                   <span>náhodná IP</span>
-                  <span>/22 - /26</span>
-                  <span>4-8 subnetů</span>
+                  <span>prefix /22 - /26</span>
+                  <span>4-8 podsítí</span>
                 </div>
               </label>
             </div>
           </div>
           <div class="specs" v-if="specs" :style="{ 'opacity': inputDisabled ? 0.5 : 1.0 }">
             <h3>Další nastavení</h3>
-              <table>
-                <tr>
-                  <td>
-                    Upřednostnit počítání s maskou podsítě
-                  </td>
-                  <td>
+            <table>
+              <tr>
+                <td>
+                  Počítat s:
+                </td>
+                <td>
 
-    <label for="cbx" class="label-cbx">
+                  <div class="radioChoose specsMask">
+                    <div class="sliderBackg"></div>
+                    <label>prefixem<input type="radio" name="specsMask" v-model="specsMask" v-bind:value="false" :disabled="inputDisabled"></label><!--
+                 --><label>maskou<input type="radio" name="specsMask" v-model="specsMask" v-bind:value="true" :disabled="inputDisabled"></label>
+                  </div>
+                  <!--  <label for="cbx" class="label-cbx">
       <input id="cbx" type="checkbox" class="invisible" v-model="specsMask" :disabled="inputDisabled">
       <div class="checkbox">
         <svg width="20px" height="20px" viewBox="0 0 20 20">
@@ -155,37 +154,55 @@
           <polyline points="4 11 8 15 16 6"></polyline>
         </svg>
       </div>
-    </label>
+    </label>*/-->
+                </td>
+              </tr>
+              <tr>
+                <td>Rezervní počet hostů: <br><span class="info">(Rezervu zaokrouhlujte dolů)</span></td>
+                <td>
+                  <div class="radioChoose specsReserve">
+                    <div class="sliderBackg"></div>
+                    <label>bez rezervy<input type="radio" name="specsReserve" v-model="specsReserve" v-bind:value="1" :disabled="inputDisabled"></label><!--
+                 --><label>10%<input type="radio" name="specsReserve" v-model="specsReserve" v-bind:value="2" :disabled="inputDisabled"></label><!--
+                 --><label>25%<input type="radio" name="specsReserve" v-model="specsReserve" v-bind:value="3" :disabled="inputDisabled"></label><!--
+                 --><label>50%<input type="radio" name="specsReserve" v-model="specsReserve" v-bind:value="4" :disabled="inputDisabled"></label>
+                  </div>
+                </td>
 
-                  </td>
-                </tr>
-              </table>
+              </tr>
+              <tr>
+                <td>Seed pro generování:</td>
+                <td><input @change="updateSeed" type="text" placeholder="(náhodně)" :disabled="inputDisabled"></td>
+
+              </tr>
+
+            </table>
           </div>
-          <div class="opts">
+          <div class="opts clearfix">
 
-              <button type="button" class="additional" @click="swapSpecs" title="Další nastavení" v-bind:class="{'active': specs}">
+            <button type="button" class="additional" @click="swapSpecs" title="Další nastavení" v-bind:class="{'active': specs}">
               <i class="fas fa-sliders-h" aria-hidden="true"></i>
             </button>
 
-
-
-            <button class="dsdd" name="dsdd" type="button" @click="generateNew" :disabled="!ipValid || !prefixValid || !comboValid || !countValid" v-if="!inputDisabled">
-              Nový příklad <i class="fas fa-arrow-right" aria-hidden="true"></i>
+            <button type="button" @click="generateNew" :disabled="!ipValid || !prefixValid || !comboValid || !countValid" v-if="!inputDisabled">
+              Nový příklad
+            </button>
+            <button type="button" @click="swapSettings" v-if="inputDisabled">
+              Pokračovat v řešení
             </button>
             <button type="button" @click="changeSettings" v-if="inputDisabled">
-              Změnit nastavení
+              Změnit zadání
             </button>
-            <button class="dsd" name="dsd" type="button" @click="swapSettings" v-if="inputDisabled">
-              zpět
-            </button>
+
           </div>
         </div>
       </div>
     </div>
     <div class="main" v-show="!settings" v-cloak>
-      <div class="container">
+      <div class="container" :style="{'min-width': (specsMask&&answers) ? '1310px' : ''}">
         <h1>Subnetting</h1>
-        <div class="subtitle">Rozdělte síť s adresou <span class="highlightArea"><span class="highlight">{{baseIP}} /{{basePrefix}}</span>
+        <div class="subtitle">Rozdělte síť s adresou
+          <span class="highlightArea"><span class="highlight">{{baseIP}} /{{basePrefix}}</span>
           <div class="popout">
             <table>
               <tr>
@@ -204,7 +221,10 @@
             </table>
           </div>
           </span>
-           na podsítě dle následujícího schématu:</div>
+          <span v-if="reserve!=0">, u podsítí zohledněte rezervu {{reserve}}%:</span>
+          <span v-if="reserve==0">na podsítě dle následujícího schématu:</span>
+        </div>
+
 
         <canvas id="canvas" width="1110" height="520"></canvas>
 
@@ -223,7 +243,7 @@
             <td v-if="answers && specsMask">Maska<br>správně</td>
           </tr>
           <tr v-for="item in subnets">
-            <td>{{item.name}}</td>
+            <td>{{item.name}}<span class="info" v-if="item.hosts == 2 && reserve != 0">(bez rezervy)</span></td>
             <td>{{item.hosts}}</td>
             <td><input type="text" v-model="item.inFirstA" @input="resetFirstA(item)" :style="{ 'border-color': item.firstACheckColor }"></td>
             <td v-if="answers">{{item.firstA}}</td>
@@ -240,22 +260,23 @@
 
         <div class="buttons clearfix">
           <div class="sectionL">
-            <input type="text"  v-model="fillAll" placeholder="dosadit do všech">
-            <button type="button" @click="fillAllTrigger"><i class="fa fa-chevron-up" aria-hidden="true"></i></button>
+            <input type="text" v-model="fillAll" placeholder="dosadit do všech">
+            <button type="button" @click="fillAllTrigger"><i class="fas fa-chevron-up"></i></button>
           </div>
           <div class="sectionR">
             <button @click="check">Zkontrolovat</button>
             <button @click="showResults">Zobrazit řešení</button>
-            <button @click="generate">Další příklad <i class="fa fa-arrow-right" aria-hidden="true"></i></button>
+            <button @click="generate">Další příklad <i class="fas fa-arrow-right"></i></button>
           </div>
         </div>
       </div>
     </div>
     <div class="hide">
-      {{thediff}}
+      {{thediff}}{{specsReserveSelected}}{{specsMaskSelected}}
     </div>
   </div>
 
   <script src="subnetting.js"></script>
 </body>
+
 </html>
