@@ -19,19 +19,89 @@
 <body>
   <div id="subnetting">
     <div class="smallMenu">
-      <div class="menuItem menuSettings" title="Nastavení" @click="swapSettings" v-bind:class="{'active': settings}"><i class="fa fa-cog" aria-hidden="true"></i></div>
+      <div class="menuItem menuSettings" title="Nastavení" @click="swapSettings" v-bind:class="{'active': settings}"><i class="fas fa-cog" aria-hidden="true"></i></div>
       <div class="menuItem menuSubnettingHelp" title="Nápověda" @click="swapSubnettingHelp" v-bind:class="{'active': help, 'border': this.help && this.settings}"><i class="fas fa-question-circle" aria-hidden="true"></i></div>
       <div class="menuItem menuBack" title="Zpět na úvodní stránku" v-if="settings"><a href="index.html"><i class="fas fa-home"></i><span>ToolkIT</span></a></div>
     </div>
 
     <div class="help">
       <div class="">
-        <div class="title">Základní pravidla pro subnetting</div>
-        <ol>
-          <li>Určit velikost subnetu (co nejmenší možný počet adres, zohlednit adresu a broadcast subnetu (2 adresy navíc)).</li>
-          <li>Přidělit místo. A to nejdříve těm největším subnetům. Při stejné velikosti postupovat podle abecedy.</li>
-          <li>Určit rozsah podsítě. První adresa je adresou podsítě, poslední je broadcastem.</li>
-        </ol>
+        <div class="title">Základní pravidla pro tvorbu subnetů</div>
+        JAK POSTUPOVAT
+        <ul>
+          <li>Podsítě vytváříme podle velikosti od největší po nejmenší</li>
+          <li>Pokud má více podsítí stejnou velikost postupujeme abecedně</li>
+          <li>Podsítě navazujeme hned za sebe a dbáme na jejich co nejmenší velikost</li>
+
+        </ul>
+        URČOVÁNÍ ADRES
+        <ul>
+          <li>Jako první, abychom vůbec věděli jak subnety seřadit, zjistíme jejich velikost(prefix). Ptáme se na otázku: kolik bitů potřebujeme pro hosty? Například v podsíti pro 20 hostů potřebujeme 5 bitů (5 bitů = maximálně 32 možných adres), prefix tedy bude 32 - 5 = <b>/27</b>
+<div class="helper">
+  <div>
+    <table>
+      <tr>
+        <td >192 . 0 . 2 . 000</td>
+        <td style="color: black;padding:0 5px"> | </td>
+        <td>00000</td>
+      </tr>
+      <tr>
+        <td class="smaller" style="text-align:right">adresa podsítě</td>
+        <td style="color: black;padding:0 5px"> | </td>
+        <td class="smaller">místo pro hosty</td>
+      </tr>
+    </table>
+    </div>
+</div>
+
+          </li>
+          <li>Adresou podsítě je první adresa v podsíti (v části pro hosty binárně samé 0)</li>
+          <li>Broadcastem podsítě je poslední adresa v podsíti (v části pro hosty binárně samé 1)</li>
+<li>
+  Příklad subnetu s prefixem /27 (poslední oktet binárně):
+  <div class="helper">
+    <div>
+      <table>
+        <tr>
+          <td class="smaller">adresa podsítě</td>
+          <td>192 . 0 . 2 . 000 | 00000</td>
+        </tr>
+        <tr>
+          <td class="smaller" style="padding-right: 60px">první použitelná adresa</td>
+          <td>192 . 0 . 2 . 000 | 00001</td>
+        </tr>
+        <tr>
+          <td class="smaller" >poslední použitelná adresa</td>
+          <td>192 . 0 . 2 . 000 | 11110</td>
+        </tr>
+        <tr>
+          <td class="smaller">adresa broadcastu</td>
+          <td>192 . 0 . 2 . 000 | 11111</td>
+        </tr>
+      </table>
+      </div>
+  </div>
+</li>
+          <li>Pokračujeme další podsítí, například:
+            <div class="helper">
+              <div>
+                <table>
+                  <tr>
+                    <td class="smaller">adresa podsítě</td>
+                    <td>192 . 0 . 2 . 001 | 00000</td>
+                  </tr>
+                  <tr>
+                    <td class="smaller" style="padding-right: 60px">první použitelná adresa</td>
+                    <td>192 . 0 . 2 . 001 | 00001</td>
+                  </tr>
+                  <tr>
+                    <td style="letter-spacing:5px;font-weight:bold">...</td>
+                  </tr>
+                </table>
+                </div>
+            </div></li>
+        </ul>
+
 
       </div>
 
@@ -243,7 +313,7 @@
             <td v-if="answers && specsMask">Maska<br>správně</td>
           </tr>
           <tr v-for="item in subnets">
-            <td>{{item.name}}<span class="info" v-if="item.hosts == 2 && reserve != 0">(bez rezervy)</span></td>
+            <td>{{item.name}}<span class="info" v-if="item.parent == 'btw' && reserve != 0">(bez rezervy)</span></td>
             <td>{{item.hosts}}</td>
             <td><input type="text" v-model="item.inFirstA" @input="resetFirstA(item)" :style="{ 'border-color': item.firstACheckColor }"></td>
             <td v-if="answers">{{item.firstA}}</td>

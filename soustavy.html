@@ -3,7 +3,7 @@
 
 <head>
   <meta charset="utf-8">
-  <title>Subnetting | ToolkIT</title>
+  <title>Soustavy | ToolkIT</title>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
   <link rel="stylesheet" href="css/main.css">
   <link rel="stylesheet" href="css/soustavy.css">
@@ -21,32 +21,51 @@
   </div>
   <div id="soustavy">
 
-    <h1>Převody mezi soustavami</h1>
-    <div class="settings">
-      <div class="centerHax">
-        <table>
-          <tr>
-            <td class="heading">ze soustavy</td>
-            <td></td>
-            <td class="heading">do soustavy</td>
-          </tr>
-          <tr>
-            <td><input type="text" v-model="from"></td>
-            <td class="to"><i class="fas fa-long-arrow-alt-right"></i></td>
-            <td><input type="text" v-model="to"></td>
-          </tr>
-        </table>
+    <h1>Převody mezi číselnými soustavami</h1>
+    <div class="block">
+      <div class="settings" v-bind:class="{'exon': exOn,'visib':!exOnMiddle2}">
+        <h4>Nastavení</h4>
+        <div class="centerHax">
+          <table>
+            <tr>
+              <td class="heading">ze soustavy</td>
+              <td></td>
+              <td class="heading">do soustavy</td>
+            </tr>
+            <tr>
+              <td><input type="text" v-model="from" :style="{ 'border-color': fromColor }"></td>
+              <td class="to"><i class="fas fa-long-arrow-alt-right"></i></td>
+              <td><input type="text" v-model="to" :style="{ 'border-color': toColor }"></td>
+            </tr>
+          </table>
+        </div>
+        <div class="range">
+          Rozsah generovaných čísel:
+          <input type="text" v-model="range" :style="{ 'border-color': rangeColor }">
+        </div>
+
+
       </div>
-      <div class="buttons">
-        <button type="button" @click="generate">Nový příklad</button>
-        <button type="button" @click="check" :disabled="!exOn">Zkontrolovat</button>
-        <button type="button" :disabled="!exOn">Vysvětlení výsledku</button>
+      <div class="main" v-bind:class="{'exon': !exOn,'visib':!exOnMiddle}"  v-if="!inHide">
+        <div class="in">
+          {{fromNumber}}<sub>({{from}})</sub> = <input type="text" v-model="toIn" :style="{ 'border-color': correct }"><sub>({{to}})</sub>
+        </div>
+        <div class="toSettings" @click="toSettings">
+          <i class="fa fa-cog" aria-hidden="true"></i>
+        </div>
       </div>
     </div>
-    <div class="main" v-if="exOn">
-      {{fromNumber}}<sub>(10)</sub> = <input type="text" v-model="toIn"><sub>(2)</sub>
+    <div v-html="stepsVal" class="steps">
+
     </div>
+    <div class="buttons">
+      <button type="button" @click="generate" :disabled="!(rangeValid && fromValid && toValid)">Nový příklad</button>
+      <button type="button" @click="check" :disabled="!exOn">Zkontrolovat</button>
+      <button type="button" @click="stepsCalc":disabled="!exOn">Postup řešení</button>
+    </div>
+
   </div>
+
   <script src="soustavy.js"></script>
 </body>
 

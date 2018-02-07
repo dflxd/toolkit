@@ -271,7 +271,6 @@ if(ip == "") {
     },
     baseCountColor: function() {
       if (!this.countValid) return "red";
-      else if (!this.countValid) return "#f40";
       else return "";
     },
     hostsMax: function() {
@@ -535,6 +534,10 @@ if(ip == "") {
     },
     toIP: function(ip) {
       if(ip == "") ip = "?.?.?.?";
+      var custom = true;
+      if(ip.substr(0,2) == "?.?") {
+        custom = false;
+      }
       var ipValid = true;
       var str = "";
       var i = 0;
@@ -596,6 +599,9 @@ var basePrefixBit = str;
             if(i < 4) newIP += ".";
           });
           //testing for excluded ranges
+          if(!custom) {
+
+
           for (var i = 0; i < this.exclude.length; i++) {
             var eIpBit = "";
             var eOctets = this.exclude[i].ip.split(".");
@@ -619,6 +625,7 @@ var basePrefixBit = str;
           }
           if(r > 100) throw "fail";
           r++;
+            }
         }while(!ipValid);
       }
       return newIP;
@@ -657,6 +664,7 @@ var basePrefixBit = str;
       }
       var rCount = rCountOpts[rand(1, rCountOpts.length) - 1];
 
+
       for (var i = 0; i < subnetCount; i++) {
         if (this.countHosts() >= this.hostsMax) {
           alert("Víc podsítí nelze vytvořit");
@@ -682,7 +690,7 @@ var basePrefixBit = str;
           bitCeil: bitRange,
           prefix: 32 - bitRange,
           mask: this.prefixToMask(32 - bitRange),
-          parent: "r1",
+          parent: "",
           firstA: "",
           lastA: "",
           inFirstA: "",
@@ -695,6 +703,10 @@ var basePrefixBit = str;
         });
       }
       this.subnets = shuffle(this.subnets, rCount - 1);
+
+      for (var i = 0; i < (rCount-1); i++) {
+        this.subnets[this.subnets.length-i-1].parent="btw";
+      }
 
       for (i = 0; i < this.subnets.length; i++) {
         this.subnets[i].name = "Subnet " + 'abcdefghijklmnopqrstuvwxyz' [i].toUpperCase();
@@ -795,9 +807,9 @@ var basePrefixBit = str;
         k++;
       }
 
-      for (var i = 0; i < this.subnets.length; i++) {
+    /*  for (var i = 0; i < this.subnets.length; i++) {
         this.subnets[i]
-      }
+      }*/
 
       var canvas = document.getElementById("canvas");
       var ctx = canvas.getContext("2d");
@@ -1041,9 +1053,6 @@ var basePrefixBit = str;
     }*/
   }
 });
-
-
-
 
 var inAnim = false;
 $(".sectionL button").click(function(){

@@ -1,5 +1,5 @@
-html,
-body {
+body,
+html {
   height: 100%;
 }
 #soustavy {
@@ -8,12 +8,19 @@ body {
   top: 50%;
   position: relative;
   transform: translateY(-50%);
+  perspective: 1000px;
 }
 #soustavy .main {
-  margin-top: 100px;
+  perspective: 500px;
   font-size: 28px;
 }
 #soustavy .main input {
+  width: 200px;
+}
+#soustavy .steps {
+  margin-top: 30px;
+}
+#soustavy .range input {
   width: 200px;
 }
 #soustavy .centerHax {
@@ -31,7 +38,15 @@ body {
   font-size: 50%;
 }
 #soustavy .settings {
-  display: inline-block;
+  width: 519px;
+  height: 290px;
+  padding: 30px;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 15px;
+  transition: transform 1s;
+}
+#soustavy .settings.exon {
+  transform: rotateY(180deg);
 }
 #soustavy .settings td {
   padding: 5px 10px;
@@ -41,8 +56,67 @@ body {
 }
 #soustavy .settings .to {
   font-size: 64px;
-  line-height: 0px;
+  line-height: 0;
 }
-#soustavy .settings .buttons button {
-  margin: 30px 5px 0px 5px;
+#soustavy .main {
+  position: absolute;
+  width: 519px;
+  height: 290px;
+  top: 0;
+  left: 0;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 15px;
+  transform: rotateY(0deg);
+  transition: transform 1s;
+}
+#soustavy .main.exon {
+  transform: rotateY(-180deg);
+}
+#soustavy .main .toSettings {
+  color: grey;
+  position: absolute;
+  top: 10px;
+  left: 15px;
+  cursor: pointer;
+}
+#soustavy .main .toSettings:hover {
+  color: white;
+}
+#soustavy .main .in {
+  animation: roll 1s ease;
+  position: relative;
+  top: 50%;
+  transform: translateY(-50%);
+}
+#soustavy .main .in input {
+  transition: transform 0.3s;
+}
+#soustavy .block {
+  width: 519px;
+  height: 290px;
+  position: relative;
+  display: inline-block;
+}
+#soustavy .buttons {
+  margin-top: 30px;
+}
+#soustavy .buttons button {
+  margin: 30px 0 0 5px;
+}
+.visib {
+  visibility: hidden;
+}
+@keyframes roll {
+  0% {
+    transform: translateY(-50%) rotateY(0deg);
+  }
+  50% {
+    transform: translateY(-50%) rotateY(90deg);
+  }
+  50.0001% {
+    transform: translateY(-50%) rotateY(-90deg);
+  }
+  100% {
+    transform: translateY(-50%) rotateY(0deg);
+  }
 }
