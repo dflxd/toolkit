@@ -5,7 +5,7 @@
 }
 body,
 html {
-  min-width: 1366px;
+  min-width: 1360px;
   margin: 0!important;
   padding: 0!important;
   font-family: 'Nunito', sans-serif;
@@ -16,7 +16,9 @@ body {
   background-image: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url("../img/header.jpg");
   background-size: 1920px;
   background-attachment: fixed;
+  background-repeat: no-repeat;
   height: 100%;
+  overflow-x: hidden;
 }
 ::selection {
   background: #49eeff;
@@ -69,7 +71,7 @@ header#mainHeading {
 }
 header#mainHeading img {
   vertical-align: none;
-  margin-bottom: 30px;
+  margin-bottom: 5px;
 }
 h1 {
   padding-top: 15px;
@@ -166,51 +168,32 @@ h1 {
   opacity: 0.5;
 }
 .modules {
-  margin-bottom: 15px;
-  margin-top: 15px;
   position: relative;
   top: 120px;
-  color: white;
 }
-.modules a div,
-.modules i,
-.modules figcaption {
-  transition: 1s;
-}
-.modules a:hover div,
-.modules a:hover i,
-.modules a:hover figcaption {
-  transform: rotateZ(180deg);
-}
-.modules a:hover div {
-  transform: rotateZ(180deg) translateY(-40px);
-}
-.modules .tech-en {
-  border: 2px solid #3498DB;
-  height: 220px;
+.modules .module {
+  height: 180px;
   margin-left: 8px;
   margin-right: 8px;
   padding: 5px;
+}
+.modules .tech-en {
+  border: 2px solid #3498DB;
 }
 .modules .tech-en:hover {
   background-color: rgba(52, 152, 219, 0.5);
 }
 .modules .networking {
   border: 2px solid #26A65B;
-  height: 220px;
-  margin-left: 8px;
-  margin-right: 8px;
-  padding: 5px;
+}
+.modules .networking p {
+  margin-top: 29px;
 }
 .modules .networking:hover {
   background-color: rgba(38, 166, 91, 0.5);
 }
 .modules .numbers {
   border: 2px solid #FF7F00;
-  height: 220px;
-  margin-left: 8px;
-  margin-right: 8px;
-  padding: 5px;
 }
 .modules .numbers:hover {
   background-color: rgba(255, 127, 0, 0.5);
@@ -218,45 +201,34 @@ h1 {
 .modules h2 {
   transform: rotate(-90deg);
   position: relative;
-  top: 55px;
-  height: 10px;
-  margin-right: 10px;
-}
-.modules i {
+  height: 100px;
+  width: 200px;
   color: white;
-  position: relative;
-  left: 28%;
-  top: 10px;
+  line-height: 50px;
+  vertical-align: bottom;
+  left: 60px;
 }
-.modules figcaption {
+.modules p {
+  margin-top: 20px;
   text-align: center;
   color: white;
-  margin-top: 20px;
-  font-weight: 600;
+  line-height: 25px;
 }
 .modules a,
 .modules a:focus,
 .modules a:hover,
 .modules a:link {
   text-decoration: none;
-  color: #3498DB;
-}
-.about {
-  position: relative;
-  top: 200px;
   color: white;
 }
-.about h2 {
-  transform: rotate(-90deg);
-  position: relative;
-  top: 100px;
-  height: 10px;
-}
-footer {
-  position: relative;
-  bottom: -210px;
+.footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 60px;
+  line-height: 60px;
+  background-color: #1C1C1C;
   text-align: center;
-  color: #b1b1b1;
 }
 .hide {
   display: none;
@@ -271,5 +243,16 @@ footer {
 @media screen and (max-width: 1366px) {
   .container {
     min-width: 1110px!important;
+  }
+  .modules .module {
+    max-width: 175px;
+    max-height: 220px;
+  }
+  h1 {
+    font-size: 17px !important;
+  }
+  img {
+    width: 348px;
+    height: 150px;
   }
 }
