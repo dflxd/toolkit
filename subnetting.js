@@ -59,6 +59,11 @@ var subnetting = new Vue({
     specs: false,
     diffInfo: false,
     specsReserve: 1,
+    specsReservePosition: {
+      left: "0px",
+      width: "123.25px"
+    },
+    specsSeed: "",
 biggerFrame: "1400px",
     exclude: [
       {
@@ -127,8 +132,8 @@ biggerFrame: "1400px",
       }
       width = $(".specsReserve label").eq(this.specsReserve-1).outerWidth();
 
-      $(".specsReserve .sliderBackg").css("left",left+"px");
-      $(".specsReserve .sliderBackg").css("width",width+"px");
+      this.specsReservePosition.left = left + "px";
+      this.specsReservePosition.width = width + "px";
     },
     specsMaskSelected: function() {
 
