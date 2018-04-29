@@ -1,15 +1,13 @@
 <?php
-// JSON má problém s diakritikou
-include_once 'scripts/dbh.inc.php';
+include_once '../dbh.inc.php';
 
-$array = array();
-
-$translate = "SELECT * FROM users LIMIT 6";
+$translate = "SELECT * FROM lesson_translate";
 $result = mysqli_query($conn, $translate);
 
+$translate = array();
 
 while($row = mysqli_fetch_assoc($result)) {
-    $array[] = $row;
+    $translate[] = $row;
 }
 
 function utf8ize($d) {
@@ -23,4 +21,5 @@ function utf8ize($d) {
     return $d;
 }
 
-echo json_encode(utf8ize($array));
+echo json_encode(utf8ize($translate));
+

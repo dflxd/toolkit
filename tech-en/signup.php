@@ -16,9 +16,6 @@ session_start();
 			<input type="password" name="pwd" placeholder="Heslo" />
             <input type="text" name="first" placeholder="Křestní jméno" />
             <input type="text" name="last" placeholder="Příjmení" />
-            
-			<!--<label>Pamatovat si mě</label>
-            <input type="checkbox" name="remember" />-->
  			<button type="submit" name="submit">Registrovat</button>
             
 		</form>

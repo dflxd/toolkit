@@ -5,13 +5,13 @@ session_start();
 
 if(isset($_POST['submit'])) {
 	
-	include 'dbh.inc.php';
+	include '../dbh.inc.php';
 	
 	$mail = mysqli_real_escape_string($conn, $_POST['mail']);
 	$pwd = mysqli_real_escape_string($conn, $_POST['pwd']);
 	
 	if(empty($mail) || empty($pwd)) {
-		header("Location: ../../tech-en.php");
+		header("Location: ../../../tech-en.php");
 		exit();
 	}
 	else {
@@ -20,7 +20,7 @@ if(isset($_POST['submit'])) {
 		$resultCheck = mysqli_num_rows($result);
 		
 		if($resultCheck < 1) {
-			header("Location: ../../tech-en.php");
+			header("Location: ../../../tech-en.php");
 			exit();
 		}
 		else {
@@ -28,7 +28,7 @@ if(isset($_POST['submit'])) {
 				//De-hashing
 				$hashedPwdCheck = password_verify($pwd, $row['user_pwd']);
 				if($hashedPwdCheck == false) {
-					header("Location: ../../tech-en.php");
+					header("Location: ../../../tech-en.php");
 					exit();
 				}
 				elseif($hashedPwdCheck == true) {
@@ -37,7 +37,7 @@ if(isset($_POST['submit'])) {
                     $_SESSION['u_first'] = $row['user_first'];
 					$_SESSION['u_last'] = $row['user_last'];
 					$_SESSION["loggedIn"] = true;
-					header("Location: ../dashboard.php");
+					header("Location: ../../dashboard.php");
 					exit();
 				}
 			}
