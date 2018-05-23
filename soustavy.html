@@ -46,7 +46,7 @@
 
 
       </div>
-      <div class="main" v-bind:class="{'exon': !exOn,'visib':!exOnMiddle}"  v-if="!inHide">
+      <div class="main" v-bind:class="{'exon': !exOn,'visib':!exOnMiddle}" v-if="!inHide">
         <div class="in">
           {{fromNumber}}<sub>({{from}})</sub> = <input type="text" v-model="toIn" :style="{ 'border-color': correct }"><sub>({{to}})</sub>
         </div>
@@ -61,12 +61,12 @@
     <div class="buttons">
       <button type="button" @click="generate" :disabled="!(rangeValid && fromValid && toValid)">Nový příklad</button>
       <button type="button" @click="check" :disabled="!exOn">Zkontrolovat</button>
-      <button type="button" @click="stepsCalc":disabled="!exOn">Postup řešení</button>
+      <button type="button" @click="stepsCalc" :disabled="!exOn">Postup řešení</button>
     </div>
 
   </div>
 
-  <script src="soustavy.js"></script>
+  <script src="js/soustavy.js"></script>
 </body>
 
 </html>

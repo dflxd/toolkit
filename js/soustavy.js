@@ -22,7 +22,9 @@ var soustavy = new Vue({
     inHide: false,
     rangeMin: 0,
     rangeMax: 1000,
-    stepsVal: ""
+    stepsVal: "",
+
+
 
   },
   methods: {
@@ -57,10 +59,10 @@ var soustavy = new Vue({
       this.toIn = "";
       this.fromNumber = rand(this.rangeMin, this.rangeMax).toString(this.from);
 
-      this.toNumber = parseInt(this.fromNumber,this.from).toString( this.to );
+      this.toNumber = parseInt(this.fromNumber, this.from).toString(this.to);
     },
     check: function() {
-      if (parseInt(this.toIn,this.to) == parseInt(this.toNumber.toString(),this.to)) this.correct = "green"; //correct
+      if (parseInt(this.toIn, this.to) == parseInt(this.toNumber.toString(), this.to)) this.correct = "green"; //correct
       else this.correct = "#f33"; //incorrect
     },
     toSettings: function() {
@@ -77,21 +79,21 @@ var soustavy = new Vue({
       var fromNumber = this.fromNumber;
       var from = this.from;
       var to = this.to;
-html += "<div style='display:inline-block'><table>";
-      if(this.from != 10) {
+      html += "<div style='display:inline-block'><table>";
+      if (this.from != 10) {
         var lng = fromNumber.length;
         html += "<tr>";
         for (var i = 0; i < lng; i++) {
-          if(i != 0) html += "<td> + </td>";
-          html += "<td>"+fromNumber.charAt(i)+"×"+from+"<sup>"+(lng-i-1)+"</sup></td>";
+          if (i != 0) html += "<td> + </td>";
+          html += "<td>" + fromNumber.charAt(i) + "×" + from + "<sup>" + (lng - i - 1) + "</sup></td>";
         }
         html += "</tr> <tr>";
         var sum = 0;
         for (var i = 0; i < lng; i++) {
-          if(i != 0) html += "<td> + </td>";
-          html += "<td>"+fromNumber.charAt(i)*Math.pow(from,(lng-i-1))+"</td>";
-          sum += fromNumber.charAt(i)*Math.pow(from,(lng-i-1));
-          if(i == lng-1) html += "<td> = </td><td>"+sum+"<sub>10</sub></td></td>";
+          if (i != 0) html += "<td> + </td>";
+          html += "<td>" + fromNumber.charAt(i) * Math.pow(from, (lng - i - 1)) + "</td>";
+          sum += fromNumber.charAt(i) * Math.pow(from, (lng - i - 1));
+          if (i == lng - 1) html += "<td> = </td><td>" + sum + "<sub>10</sub></td></td>";
           html += "";
         }
         fromNumber = sum;
@@ -101,30 +103,30 @@ html += "<div style='display:inline-block'><table>";
 
 
       from = 10;
-    if(to != 10) {
+      if (to != 10) {
 
 
-      html += "<br>"
-      var lastN = -1;
-      while(lastN != 0) {
-        html += fromNumber + " / " + to + " = " + Math.floor(fromNumber/to) + "   zb. " + (fromNumber%to);
-        rest.push(fromNumber%to);
-        lastN = Math.floor(fromNumber/to);
-        fromNumber = Math.floor(fromNumber/to);
-        html +="<br>";
+        html += "<br>"
+        var lastN = -1;
+        while (lastN != 0) {
+          html += fromNumber + " / " + to + " = " + Math.floor(fromNumber / to) + "   zb. " + (fromNumber % to);
+          rest.push(fromNumber % to);
+          lastN = Math.floor(fromNumber / to);
+          fromNumber = Math.floor(fromNumber / to);
+          html += "<br>";
+
+        }
+        var fin = "";
+        for (var i = rest.length - 1; i >= 0; i--) {
+          var one = rest[i];
+          if (one >= 10) one = "abcdefghijklmnopqrstuvwxyz" [one - 10];
+          else one = one.toString();
+          fin += one;
+
+        }
+        html += "<br> = " + fin + "<sub>" + to + "</sub>";
 
       }
-      var fin = "";
-      for (var i = rest.length-1; i >= 0; i--) {
-        var one = rest[i];
-        if(one >= 10) one = "abcdefghijklmnopqrstuvwxyz"[one-10];
-        else one = one.toString();
-        fin += one;
-
-      }
-      html += "<br> = "+fin+"<sub>"+to+"</sub>";
-
-}
 
 
       return html;

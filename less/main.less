@@ -1,4 +1,4 @@
-//out: ../css/main.css
+//"out": "../css/main.css"
 
 .clearfix:after {
     content: "";
@@ -23,11 +23,10 @@ body {
     background-attachment: fixed;
     background-repeat: no-repeat;
     height: 100%;
-    overflow-x: hidden;
 }
 header #logo {
          width:468px;
-        height:200px; 
+        height:200px;
     }
 
 ::selection {
@@ -44,13 +43,15 @@ button {
     font-size: 20px;
     outline: none!important;
 
+    &:focus {
+    //  background: rgba(14, 144, 210, 0.5);
+    }
+
     &:hover {
-        //border-color: white;
-        //color: black;
         background: rgba(14, 144, 210, 0.5);
     }
 
-    &:active {
+    &:active:not(:disabled) {
         transform: scale(0.95);
         transition: all 0.1s;
     }
@@ -59,8 +60,59 @@ button {
         opacity: 0.5;
     }
 
-    &:disabled:hover {
+    &:disabled:hover:not(.specialFocus) {
         background: rgba(6, 45, 65, 0.5);
+    }
+}
+
+button.specialFocus {
+    border: none;
+    border-radius: 0;
+    background: none;
+    color: #fff;
+    padding: 0px;
+    outline: none;
+    span {
+      border: 2px solid #49eeff;
+      border-radius: 10px;
+      background: rgba(6, 45, 65, 0.5);
+      color: #fff;
+      cursor: pointer;
+      padding: 8px 16px;
+      font-size: 20px;
+      outline: none;
+
+
+        display: inline-block;
+
+      &:hover {
+          background: rgba(14, 144, 210, 0.5);
+      }
+
+      &:active:not(.noActiveEffect) {
+          transform: scale(0.95);
+          transition: all 0.1s;
+      }
+
+    }
+
+
+    &:focus span{
+      border: 2px solid white;
+    }
+
+
+    &:disabled span{
+        opacity: 0.5;
+    }
+
+    &:disabled:hover span {
+        background: rgba(6, 45, 65, 0.5);
+    }
+
+    &:disabled span:active {
+        transform: scale(1) !important;
+        transition: all 0s;
     }
 }
 
@@ -96,7 +148,7 @@ header {
 }
 
 h1 {
-    padding-top: 15px;
+    padding-top: 25px;
     margin-bottom: 15px;
 }
 
@@ -107,7 +159,7 @@ h1 {
 
 .smallMenu {
     user-select: none;
-    z-index: 1;
+    z-index: 1000;
     position: fixed;
     top: 20px;
     left: 20px;
@@ -268,14 +320,66 @@ h1 {
     }
 }
 
-.footer {
+footer.subn {
+
     position: absolute;
     bottom: 0;
-    width: 100%;
+    right: 0;
+    padding: 5px;
+    text-align: center;
+
+    &.toEnd {
+      bottom: -70px;
+    }
+    table {
+      td {
+        padding: 0;
+        line-height: 10px;
+        font-size: 16px;
+        a {
+          text-align: right;
+    width: 60px;
     height: 60px;
-    line-height: 60px;
-    background-color: #1C1C1C;
-    text-align: center
+      display: inline-block;
+        margin-left: 5px;
+          img {
+            width: 100%;
+            transform: perspective(100px) rotateY(0deg);
+          }
+          &:hover {
+            img {
+              animation: rotatee .6s;
+              animation-timing-function: ease-out;
+              animation-fill-mode: forwards;
+            }
+
+          }
+
+
+        }
+
+      }
+    }
+}
+@keyframes rotatee {
+  0% {
+    transform: perspective(100px) rotateY(0deg);
+  }
+  45% {
+    transform: perspective(100px) rotateY(165deg) rotateX(0deg);
+  }
+  55% {
+    transform: perspective(100px) rotateY(180deg) rotateX(15deg);
+  }
+  75% {
+    transform: perspective(100px) rotateY(180deg) rotateX(90deg) rotateZ(0deg);
+  }
+  75.01% {
+    transform: perspective(100px) rotateY(180deg) rotateX(90deg) rotateZ(180deg);
+  }
+  100% {
+    transform: perspective(100px) rotateY(180deg) rotateX(180deg) rotateZ(180deg);
+  }
 }
 
 .hide {
@@ -299,13 +403,5 @@ h1 {
             max-width: 175px;
             max-height: 220px;
         }
-    }
-    h1 {
-        font-size: 17px !important;
-    }
-
-    img {
-        width: 348px;
-        height: 150px;
     }
 }

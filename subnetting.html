@@ -2,118 +2,141 @@
 <html>
 
 <head>
+
+
   <meta charset="utf-8">
   <title>Subnetting | ToolkIT</title>
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
-  <link rel="stylesheet" href="css/main.css">
-  <link rel="stylesheet" href="css/subnetting.css">
+
   <link href="https://fonts.googleapis.com/css?family=Nunito:400,700" rel="stylesheet">
   <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.5.3/vue.js"></script>
-  <script defer src="https://use.fontawesome.com/releases/v5.0.4/js/all.js"></script>
+  <script defer src="https://use.fontawesome.com/releases/v5.0.13/js/all.js" integrity="sha384-xymdQtn1n3lH2wcu0qhcdaOpQwyoarkgLVxC/wZ5q7h9gHtxICrpcaSUfygqZGOe" crossorigin="anonymous"></script>
+
+
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
+  <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+  <link rel="icon" href="favicon.ico" type="image/x-icon">
+
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js" integrity="sha256-T0Vest3yCU7pafRw9r+settMBX6JkKN06dqBnpQ8d30=" crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/subnetting.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/seedrandom/2.4.3/seedrandom.min.js">
   </script>
 </head>
 
-
 <body>
   <div id="subnetting">
     <div class="smallMenu">
-      <div class="menuItem menuSettings" title="Nastavení" @click="swapSettings" v-bind:class="{'active': settings}"><i class="fas fa-cog" aria-hidden="true"></i></div>
-      <div class="menuItem menuSubnettingHelp" title="Nápověda" @click="swapSubnettingHelp" v-bind:class="{'active': help, 'border': this.help && this.settings}"><i class="fas fa-question-circle" aria-hidden="true"></i></div>
-      <div class="menuItem menuBack" title="Zpět na úvodní stránku" v-if="settings"><a href="index.html"><i class="fas fa-home"></i><span>ToolkIT</span></a></div>
+      <div class="menuItem menuSettings" title="Nastavení" @click="swapSettings" v-bind:class="{'active': location =='settings'}"><i class="fas fa-cog" aria-hidden="true"></i></div>
+      <div class="menuItem menuSubnettingHelp" title="Nápověda" @click="swapSubnettingHelp" v-bind:class="{'active': help, 'border': help && location =='settings'}"><i class="fas fa-question-circle" aria-hidden="true"></i></div>
+      <div class="menuItem menuBack" title="Zpět na úvodní stránku" v-if="location =='settings'"><a href="index.html"><i class="fas fa-home"></i><span>ToolkIT</span></a></div>
     </div>
+    <div class="helpBox">
+      <div class="help">
+        <div class="">
+          <div class="title">Pokyny pro počítání podsítí</div>
+          <span class="subtitle" style="margin-right:10px;font-size:26px"><i class="fas fa-info"></i></span><span style="position: relative;bottom: 3px;display: inline-block;width: calc(100% - 20px);vertical-align: middle;">Jedná se o zjednodušená pravidla, reálně může do počítání vstupovat více faktorů.</span>
+          <div style="color: #49eeff">JAK POSTUPOVAT</div>
+          <ul>
+            <li>Podsítě vytváříme podle velikosti od největší po nejmenší</li>
+            <li>Pokud má více podsítí stejnou velikost postupujeme abecedně</li>
+            <li>Podsítě navazujeme hned za sebe (žádné prázdné místo mezi nimi)</li>
+            <li>Podsítě by měli být co možná nejmenší vzhledem k požadovanému počtu hostů</li>
 
-    <div class="help">
-      <div class="">
-        <div class="title">Základní pravidla pro tvorbu subnetů</div>
-        JAK POSTUPOVAT
-        <ul>
-          <li>Podsítě vytváříme podle velikosti od největší po nejmenší</li>
-          <li>Pokud má více podsítí stejnou velikost postupujeme abecedně</li>
-          <li>Podsítě navazujeme hned za sebe a dbáme na jejich co nejmenší velikost</li>
-
-        </ul>
-        URČOVÁNÍ ADRES
-        <ul>
-          <li>Jako první, abychom vůbec věděli jak subnety seřadit, zjistíme jejich velikost(prefix). Ptáme se na otázku: kolik bitů potřebujeme pro hosty? Například v podsíti pro 20 hostů potřebujeme 5 bitů (5 bitů = maximálně 32 možných adres), prefix tedy bude 32 - 5 = <b>/27</b>
-<div class="helper">
-  <div>
-    <table>
-      <tr>
-        <td >192 . 0 . 2 . 000</td>
-        <td style="color: black;padding:0 5px"> | </td>
-        <td>00000</td>
-      </tr>
-      <tr>
-        <td class="smaller" style="text-align:right">adresa podsítě</td>
-        <td style="color: black;padding:0 5px"> | </td>
-        <td class="smaller">místo pro hosty</td>
-      </tr>
-    </table>
-    </div>
-</div>
-
-          </li>
-          <li>Adresou podsítě je první adresa v podsíti (v části pro hosty binárně samé 0)</li>
-          <li>Broadcastem podsítě je poslední adresa v podsíti (v části pro hosty binárně samé 1)</li>
-<li>
-  Příklad subnetu s prefixem /27 (poslední oktet binárně):
-  <div class="helper">
-    <div>
-      <table>
-        <tr>
-          <td class="smaller">adresa podsítě</td>
-          <td>192 . 0 . 2 . 000 | 00000</td>
-        </tr>
-        <tr>
-          <td class="smaller" style="padding-right: 60px">první použitelná adresa</td>
-          <td>192 . 0 . 2 . 000 | 00001</td>
-        </tr>
-        <tr>
-          <td class="smaller" >poslední použitelná adresa</td>
-          <td>192 . 0 . 2 . 000 | 11110</td>
-        </tr>
-        <tr>
-          <td class="smaller">adresa broadcastu</td>
-          <td>192 . 0 . 2 . 000 | 11111</td>
-        </tr>
-      </table>
-      </div>
-  </div>
-</li>
-          <li>Pokračujeme další podsítí, například:
-            <div class="helper">
-              <div>
-                <table>
-                  <tr>
-                    <td class="smaller">adresa podsítě</td>
-                    <td>192 . 0 . 2 . 001 | 00000</td>
-                  </tr>
-                  <tr>
-                    <td class="smaller" style="padding-right: 60px">první použitelná adresa</td>
-                    <td>192 . 0 . 2 . 001 | 00001</td>
-                  </tr>
-                  <tr>
-                    <td style="letter-spacing:5px;font-weight:bold">...</td>
-                  </tr>
-                </table>
+          </ul>
+          <div style="color: #49eeff">URČOVÁNÍ ADRES</div>
+          <ul>
+            <li>Jako první, abychom vůbec věděli jak podsítě seřadit, zjistíme jejich velikost (prefix).<br>
+              Otázka zní: <b>kolik bitů potřebujeme pro hosty?</b><br>
+              Například v podsíti s 10 hosty potřebujeme 4 bity (= až 16 možných adres), z celé adresy
+              si tedy zapůjčujeme 4 bity, proto 32 - 4 = prefix <b>/28</b>
+              <div class="helper">
+                <div>
+                  <table>
+                    <tr>
+                      <td>192 . 0 . 2 . 0000</td>
+                      <td style="color: black;padding:0 5px"> | </td>
+                      <td>0000</td>
+                    </tr>
+                    <tr>
+                      <td class="smaller" style="text-align:right">adresa podsítě</td>
+                      <td style="color: black;padding:0 5px"> | </td>
+                      <td class="smaller">místo pro hosty</td>
+                    </tr>
+                  </table>
                 </div>
-            </div></li>
-        </ul>
+              </div>
 
+            </li>
+            <li><b>Adresou podsítě</b> je první adresa v podsíti (v části pro hosty binárně samé 0)</li>
+  <hr style="margin: 5px;visibility:  hidden;">
+            <li><b>První použitelnou adresou</b> (první host) je následující adresa po adrese podsítě (v části pro hosty binárně samé 0 a poslední bit 1)</li>
+
+
+            <li><b>Poslední použitelnou adresou</b> (první host) je předchozí adresa před broadcastem podsítě (v části pro hosty binárně samé 1 a poslední bit 0)</li>
+  <hr style="margin: 5px;visibility:  hidden;">
+  <li><b>Broadcastem podsítě</b> je poslední adresa v podsíti (v části pro hosty binárně samé 1)</li>
+    <hr style="margin: 5px;visibility:  hidden;">
+            <li>
+              Příklad podsítě s prefixem /28 (poslední oktet binárně):
+              <div class="helper">
+                <div>
+                  <table>
+                    <tr>
+                      <td class="smaller">adresa podsítě</td>
+                      <td>192 . 0 . 2 . 0000 | 0000</td>
+                    </tr>
+                    <tr>
+                      <td class="smaller" style="padding-right: 60px">první použitelná adresa</td>
+                      <td>192 . 0 . 2 . 0000 | 0001</td>
+                    </tr>
+                    <tr>
+                      <td class="smaller">poslední použitelná adresa</td>
+                      <td>192 . 0 . 2 . 0000 | 1110</td>
+                    </tr>
+                    <tr>
+                      <td class="smaller">adresa broadcastu</td>
+                      <td>192 . 0 . 2 . 0000 | 1111</td>
+                    </tr>
+                  </table>
+                </div>
+              </div>
+            </li>
+            <li>Pokračujeme další podsítí, například:
+              <div class="helper">
+                <div>
+                  <table>
+                    <tr>
+                      <td class="smaller">adresa podsítě</td>
+                      <td>192 . 0 . 2 . 0001 | 0000</td>
+                    </tr>
+                    <tr>
+                      <td class="smaller" style="padding-right: 60px">první použitelná adresa</td>
+                      <td>192 . 0 . 2 . 0001 | 0001</td>
+                    </tr>
+                    <tr>
+                      <td style="letter-spacing:5px;font-weight:bold">...</td>
+                    </tr>
+                  </table>
+                </div>
+              </div>
+            </li>
+          </ul>
+
+
+        </div>
 
       </div>
-
     </div>
-    <div class="settings" v-show="settings">
-      <div class="container">
+    <div class="settings" v-show="location =='settings'">
+
         <div class="area">
-          <div class="inputs clearfix" :style="{ 'opacity': inputDisabled ? 0.5 : 1.0 }" v-if="!specs">
+          <div class="inputs clearfix" :style="{ 'opacity': inputDisabled ? 0.5 : 1.0 }" v-if="page=='main'">
             <h1>Subnetting</h1>
             <table class="mainIn">
               <tr>
-                <td>
+                <td class="countSubnets">
                   Počet podsítí
                 </td>
                 <td class="space">
@@ -131,8 +154,8 @@
 
               </tr>
               <tr>
-                <td class="countHosts">
-                  <input type="text" v-model="subnetCountIn" :disabled="inputDisabled" :style="{ 'border-color': baseCountColor }" placeholder="(2-14)">
+                <td class="countSubnets">
+                  <input type="text" v-model="subnetCountIn" class="countSubnets" :disabled="inputDisabled" :style="{ 'border-color': baseCountColor }" placeholder="(2-14)">
                 </td>
                 <td class="space e">
                   &nbsp;
@@ -145,7 +168,7 @@
                   /
                 </td>
                 <td class="prefix">
-                  <input type="text" v-model="prefixIn" class="prefix" :disabled="inputDisabled" :style="{ 'border-color': basePrefixColor }" placeholder="(1-28)">
+                  <input type="text" v-model="prefixIn" class="prefix" :disabled="inputDisabled" :style="{ 'border-color': basePrefixColor }" placeholder="(8-28)">
                 </td>
               </tr>
             </table>
@@ -202,13 +225,14 @@
               </label>
             </div>
           </div>
-          <div class="specs" v-if="specs" :style="{ 'opacity': inputDisabled ? 0.5 : 1.0 }">
+          <div class="specs" v-if="page=='addit'" :style="{ 'opacity': inputDisabled ? 0.5 : 1.0 }">
             <h3>Další nastavení</h3>
             <table>
               <tr>
                 <td>
-                  Počítat s:
+                  Kategorie pro počítání:
                 </td>
+
                 <td>
 
                   <!--<div class="radioChoose specsMask">
@@ -216,9 +240,10 @@
                     <label>prefixem<input type="radio" name="specsMask" v-model="specsMask" v-bind:value="false" :disabled="inputDisabled"></label><!--
                  <label>maskou<input type="radio" name="specsMask" v-model="specsMask" v-bind:value="true" :disabled="inputDisabled"></label>
                </div>-->
-                  <label class="label-cbx">
-                    Adresa podsítě
-                    <input type="checkbox" class="invisible" v-model="specsMask" :disabled="inputDisabled">
+                  <div class="half">
+                    <label class="label-cbx">
+                    Adresa
+                    <input type="checkbox" class="invisible" v-model="specsOpts.firstA" :disabled="inputDisabled">
                     <div class="checkbox">
                       <svg width="20px" height="20px" viewBox="0 0 20 20">
                         <path d="M3,1 L17,1 L17,1 C18.1045695,1 19,1.8954305 19,3 L19,17 L19,17 C19,18.1045695 18.1045695,19 17,19 L3,19 L3,19 C1.8954305,19 1,18.1045695 1,17 L1,3 L1,3 C1,1.8954305 1.8954305,1 3,1 Z"></path>
@@ -227,31 +252,9 @@
                     </div>
                   </label>
 
-                  <label class="label-cbx">
-                    První použitelná adresa
-                    <input type="checkbox" class="invisible" v-model="specsMask" :disabled="inputDisabled">
-                    <div class="checkbox">
-                      <svg width="20px" height="20px" viewBox="0 0 20 20">
-                        <path d="M3,1 L17,1 L17,1 C18.1045695,1 19,1.8954305 19,3 L19,17 L19,17 C19,18.1045695 18.1045695,19 17,19 L3,19 L3,19 C1.8954305,19 1,18.1045695 1,17 L1,3 L1,3 C1,1.8954305 1.8954305,1 3,1 Z"></path>
-                        <polyline points="4 11 8 15 16 6"></polyline>
-                      </svg>
-                    </div>
-                  </label>
-
-                  <label class="label-cbx">
-                    Poslední použitelná adresa
-                    <input type="checkbox" class="invisible" v-model="specsMask" :disabled="inputDisabled">
-                    <div class="checkbox">
-                      <svg width="20px" height="20px" viewBox="0 0 20 20">
-                        <path d="M3,1 L17,1 L17,1 C18.1045695,1 19,1.8954305 19,3 L19,17 L19,17 C19,18.1045695 18.1045695,19 17,19 L3,19 L3,19 C1.8954305,19 1,18.1045695 1,17 L1,3 L1,3 C1,1.8954305 1.8954305,1 3,1 Z"></path>
-                        <polyline points="4 11 8 15 16 6"></polyline>
-                      </svg>
-                    </div>
-                  </label>
-
-                  <label class="label-cbx">
+                    <label class="label-cbx">
                     Broadcast
-                    <input type="checkbox" class="invisible" v-model="specsMask" :disabled="inputDisabled">
+                    <input type="checkbox" class="invisible" v-model="specsOpts.lastA" :disabled="inputDisabled">
                     <div class="checkbox">
                       <svg width="20px" height="20px" viewBox="0 0 20 20">
                         <path d="M3,1 L17,1 L17,1 C18.1045695,1 19,1.8954305 19,3 L19,17 L19,17 C19,18.1045695 18.1045695,19 17,19 L3,19 L3,19 C1.8954305,19 1,18.1045695 1,17 L1,3 L1,3 C1,1.8954305 1.8954305,1 3,1 Z"></path>
@@ -260,20 +263,11 @@
                     </div>
                   </label>
 
-                  <label class="label-cbx">
-                    Maska
-                    <input type="checkbox" class="invisible" v-model="specsMask" :disabled="inputDisabled">
-                    <div class="checkbox">
-                      <svg width="20px" height="20px" viewBox="0 0 20 20">
-                        <path d="M3,1 L17,1 L17,1 C18.1045695,1 19,1.8954305 19,3 L19,17 L19,17 C19,18.1045695 18.1045695,19 17,19 L3,19 L3,19 C1.8954305,19 1,18.1045695 1,17 L1,3 L1,3 C1,1.8954305 1.8954305,1 3,1 Z"></path>
-                        <polyline points="4 11 8 15 16 6"></polyline>
-                      </svg>
-                    </div>
-                  </label>
 
-                  <label class="label-cbx">
+
+                    <label class="label-cbx">
                     Prefix
-                    <input type="checkbox" class="invisible" v-model="specsMask" :disabled="inputDisabled">
+                    <input type="checkbox" class="invisible" v-model="specsOpts.prefix" :disabled="inputDisabled">
                     <div class="checkbox">
                       <svg width="20px" height="20px" viewBox="0 0 20 20">
                         <path d="M3,1 L17,1 L17,1 C18.1045695,1 19,1.8954305 19,3 L19,17 L19,17 C19,18.1045695 18.1045695,19 17,19 L3,19 L3,19 C1.8954305,19 1,18.1045695 1,17 L1,3 L1,3 C1,1.8954305 1.8954305,1 3,1 Z"></path>
@@ -281,34 +275,140 @@
                       </svg>
                     </div>
                   </label>
+
+
+
+
+                  </div>
+                  <div class="half">
+                    <label class="label-cbx">
+                      První host
+                      <input type="checkbox" class="invisible" v-model="specsOpts.firstH" :disabled="inputDisabled">
+                      <div class="checkbox">
+                        <svg width="20px" height="20px" viewBox="0 0 20 20">
+                          <path d="M3,1 L17,1 L17,1 C18.1045695,1 19,1.8954305 19,3 L19,17 L19,17 C19,18.1045695 18.1045695,19 17,19 L3,19 L3,19 C1.8954305,19 1,18.1045695 1,17 L1,3 L1,3 C1,1.8954305 1.8954305,1 3,1 Z"></path>
+                          <polyline points="4 11 8 15 16 6"></polyline>
+                        </svg>
+                      </div>
+                    </label>
+                    <label class="label-cbx">
+                      Poslední host
+                      <input type="checkbox" class="invisible" v-model="specsOpts.lastH" :disabled="inputDisabled">
+                      <div class="checkbox">
+                        <svg width="20px" height="20px" viewBox="0 0 20 20">
+                          <path d="M3,1 L17,1 L17,1 C18.1045695,1 19,1.8954305 19,3 L19,17 L19,17 C19,18.1045695 18.1045695,19 17,19 L3,19 L3,19 C1.8954305,19 1,18.1045695 1,17 L1,3 L1,3 C1,1.8954305 1.8954305,1 3,1 Z"></path>
+                          <polyline points="4 11 8 15 16 6"></polyline>
+                        </svg>
+                      </div>
+                    </label>
+
+                    <label class="label-cbx">
+                      Maska
+                      <input type="checkbox" class="invisible" v-model="specsOpts.mask" :disabled="inputDisabled">
+                      <div class="checkbox">
+                        <svg width="20px" height="20px" viewBox="0 0 20 20">
+                          <path d="M3,1 L17,1 L17,1 C18.1045695,1 19,1.8954305 19,3 L19,17 L19,17 C19,18.1045695 18.1045695,19 17,19 L3,19 L3,19 C1.8954305,19 1,18.1045695 1,17 L1,3 L1,3 C1,1.8954305 1.8954305,1 3,1 Z"></path>
+                          <polyline points="4 11 8 15 16 6"></polyline>
+                        </svg>
+                      </div>
+                    </label>
+                  </div>
+
 
                 </td>
               </tr>
               <tr>
-                <td>Rezervní počet hostů: <br><span class="info">(Rezervu zaokrouhlujte dolů)</span></td>
+                <td>Rezervní počet hostů: <br><span class="info">Rezervu zaokrouhlujte dolů</span></td>
                 <td>
                   <div class="radioChoose specsReserve">
                     <div class="sliderBackg" :style="{'left': specsReservePosition.left, 'width': specsReservePosition.width}"></div>
                     <label>bez rezervy<input type="radio" name="specsReserve" v-model="specsReserve" v-bind:value="1" :disabled="inputDisabled"></label><!--
+
                  --><label>10%<input type="radio" name="specsReserve" v-model="specsReserve" v-bind:value="2" :disabled="inputDisabled"></label><!--
+
                  --><label>25%<input type="radio" name="specsReserve" v-model="specsReserve" v-bind:value="3" :disabled="inputDisabled"></label><!--
+
                  --><label>50%<input type="radio" name="specsReserve" v-model="specsReserve" v-bind:value="4" :disabled="inputDisabled"></label>
                   </div>
                 </td>
 
               </tr>
               <tr>
-                <td>Generovat ze seedu: <br><span class="info">(Stejný seed a nastavení = stejný příklad)</span></td>
+                <td>Generovat ze seedu: <br><span class="info">Stejný seed a nastavení = stejný příklad</span></td>
                 <td><input @change="updateSeed" v-model="specsSeed" type="text" placeholder="(náhodně)" :disabled="inputDisabled"></td>
 
               </tr>
+              <tr>
+                <td>Animace přechodů:</td>
+                <td>
+                  <label class="label-cbx">
+                    <span v-if="specsAnimations" style="position:relative;bottom:2px">Zapnuto</span><span v-else style="position:relative;bottom:2px">Vypnuto</span>
+                    <input type="checkbox" class="invisible" v-model="specsAnimations" :disabled="inputDisabled">
+                    <div class="checkbox">
+                      <svg width="20px" height="20px" viewBox="0 0 20 20">
+                        <path d="M3,1 L17,1 L17,1 C18.1045695,1 19,1.8954305 19,3 L19,17 L19,17 C19,18.1045695 18.1045695,19 17,19 L3,19 L3,19 C1.8954305,19 1,18.1045695 1,17 L1,3 L1,3 C1,1.8954305 1.8954305,1 3,1 Z"></path>
+                        <polyline points="4 11 8 15 16 6"></polyline>
+                      </svg>
+                    </div>
+                  </label>
+                </td>
+
+              </tr>
+
 
             </table>
           </div>
+          <div class="mods" v-if="page=='mods'" :style="{ 'opacity': inputDisabled ? 0.5 : 1.0 }">
+            <h3>Módy</h3>
+            <div>
+              <div class="profile oneLine">
+                Určení adresy
+              </div>
+
+              <div class="onExpand">
+                <div class="description">
+                  Na základě známé adresy dopočítejte některou další adresu ve stejné podsíti
+                </div>
+                <div class="prefix">
+                  <span>Prefix: </span>
+                  <input type="text" v-model="mod1.prefixIn" :disabled="inputDisabled" :style="{ 'border-color': mod1PrefixColor }" placeholder="(8-30)">
+                </div>
+                <button tabindex="-1" type="button" @click="generateMod1" :disabled="(!prefixValidMod1 || inputDisabled)">
+                  <i class="fas fa-arrow-right"></i>
+                </button>
+
+              </div>
+            </div>
+            <div>
+              <div class="profile">
+                Patří do stejné podsítě?
+              </div>
+
+              <div class="onExpand">
+                <div class="description">
+                  Zjistěte, zda jsou dvě vygenerované adresy<br> součástí stejné podsítě
+
+                </div>
+                <div class="prefix">
+                  <span>Prefix: </span>
+                  <input type="text" v-model="mod2.prefixIn" :disabled="inputDisabled" :style="{ 'border-color': mod2PrefixColor }" placeholder="(8-30)">
+                </div>
+
+                <button tabindex="-1" type="button" @click="generateMod2" :disabled="(!prefixValidMod2 || inputDisabled)">
+                  <i class="fas fa-arrow-right"></i>
+                </button>
+
+              </div>
+            </div>
+          </div>
           <div class="opts clearfix">
 
-            <button type="button" class="additional" @click="swapSpecs" title="Další nastavení" v-bind:class="{'active': specs}">
+            <button type="button" class="additional" @click="setPageAddit" title="Další nastavení" v-bind:class="{'active': page=='addit'}">
               <i class="fas fa-sliders-h" aria-hidden="true"></i>
+            </button>
+
+            <button type="button" class="additional" @click="setPageMods" title="Módy" v-bind:class="{'active': page=='mods'}">
+              <i class="fas fa-archive"></i>
             </button>
 
             <button type="button" @click="generateNew" :disabled="!ipValid || !prefixValid || !comboValid || !countValid" v-if="!inputDisabled">
@@ -323,87 +423,261 @@
 
           </div>
         </div>
-      </div>
+
+        <footer class="subn">
+          <table>
+            <tr>
+
+              <td>Matěj Motl</td>
+              <td rowspan="3"><a href="http://ssinfis.cz" target="_blank"><img src="img/ssinfisLogo.png" alt=""></a></td>
+            </tr>
+
+            <tr>
+              <td>&copy; <span class="currentYear"></span></td>
+            </tr>
+            <tr>
+              <td>Subnetting v1.1</td>
+            </tr>
+          </table>
+        </footer>
     </div>
-    <div class="main" v-show="!settings" v-cloak>
-      <div class="container" :style="{'min-width': (specsMask&&answers) ? '1310px' : ''}">
+    <div class="main" :class="specsAnimations ? '' : 'noanim'" v-show="location == 'main'" v-cloak>
+      <div class="container">
         <h1>Subnetting</h1>
-        <div class="subtitle">Rozdělte síť s adresou
-          <span class="highlightArea"><span class="highlight">{{baseIP}} /{{basePrefix}}</span>
-          <div class="popout">
-            <table>
+
+        <div class="instance offRight" v-for="instance, index in instances">
+          <div class="subtitle">Rozdělte síť s adresou
+            <span class="highlightArea"><span class="highlight">{{instance.baseIP}} /{{instance.basePrefix}}</span>
+            <div class="popout">
+              <table>
+                <tr>
+                  <td colspan="2">K dispozici až {{hostsMax(index)}} adres ({{instance.baseIP}} - {{lastIP(index)}})</td>
+                </tr>
+                <tr>
+                  <td>Adresa: </td>
+                  <td><span v-for="item in baseIPShow(index)">{{item}}</span></td>
+                </tr>
+                <tr>
+                  <td>Maska: </td>
+                  <td><span v-for="item in basePrefixShow(index)">{{item}}</span></td>
+                </tr>
+              </table>
+            </div>
+            </span>
+            <span v-if="reserve!=0">, u podsítí zohledněte rezervu {{reserve}}%:</span>
+            <span v-if="reserve==0">na podsítě dle následujícího schématu:</span>
+          </div>
+
+
+          <canvas v-bind:id="toCanvasId(index)" width="1110" height="520"></canvas>
+          <div class="interBox">
+
+
+            <table v-if="instances[index].subnets.length > 0" class="inter">
               <tr>
-                <td colspan="2">K dispozici až {{hostsMax}} adres ({{baseIP}} - {{lastIP}})</td>
+                <td>Název</td>
+                <td>Počet hostů</td>
+
+                <td v-if="specsOpts.firstA"><span v-if="instances[index].answers">Zadaná<br></span>Adresa</td>
+                <td v-if="instances[index].answers && specsOpts.firstA">Adresa<br>správně</td>
+
+                <td v-if="specsOpts.firstH"><span v-if="instances[index].answers">Zadaný<br></span>První host</td>
+                <td v-if="instances[index].answers && specsOpts.firstH">První host<br>správně</td>
+
+                <td v-if="specsOpts.lastH"><span v-if="instances[index].answers">Zadaný<br></span>Poslední host</td>
+                <td v-if="instances[index].answers && specsOpts.lastH">Poslední host<br>správně</td>
+
+                <td v-if="specsOpts.lastA"><span v-if="instances[index].answers">Zadaný<br></span>Broadcast</td>
+                <td v-if="instances[index].answers && specsOpts.lastA">Broadcast<br>správně</td>
+
+                <td v-if="specsOpts.mask" class="maskCell"><span v-if="instances[index].answers">Zadaná<br></span>Maska</td>
+                <td v-if="instances[index].answers && specsOpts.mask">Maska<br>správně</td>
+
+                <td v-if="specsOpts.prefix" class="prefixCell"><span v-if="instances[index].answers">Zadaný<br></span>Prefix</td>
+                <td v-if="instances[index].answers && specsOpts.prefix">Prefix<br>správně</td>
               </tr>
-              <tr>
-                <td>Adresa: </td>
-                <td>
-                  <span v-for="item in baseIPShow">{{item}}</span>
-                </td>
-              </tr>
-              <tr>
-                <td>Maska: </td>
-                <td><span v-for="item in basePrefixShow">{{item}}</span></td>
+              <tr v-for="item in instances[index].subnets" :style="{ 'transition-delay': ((item.nth*0.025)+0.025) + 's'}">
+                <td>{{item.name}}<span class="info" v-if="item.parent == 'btw' && reserve != 0">(bez rezervy)</span></td>
+                <td>{{item.hosts}}</td>
+                <td v-if="specsOpts.firstA"><input type="text" v-model="item.inFirstA" @input="resetFirstA(item)" :style="{ 'border-color': item.firstACheckColor }"></td>
+                <td v-if="instances[index].answers && specsOpts.firstA">{{item.firstA}}</td>
+
+                <td v-if="specsOpts.firstH"><input type="text" v-model="item.inFirstH" @input="resetFirstH(item)" :style="{ 'border-color': item.firstHCheckColor }"></td>
+                <td v-if="instances[index].answers && specsOpts.firstH">{{item.firstH}}</td>
+                <td v-if="specsOpts.lastH"><input type="text" v-model="item.inLastH" @input="resetLastH(item)" :style="{ 'border-color': item.lastHCheckColor }"></td>
+                <td v-if="instances[index].answers && specsOpts.lastH">{{item.lastH}}</td>
+
+                <td v-if="specsOpts.lastA"><input type="text" v-model="item.inLastA" @input="resetLastA(item)" :style="{ 'border-color': item.lastACheckColor }"></td>
+                <td v-if="instances[index].answers && specsOpts.lastA">{{item.lastA}}</td>
+
+                <td class="maskCell" v-if="specsOpts.mask"><input type="text" v-model="item.inMask" @input="resetMask(item)" class="mask" :style="{ 'border-color': item.maskCheckColor }"></td>
+                <td v-if="instances[index].answers && specsOpts.mask">{{item.mask}}</td>
+                <td class="prefixCell" v-if="specsOpts.prefix"><input type="text" v-model="item.inPrefix" @input="resetPrefix(item)" class="prefix" :style="{ 'border-color': item.prefixCheckColor }"></td>
+                <td v-if="instances[index].answers && specsOpts.prefix">{{item.prefix}}</td>
+
               </tr>
             </table>
           </div>
-          </span>
-          <span v-if="reserve!=0">, u podsítí zohledněte rezervu {{reserve}}%:</span>
-          <span v-if="reserve==0">na podsítě dle následujícího schématu:</span>
-        </div>
-
-
-        <canvas id="canvas" width="1110" height="520"></canvas>
-
-        <table v-if="subnets.length > 0" class="inter">
-          <tr>
-            <td>Název</td>
-            <td>Počet hostů</td>
-            <td><span v-if="answers">Zadaná<br></span>Adresa</td>
-            <td v-if="answers">Adresa<br>správně</td>
-            <td><span v-if="answers">Zadaný<br></span>Broadcast</td>
-            <td v-if="answers">Broadcast<br>správně</td>
-            <td class="prefixCell" v-if="!specsMask"><span v-if="answers">Zadaný<br></span>Prefix</td>
-            <td v-if="answers && !specsMask">Prefix<br>správně</td>
-
-            <td class="maskCell" v-if="specsMask"><span v-if="answers">Zadaná<br></span>Maska</td>
-            <td v-if="answers && specsMask">Maska<br>správně</td>
-          </tr>
-          <tr v-for="item in subnets">
-            <td>{{item.name}}<span class="info" v-if="item.parent == 'btw' && reserve != 0">(bez rezervy)</span></td>
-            <td>{{item.hosts}}</td>
-            <td><input type="text" v-model="item.inFirstA" @input="resetFirstA(item)" :style="{ 'border-color': item.firstACheckColor }"></td>
-            <td v-if="answers">{{item.firstA}}</td>
-            <td><input type="text" v-model="item.inLastA" @input="resetLastA(item)" :style="{ 'border-color': item.lastACheckColor }"></td>
-            <td v-if="answers">{{item.lastA}}</td>
-
-            <td class="prefixCell" v-if="!specsMask"><input type="text" v-model="item.inPrefix" @input="resetPrefix(item)" class="prefix" :style="{ 'border-color': item.prefixCheckColor }"></td>
-            <td v-if="answers && !specsMask">{{item.prefix}}</td>
-
-            <td class="maskCell" v-if="specsMask"><input type="text" v-model="item.inMask" @input="resetPrefix(item)" class="mask" :style="{ 'border-color': item.prefixCheckColor }"></td>
-            <td v-if="answers && specsMask">{{item.mask}}</td>
-          </tr>
-        </table>
-
-        <div class="buttons clearfix">
-          <div class="sectionL">
-            <input type="text" v-model="fillAll" placeholder="dosadit do všech">
-            <button type="button" @click="fillAllTrigger"><i class="fas fa-chevron-up"></i></button>
-          </div>
-          <div class="sectionR">
-            <button @click="check">Zkontrolovat</button>
-            <button @click="showResults">Zobrazit řešení</button>
-            <button @click="generate">Další příklad <i class="fas fa-arrow-right"></i></button>
-          </div>
         </div>
       </div>
+      <div class="buttonsBox" :style="{ 'top' : currentInstanceHeight+'px'}">
+        <div class="container">
+
+
+          <div class="buttons clearfix">
+            <div class="clearfix buttonsUp">
+              <div class="sectionR">
+                <button class="specialFocus" @click="prevInstance" :disabled="currentInstance == 0"><span tabindex="-1"><i class="fas fa-arrow-left"></i></span></button>
+                <div class="inlineBlock">{{currentInstanceName}}</div>
+                <button class="specialFocus" @click="nextInstance" :disabled="currentInstance == (instances.length-1)"><span tabindex="-1"><i class="fas fa-arrow-right"></i></span></button>
+              </div>
+            </div>
+            <div class="">
+              <div class="sectionL">
+                <input type="text" v-model="fillAll" placeholder="dosadit do všech">
+                <button class="specialFocus" type="button" @click="fillAllTrigger"><span tabindex="-1" class="noActiveEffect"><i class="fas fa-chevron-up"></i></span></button>
+              </div>
+              <div class="sectionR">
+                <button class="specialFocus" @click="check"><span tabindex="-1">Zkontrolovat</span></button>
+                <button class="specialFocus" @click="showResults"><span tabindex="-1">Zobrazit řešení</span></button>
+                <button class="specialFocus" @click="generate"><span tabindex="-1">Nový příklad</span></button>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+        <footer class="toEnd subn">
+          <table>
+            <tr>
+
+              <td>Matěj Motl</td>
+              <td rowspan="3"><a href="http://ssinfis.cz" target="_blank"><img src="img/ssinfisLogo.png" alt=""></a></td>
+            </tr>
+
+            <tr>
+              <td>&copy; <span class="currentYear"></span></td>
+            </tr>
+            <tr>
+              <td>Subnetting v1.1</td>
+            </tr>
+          </table>
+        </footer>
+      </div>
+
+    </div>
+    <div class="modBox" v-if="location == 'mod1'">
+
+
+    <div class="mod mod1">
+
+
+
+        <h3>Subnetting - Určení adresy</h3>
+
+        <div class="task clearfix">
+          <h5><span>PODSÍŤ</span></h5>
+          <div class="left">
+            {{mod1.address1Type}}: <span class="information address"><span v-for="octet, index in mod1.octets" @click="fillAndFocusMod1(index)">{{octet}}<span v-if="index != 0">.</span></span>
+          </div>
+          <div class="right">
+            Prefix: <span class="information">/{{mod1.prefix}}</span>
+          </div>
+        </div>
+        Jaká je adresa {{mod1.address2Type}}?&nbsp;
+        <input type="text" v-model="mod1.address2In" :style="{ 'border-color': mod1.checkColor }">
+        <div v-if="mod1.answers" class="answers">Správně: {{mod1.address2}}</div>
+        <div class="buttons">
+          <button class="specialFocus" @click="checkMod1"><span tabindex="-1">Zkontrolovat</span></button><!--
+
+         --><button class="specialFocus" @click="showResultsMod1"><span tabindex="-1">Zobrazit řešení</span></button><!--
+
+         --><button class="specialFocus" @click="generateMod1"><span tabindex="-1">Nový příklad</span></button>
+        </div>
+
+    </div>
+    <footer class="subn">
+      <table>
+        <tr>
+
+          <td>Matěj Motl</td>
+          <td rowspan="3"><a href="http://ssinfis.cz" target="_blank"><img src="img/ssinfisLogo.png" alt=""></a></td>
+        </tr>
+
+        <tr>
+          <td>&copy; <span class="currentYear"></span></td>
+        </tr>
+        <tr>
+          <td>Subnetting v1.1</td>
+        </tr>
+      </table>
+    </footer>
+    </div>
+    <div class="modBox" v-if="location == 'mod2'">
+
+
+    <div class="mod mod2">
+
+
+
+        <h3>Subnetting - Patří do stejné podsítě?</h3>
+
+        <div class="task clearfix">
+          <h5><span>ADRESY</span></h5>
+          <div class="left">
+            Adresa 1: <span class="information address">{{mod2.address1}}</span>
+          </div>
+          <div class="left">
+            Adresa 2: <span class="information address">{{mod2.address2}}</span>
+          </div>
+          <div class="right">
+            Prefix: <span class="information">/{{mod2.prefix}}</span>
+          </div>
+        </div>
+        <div class="clearfix">
+          <div class="question">
+            Patří tyto dvě adresy do stejné podsítě?
+          </div>
+
+          <div class="radioChoose mod2In">
+            <div class="sliderBackg" :class="{downscale:!mod2.selected, aftershock:mod2.aftershock, t:mod2.result==1, f:mod2.result==-1}" :style="{'left': mod2.inPosition.left, 'width': mod2.inPosition.width}"></div>
+            <label>ANO<input type="radio" name="in" @click="mod2Actuate" v-model="mod2.in" v-bind:value="1" :disabled="mod2.result != 0"></label><!--
+
+           --><label>NE<input type="radio" name="in" @click="mod2Actuate" v-model="mod2.in" v-bind:value="2" :disabled="mod2.result != 0"></label>
+          </div>
+        </div>
+
+        <div class="buttons">
+          <button class="specialFocus" @click="checkMod2" :disabled="!mod2.selected" v-if="mod2.result == 0"><span tabindex="-1">Zkontrolovat</span></button><!--
+
+         --><button class="specialFocus" @click="generateMod2"><span tabindex="-1">Nový příklad</span></button>
+        </div>
+
+    </div>
+    <footer class="subn">
+      <table>
+        <tr>
+
+          <td>Matěj Motl</td>
+          <td rowspan="3"><a href="http://ssinfis.cz" target="_blank"><img src="img/ssinfisLogo.png" alt=""></a></td>
+        </tr>
+
+        <tr>
+          <td>&copy; <span class="currentYear"></span></td>
+        </tr>
+        <tr>
+          <td>Subnetting v1.1</td>
+        </tr>
+      </table>
+    </footer>
     </div>
     <div class="hide">
-      {{thediff}}{{specsReserveSelected}}{{specsMaskSelected}}
+      {{thediff}}{{specsReserveSelected}}{{mod2InSelected}}{{currentInstanceHeight}}
     </div>
+
   </div>
 
-  <script src="subnetting.js"></script>
+  <script src="js/subnetting.js"></script>
 </body>
 
 </html>

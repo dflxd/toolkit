@@ -1,18 +1,135 @@
+html,
 body {
   color: white;
+  height: 100%;
+}
+h1 {
+  margin-bottom: 25px;
 }
 #subnetting {
+  height: 100%;
+  min-width: fit-content;
+  min-height: fit-content;
   text-align: center;
 }
-#subnetting #canvas {
-  margin-top: 15px;
+#subnetting .container {
+  position: relative;
+}
+#subnetting .radioChoose {
+  display: table;
+  position: relative;
+  width: 100%;
+}
+#subnetting .radioChoose.specsReserve .sliderBackg {
+  left: 0;
+  width: 123.25px;
+}
+#subnetting .radioChoose.mod2In .sliderBackg {
+  left: 0;
+  width: 97.95px;
+  transform: scale(1);
+  transition: all .2s, left 0s, width 0s;
+}
+#subnetting .radioChoose.mod2In .sliderBackg.downscale {
+  transform: scale(0);
+}
+#subnetting .radioChoose.mod2In .sliderBackg.aftershock {
+  transition: all 0s, left .2s, width .2s;
+}
+#subnetting .radioChoose.mod2In .sliderBackg.t {
+  border-color: #00bd00;
+  background-color: rgba(0, 189, 0, 0.15);
+}
+#subnetting .radioChoose.mod2In .sliderBackg.f {
+  border-color: #f33;
+  background-color: rgba(255, 51, 51, 0.1);
+}
+#subnetting .radioChoose label {
+  cursor: pointer;
+  padding: 8px 12px;
+  margin-bottom: 0;
+  user-select: none;
+  text-align: center;
+  transition: 0.2s;
+  display: table-cell;
+}
+#subnetting .radioChoose input {
+  display: none;
+}
+#subnetting .radioChoose input:checked + label {
+  background: red;
+}
+#subnetting .radioChoose .sliderBackg {
+  z-index: -1;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  background: rgba(0, 231, 255, 0.05);
+  transition: all 0.2s;
+  border-radius: 10px;
+  border: solid 2px #49eeff;
+}
+#subnetting .main.noanim * {
+  transition: all 0s!important;
+  transition-delay: 0s!important;
+}
+#subnetting canvas {
+  margin-top: 5px;
+  margin-bottom: -5px;
+}
+#subnetting .instance {
+  z-index: 1;
+  position: absolute;
+  left: 15px;
+  right: 15px;
+}
+#subnetting .instance .subtitle {
+  z-index: 1;
+}
+#subnetting .instance canvas {
+  transition-delay: 0.1s!important;
+}
+#subnetting .instance .interBox tr,
+#subnetting .instance .subtitle,
+#subnetting .instance canvas {
+  transition: all 1s;
+  transform: perspective(2000px) rotateY(0deg) translateZ(0px);
+  opacity: 1;
+}
+#subnetting .instance .interBox {
+  opacity: 1;
+  transition: all 1s;
+}
+#subnetting .instance.offLeft {
+  z-index: -1;
+}
+#subnetting .instance.offLeft .interBox {
+  opacity: 0;
+}
+#subnetting .instance.offLeft .interBox tr,
+#subnetting .instance.offLeft .subtitle,
+#subnetting .instance.offLeft canvas {
+  transform: translateX(200px) perspective(2000px) rotateY(-80deg) translateZ(500px) scale(0.8);
+  opacity: 0;
+}
+#subnetting .instance.offRight {
+  z-index: -1;
+}
+#subnetting .instance.offRight .interBox {
+  opacity: 0;
+}
+#subnetting .instance.offRight .interBox tr,
+#subnetting .instance.offRight .subtitle,
+#subnetting .instance.offRight canvas {
+  transform: translateX(-200px) perspective(2000px) rotateY(80deg) translateZ(500px) scale(0.8);
+  opacity: 0;
 }
 #subnetting .highlightArea {
   position: relative;
 }
 #subnetting .highlightArea .highlight {
   cursor: default;
-  border: 1px dashed #4ef;
+  border: 1px dashed #49eeff;
   padding: 0 7px;
   background: rgba(0, 0, 0, 0.2);
   position: relative;
@@ -22,20 +139,20 @@ body {
 }
 #subnetting .highlightArea .highlight:hover + .popout {
   opacity: 1;
-  transition: all .2s;
-  transition-delay: .2s;
+  transition: all 0.2s;
+  transition-delay: 0.2s;
 }
 #subnetting .highlightArea .popout {
   z-index: 1;
   position: absolute;
   font-size: 14px;
-  background: rgba(0, 0, 0, 0.7);
+  background: rgba(25, 25, 25, 0.9);
   top: calc(100% + 8px);
   left: 50%;
   transform: translateX(-50%);
   border-radius: 10px;
   opacity: 0;
-  transition: .1s all;
+  transition: 0.1s all;
   margin: 0;
   padding: 5px;
 }
@@ -53,7 +170,7 @@ body {
 }
 #subnetting .highlightArea .popout td + td span:not(:first-child):before {
   content: " . ";
-  letter-spacing: 0px;
+  letter-spacing: 0;
   margin-left: -2px;
 }
 #subnetting .highlightArea .popout:before {
@@ -64,10 +181,12 @@ body {
   margin-left: -7px;
   border-width: 7px;
   border-style: solid;
-  border-color: transparent transparent rgba(0, 0, 0, 0.7) transparent;
+  border-color: transparent transparent rgba(25, 25, 25, 0.9) transparent;
 }
-#subnetting .help {
-  width: 850px;
+#subnetting .helpBox {
+  min-width: 610px;
+  width: 800px;
+  height: 800px;
   display: none;
   position: fixed;
   background: rgba(20, 20, 20, 0.9);
@@ -75,32 +194,39 @@ body {
   border-radius: 0 10px 10px 10px;
   top: 72px;
   left: 20px;
-  z-index: 1;
-  padding: 20px;
+  z-index: 2;
   font-size: 18px;
   text-align: left;
   max-height: calc(100% - 95px);
+  max-width: calc(100% - 44px);
+}
+#subnetting .helpBox .help {
+  max-height: 100%;
+  padding: 20px;
   overflow: auto;
+  /*&::-webkit-scrollbar-track
+    {
+    	-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+    	background-color: white;
+    }
+
+    &::-webkit-scrollbar
+    {
+    	width: 16px;
+
+    	background-color: white;
+    }
+
+    &::-webkit-scrollbar-thumb
+    {
+    	-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);
+    	background-color: #555;
+    }*/
 }
-#subnetting .help::-webkit-scrollbar-track {
-  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
-  border-radius: 10px;
-  background-color: #F5F5F5;
+#subnetting .helpBox .help .helper {
+  margin: 10px 0 5px;
 }
-#subnetting .help::-webkit-scrollbar {
-  width: 12px;
-  background-color: #F5F5F5;
-  border-radius: 0 5px 5px 0;
-}
-#subnetting .help::-webkit-scrollbar-thumb {
-  border-radius: 10px;
-  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
-  background-color: #555;
-}
-#subnetting .help .helper {
-  margin: 10px 0 5px 0;
-}
-#subnetting .help .helper div {
+#subnetting .helpBox .help .helper div {
   border-radius: 5px;
   font-size: 20px;
   display: inline-block;
@@ -109,22 +235,25 @@ body {
   background: #eee;
   color: #111;
 }
-#subnetting .help .helper div .smaller {
+#subnetting .helpBox .help .helper div .smaller {
   font-size: 75%;
 }
-#subnetting .help .title {
+#subnetting .helpBox .help .title {
   font-size: 32px;
 }
 #subnetting .settings {
-  position: fixed;
   width: 100%;
   height: 100%;
-  background-image: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url(../img/header.jpg);
+  background-image: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url("../img/header.jpg");
   background-size: 1920px;
   background-attachment: fixed;
-}
-#subnetting .settings .container {
-  height: 100%;
+  position: relative;
+  min-width: fit-content;
+  overflow: hidden;
+  min-height: 550px;
+  /*bug
+              top: 50%;
+                  transform: translateY(-50%);*/
 }
 #subnetting .settings .area {
   animation: zoomIn 0.2s ease-out;
@@ -138,6 +267,11 @@ body {
 }
 #subnetting .settings .area h1 {
   padding-top: 0;
+}
+#subnetting .settings .area .mainIn tr:first-child .ip,
+#subnetting .settings .area .mainIn tr:first-child .prefix,
+#subnetting .settings .area .mainIn tr:first-child .countSubnets {
+  padding-bottom: 5px;
 }
 #subnetting .settings .area .mainIn tr td input {
   width: 100%;
@@ -164,8 +298,8 @@ body {
 #subnetting .settings .area .mainIn tr td.ip .downer:hover svg {
   color: white;
 }
-#subnetting .settings .area .mainIn tr td.prefix,
-#subnetting .settings .area .mainIn tr td.countHosts {
+#subnetting .settings .area .mainIn tr td.countSubnets,
+#subnetting .settings .area .mainIn tr td.prefix {
   width: 22%;
 }
 #subnetting .settings .area .mainIn tr td.space {
@@ -210,7 +344,7 @@ body {
   display: block;
   flex: 1;
   height: 90px;
-  margin: 0px 5px;
+  margin: 0 5px;
   user-select: none;
   cursor: pointer;
   font-size: 16px;
@@ -231,7 +365,7 @@ body {
 #subnetting .settings .area .diff .desc:nth-child(2) {
   margin-left: 0;
   border-radius: 10px 0 0 10px;
-  box-shadow: inset 0px 0px 0px 2px rgba(0, 128, 0, 0.5);
+  box-shadow: inset 0 0 0 2px rgba(0, 128, 0, 0.5);
   position: relative;
   z-index: 1;
 }
@@ -249,7 +383,7 @@ body {
   opacity: 0;
 }
 #subnetting .settings .area .diff .desc:nth-child(4) {
-  box-shadow: inset 0px 0px 0px 2px rgba(255, 255, 0, 0.5);
+  box-shadow: inset 0 0 0 2px rgba(255, 255, 0, 0.5);
   position: relative;
   z-index: 1;
 }
@@ -266,7 +400,7 @@ body {
   opacity: 0;
 }
 #subnetting .settings .area .diff .desc:nth-child(6) {
-  box-shadow: inset 0px 0px 0px 2px rgba(255, 96, 0, 0.5);
+  box-shadow: inset 0 0 0 2px rgba(255, 96, 0, 0.5);
   position: relative;
   z-index: 1;
 }
@@ -284,7 +418,7 @@ body {
 }
 #subnetting .settings .area .diff .desc:nth-child(8) {
   margin-right: 0;
-  box-shadow: inset 0px 0px 0px 2px rgba(255, 0, 0, 0.5);
+  box-shadow: inset 0 0 0 2px rgba(255, 0, 0, 0.5);
   position: relative;
   border-radius: 0 10px 10px 0;
   z-index: 1;
@@ -307,88 +441,67 @@ body {
   z-index: -1;
 }
 #subnetting .settings .area .specs {
-  height: 314px;
   width: 100%;
   position: relative;
+  font-size: 18px;
+  height: 328px;
 }
 #subnetting .settings .area .specs .info {
   color: #aaa;
-  font-size: 80%;
+  font-size: 75%;
 }
 #subnetting .settings .area .specs tr:not(:first-child) td {
   padding-top: 15px;
 }
+#subnetting .settings .area .specs tr td:nth-child(1) {
+  font-size: 20px;
+  line-height: 25px;
+}
 #subnetting .settings .area .specs h3 {
-  margin-bottom: 30px;
+  margin-bottom: 20px;
 }
 #subnetting .settings .area .specs table {
+  width: 100%;
   position: relative;
   left: 50%;
   transform: translateX(-50%);
   text-align: left;
 }
+#subnetting .settings .area .specs table .half {
+  float: left;
+  width: 50%;
+}
 #subnetting .settings .area .specs table tr td:nth-child(2) {
-  padding-left: 30px;
+  padding-left: 28px;
 }
 #subnetting .settings .area .specs input[type=text] {
+  width: 100%;
   text-align: center;
-}
-#subnetting .settings .area .specs .radioChoose {
-  display: inline-block;
-  position: relative;
-}
-#subnetting .settings .area .specs .radioChoose.specsReserve .sliderBackg {
-  left: 0;
-  width: 123.25px;
-}
-#subnetting .settings .area .specs .radioChoose.specsMask .sliderBackg {
-  left: 0;
-  width: 97.95px;
-}
-#subnetting .settings .area .specs .radioChoose label {
-  cursor: pointer;
-  padding: 5px 10px;
-  margin-bottom: 0;
-  user-select: none;
-  text-align: center;
-  transition: .2s;
-}
-#subnetting .settings .area .specs .radioChoose input {
-  display: none;
-}
-#subnetting .settings .area .specs .radioChoose input:checked + label {
-  background: red;
-}
-#subnetting .settings .area .specs .radioChoose .sliderBackg {
-  z-index: -1;
-  height: 100%;
-  position: absolute;
-  top: 0;
-  background: rgba(0, 231, 255, 0.05);
-  transition: all .2s;
-  border-radius: 10px;
-  box-shadow: 0 0 0 2px #49eeff;
 }
 #subnetting .settings .area .specs .label-cbx {
   user-select: none;
   cursor: pointer;
   margin-bottom: 0;
+  float: left;
+  clear: both;
+  line-height: 30px;
 }
 #subnetting .settings .area .specs .label-cbx input:checked + .checkbox {
-  border-color: #20C2E0;
+  border-color: #0ac;
 }
 #subnetting .settings .area .specs .label-cbx input:checked + .checkbox svg path {
-  fill: #20C2E0;
+  fill: #0ac;
 }
 #subnetting .settings .area .specs .label-cbx input:checked + .checkbox svg polyline {
   stroke-dashoffset: 0;
+  stroke: white;
 }
-#subnetting .settings .area .specs .label-cbx:hover .checkbox svg path {
+#subnetting .settings .area .specs .label-cbx:hover input:not(:disabled) + .checkbox svg path {
   stroke-dashoffset: 0;
 }
 #subnetting .settings .area .specs .label-cbx .checkbox {
   position: relative;
-  top: 2px;
+  top: 4px;
   float: left;
   margin-right: 8px;
   width: 20px;
@@ -403,7 +516,7 @@ body {
 }
 #subnetting .settings .area .specs .label-cbx .checkbox svg path {
   fill: none;
-  stroke: #20C2E0;
+  stroke: #0ac;
   stroke-width: 2;
   stroke-linecap: round;
   stroke-linejoin: round;
@@ -439,6 +552,81 @@ body {
   height: 0;
   opacity: 0;
 }
+#subnetting .settings .area .mods {
+  height: 328px;
+  text-align: left;
+}
+#subnetting .settings .area .mods h3 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+#subnetting .settings .area .mods > div {
+  overflow: hidden;
+  user-select: none;
+  text-align: center;
+  display: inline-block;
+  width: 150px;
+  height: 100px;
+  float: left;
+  border: 2px solid #49eeff;
+  background: rgba(6, 45, 65, 0.1);
+  color: #fff;
+  position: relative;
+  font-size: 20px;
+  transition: width .3s, height .3s;
+}
+#subnetting .settings .area .mods > div .prefix {
+  display: inline-block;
+  float: left;
+}
+#subnetting .settings .area .mods > div button {
+  float: right;
+  height: 44px;
+  line-height: 25px;
+}
+#subnetting .settings .area .mods > div:not(:first-of-type) {
+  margin-left: 10px;
+}
+#subnetting .settings .area .mods > div .profile {
+  padding: 20px 5px;
+  cursor: pointer;
+  transition: padding .3s;
+}
+#subnetting .settings .area .mods > div .profile.oneLine {
+  padding: 34px 5px;
+}
+#subnetting .settings .area .mods > div .onExpand {
+  padding-top: 15px;
+  margin: 0 10px;
+  border-top: 1px solid rgba(255, 255, 255, 0.8);
+  opacity: 0;
+  transition: opacity .1s;
+  transition-delay: 0s;
+}
+#subnetting .settings .area .mods > div .onExpand .description {
+  font-size: 16px;
+  margin-bottom: 15px;
+}
+#subnetting .settings .area .mods > div .onExpand input {
+  width: 100px;
+  text-align: center;
+}
+#subnetting .settings .area .mods > div.expand {
+  width: 250px;
+  height: 229px;
+  background: rgba(14, 144, 210, 0.1);
+}
+#subnetting .settings .area .mods > div.expand .profile {
+  padding: 15px 5px;
+}
+#subnetting .settings .area .mods > div.expand .onExpand {
+  opacity: 1;
+  transition: opacity .2s;
+  transition-delay: .1s;
+}
+#subnetting .settings .area .mods > div:hover {
+  background: rgba(14, 144, 210, 0.1);
+}
 #subnetting .settings .area .opts {
   width: 100%;
   margin-top: 30px;
@@ -460,15 +648,25 @@ body {
 #subnetting .settings .area .opts .additional.active:hover {
   background: #ddd;
 }
+#subnetting .settings .area .opts .additional.active {
+  background: #ddd;
+  border-color: #079;
+}
+#subnetting .settings .area .opts .additional.active svg {
+  color: #08a;
+}
+#subnetting .settings .area .opts .additional.active:hover {
+  background: #ddd;
+}
 #subnetting .settings .area .opts .additional svg {
   color: white;
   /* line-height: 216px;*/
   vertical-align: middle;
-  margin: 2px 0px;
+  margin: 2px 0;
   /* margin: 0 10px; */
-  top: 0px;
+  top: 0;
   font-size: 26px;
-  bottom: 0px;
+  bottom: 0;
   right: 0;
   left: 0;
   /* position: absolute; */
@@ -478,64 +676,235 @@ body {
 #subnetting .settings .area .opts button {
   float: right;
 }
-#subnetting table.inter {
+#subnetting .modBox {
+  height: 100%;
+}
+#subnetting .mod {
+  width: 600px;
+  top: 50%;
+  left: 50%;
+  position: relative;
+  transform: translate(-50%, -50%);
+  min-width: 500px;
+}
+#subnetting .mod h3 {
+  margin-bottom: 50px;
+}
+#subnetting .mod h5 {
+  text-align: center;
+}
+#subnetting .mod h5 span {
+  border-bottom: 2px solid white;
+}
+#subnetting .mod input {
+  transition: all .3s;
+}
+#subnetting .mod .buttons {
+  text-align: right;
+  margin-top: 30px;
+}
+#subnetting .mod .buttons button:not(:first-child) {
+  margin-left: 10px;
+}
+#subnetting .mod .answers {
+  margin-top: 15px;
+}
+#subnetting .mod .task > div {
+  display: inline-block;
+}
+#subnetting .mod .task .left {
+  float: left;
+}
+#subnetting .mod .task .left:nth-of-type(2) {
+  clear: left;
+}
+#subnetting .mod .task .right {
+  float: right;
+}
+#subnetting .mod .task .information {
+  padding: 2px 5px 0px 5px;
+  border-bottom: 2px solid #49eeff;
+  font-size: 24px;
+  letter-spacing: .5px;
+  display: inline-block;
+}
+#subnetting .mod .task .information > span {
+  float: right;
+  cursor: pointer;
+}
+#subnetting .mod .task .information > span:hover {
+  background: rgba(255, 255, 255, 0.15);
+}
+#subnetting .mod .task .information > span:hover + span {
+  background: rgba(255, 255, 255, 0.15);
+}
+#subnetting .mod .task .information > span:hover + span + span {
+  background: rgba(255, 255, 255, 0.15);
+}
+#subnetting .mod .task .information > span:hover + span + span + span {
+  background: rgba(255, 255, 255, 0.15);
+}
+#subnetting .mod.mod1 .task {
+  margin-bottom: 50px;
+}
+#subnetting .mod.mod1 .right {
+  position: relative;
+  top: 12px;
+}
+#subnetting .mod.mod1 .information.address {
+  top: 12px;
+  position: relative;
+}
+#subnetting .mod.mod2 .question {
+  display: inline-block;
+  float: left;
+  line-height: 46px;
+}
+#subnetting .mod.mod2 .mod2In {
+  width: 40%;
+  float: right;
+  display: inline-block;
+}
+#subnetting .mod.mod2 .mod2In label {
+  display: inline-block;
+  width: 50%;
+}
+#subnetting .mod.mod2 .task {
+  margin-bottom: 25px;
+}
+#subnetting .mod.mod2 .task .right {
+  margin-top: 20px;
+  display: block;
+  float: none;
+  text-align: right;
+}
+#subnetting .mod.mod2 .task .left {
+  margin-top: 10px;
+}
+#subnetting .interBox {
+  overflow-x: auto;
+  padding-bottom: 15px;
+}
+#subnetting .interBox::-webkit-scrollbar-track {
+  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+  border-radius: 10px;
+}
+#subnetting .interBox::-webkit-scrollbar {
+  height: 11px;
+  background-color: rgba(0, 0, 0, 0.5);
+  border-radius: 10px;
+}
+#subnetting .interBox::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+  background-color: #257788;
+  background-color: #00cde2;
+}
+#subnetting .interBox table.inter {
   width: 100%;
 }
-#subnetting table.inter .info {
+#subnetting .interBox table.inter .info {
   font-size: 12px;
   position: absolute;
   top: 35px;
   left: 15px;
 }
-#subnetting table.inter td {
+#subnetting .interBox table.inter td {
   position: relative;
   padding: 5px;
   margin: 5px;
+  /*
+            &.prefixCell {
+              width: 100px;
+              input {
+                text-align: center;
+              }
+            }*/
 }
-#subnetting table.inter td:nth-child(1) {
+#subnetting .interBox table.inter td:nth-child(1) {
+  min-width: 100px;
   width: 100px;
 }
-#subnetting table.inter td.prefixCell {
-  width: 100px;
+#subnetting .interBox table.inter td:nth-child(2) {
+  min-width: 120px;
+  width: 120px;
 }
-#subnetting table.inter td.prefixCell input {
-  text-align: center;
-}
-#subnetting table.inter td input {
+#subnetting .interBox table.inter td input {
   transition: all 0.2s;
   width: 100%;
+}
+#subnetting .interBox table.inter td input:not(.prefix) {
+  min-width: 200px;
+}
+#subnetting .interBox table.inter td.prefixCell {
+  width: 100px;
+  min-width: 100px;
+}
+#subnetting .interBox table.inter td.prefixCell .prefix {
+  text-align: center;
 }
 #subnetting #schema {
   margin-bottom: 50px;
 }
-#subnetting .buttons {
-  margin: 50px 0;
+#subnetting .buttonsBox {
+  position: relative;
+  transition: top 0.5s;
+  padding-top: 50px;
+  margin-bottom: 70px;
+  min-width: fit-content;
+}
+#subnetting .buttonsBox .buttons {
   width: 100%;
 }
-#subnetting .buttons .sectionL {
+#subnetting .buttonsBox .buttons .buttonsUp {
+  margin-bottom: 12px;
+}
+#subnetting .buttonsBox .buttons .buttonsUp .inlineBlock {
+  display: inline-block;
+  padding-top: 3px;
+  font-size: 20px;
+  position: relative;
+  bottom: -2px;
+  text-transform: uppercase;
+  background: rgba(0, 0, 0, 0.3);
+  color: #ffffff;
+  padding: 6px 12px 2px;
+  border-radius: 10px;
+}
+#subnetting .buttonsBox .buttons .buttonsUp .specialFocus span {
+  padding: 2px 16px;
+}
+#subnetting .buttonsBox .buttons .buttonsUp .specialFocus span svg {
+  position: relative;
+  top: 1px;
+}
+#subnetting .buttonsBox .buttons .sectionL {
   position: relative;
   float: left;
 }
-#subnetting .buttons .sectionL input {
+#subnetting .buttonsBox .buttons .sectionL input {
   height: 50px;
 }
-#subnetting .buttons .sectionL button {
+#subnetting .buttonsBox .buttons .sectionL button {
   position: absolute;
   right: 0;
   top: 0;
   overflow: hidden;
 }
-#subnetting .buttons .sectionL button:active {
+#subnetting .buttonsBox .buttons .sectionL button:active {
   transform: none;
 }
-#subnetting .buttons .sectionR {
+#subnetting .buttonsBox .buttons .sectionR {
   float: right;
 }
-#subnetting .buttons .sectionR button {
+#subnetting .buttonsBox .buttons .sectionR button {
   margin-left: 5px;
 }
 .main {
   visibility: hidden;
+}
+.main h1 {
+  margin-bottom: 20px;
 }
 @keyframes zoomIn {
   from {
