@@ -554,7 +554,9 @@ var subnetting = new Vue({
         specsOpts: this.specsOpts,
         specsReserve: this.specsReserve,
         specsSeed: this.specsSeed,
-        specsAnimations: this.specsAnimations
+        specsAnimations: this.specsAnimations,
+        mod1PrefixIn: this.mod1.prefixIn,
+        mod2PrefixIn: this.mod2.prefixIn
       };
       var json = JSON.stringify(data);
       setCookie("subnettingSettings", json, 1000);
@@ -648,6 +650,7 @@ var subnetting = new Vue({
       } else {
         Math.seedrandom(val);
       }
+      this.saveSettings();
       console.log("seed nastaven na " + val);
     },
     prefixToMask: function(prefix) {
@@ -1599,6 +1602,8 @@ var subnetting = new Vue({
       this.specsReserve = data.specsReserve;
       this.specsSeed = data.specsSeed;
       this.specsAnimations = data.specsAnimations;
+      this.mod1.prefixIn = data.mod1PrefixIn;
+      this.mod2.prefixIn = data.mod2PrefixIn;
     }
 
   },
