@@ -3,6 +3,9 @@
   clear: both;
   display: block;
 }
+[v-cloak] {
+  display: none;
+}
 body,
 html {
   margin: 0!important;
@@ -118,7 +121,7 @@ header#mainHeading img {
 }
 h1 {
   padding-top: 25px;
-  margin-bottom: 20px;
+  margin-bottom: 15px;
 }
 .subtitle {
   font-size: 24px;

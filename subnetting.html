@@ -74,7 +74,7 @@
             <li><b>První použitelnou adresou</b> (první host) je následující adresa po adrese podsítě (v části pro hosty binárně samé 0 a poslední bit 1)</li>
 
 
-            <li><b>Poslední použitelnou adresou</b> (první host) je předchozí adresa před broadcastem podsítě (v části pro hosty binárně samé 1 a poslední bit 0)</li>
+            <li><b>Poslední použitelnou adresou</b> (poslední host) je předchozí adresa před broadcastem podsítě (v části pro hosty binárně samé 1 a poslední bit 0)</li>
   <hr style="margin: 5px;visibility:  hidden;">
   <li><b>Broadcastem podsítě</b> je poslední adresa v podsíti (v části pro hosty binárně samé 1)</li>
     <hr style="margin: 5px;visibility:  hidden;">
@@ -351,6 +351,9 @@
                       </svg>
                     </div>
                   </label>
+                  <div class="reset" @click="resetSettings">
+                    resetovat nastavení
+                  </div>
                 </td>
 
               </tr>
@@ -424,7 +427,7 @@
           </div>
         </div>
 
-        <footer class="subn">
+        <footer class="subn" v-cloak>
           <table>
             <tr>
 
@@ -547,7 +550,7 @@
           </div>
 
         </div>
-        <footer class="toEnd subn">
+        <footer class="toEnd subn" v-cloak>
           <table>
             <tr>
 
@@ -596,7 +599,7 @@
         </div>
 
     </div>
-    <footer class="subn">
+    <footer class="subn" v-cloak>
       <table>
         <tr>
 
@@ -654,7 +657,7 @@
         </div>
 
     </div>
-    <footer class="subn">
+    <footer class="subn" v-cloak>
       <table>
         <tr>
 

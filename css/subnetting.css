@@ -6,6 +6,9 @@ body {
 h1 {
   margin-bottom: 25px;
 }
+[v-cloak] {
+  display: none;
+}
 #subnetting {
   height: 100%;
   min-width: fit-content;
@@ -445,6 +448,18 @@ h1 {
   position: relative;
   font-size: 18px;
   height: 328px;
+}
+#subnetting .settings .area .specs .reset {
+  position: absolute;
+  font-size: 14px;
+  bottom: 5px;
+  right: 0px;
+  opacity: 0.5;
+  text-decoration: underline;
+  cursor: pointer;
+}
+#subnetting .settings .area .specs .reset:hover {
+  opacity: 0.75;
 }
 #subnetting .settings .area .specs .info {
   color: #aaa;

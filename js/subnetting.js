@@ -138,6 +138,7 @@ var subnetting = new Vue({
       width: "123.25px"
     },
     specsSeed: "",
+    cooldown: false,
     biggerFrame: "1400px",
     exclude: [{
         ip: "0.0.0.0",
@@ -561,19 +562,51 @@ var subnetting = new Vue({
       var json = JSON.stringify(data);
       setCookie("subnettingSettings", json, 1000);
     },
+    resetSettings: function() {
+      this.subnetCountIn = "4-6";
+      this.baseIPIn = "192.0.2.0";
+      this.prefixIn = "24";
+      this.specsOpts = {
+        firstA: true,
+        firstH: false,
+        lastH: false,
+        lastA: true,
+        mask: false,
+        prefix: true
+      };
+      this.specsReserve = 1;
+      this.specsSeed = "";
+      this.specsAnimations = true;
+      this.mod1.prefixIn = "26-30";
+      this.mod2.prefixIn = "26-28";
+      this.saveSettings();
+    },
     prevInstance: function() {
-      $(".main .instance").eq(subnetting.currentInstance).addClass("offRight");
-      this.currentInstance--;
-      this.currentInstanceLazy--;
-      if (subnetting.specsAnimations) {
+      if(!this.cooldown) {
+        this.cooldown = true;
+        var that = this;
         setTimeout(function() {
+          that.cooldown = false;
+        },500);
+        $(".main .instance").eq(subnetting.currentInstance).addClass("offRight");
+        this.currentInstance--;
+        this.currentInstanceLazy--;
+        if (subnetting.specsAnimations) {
+          setTimeout(function() {
+            $(".main .instance").eq(subnetting.currentInstance).removeClass("offLeft");
+          }, 300);
+        } else {
           $(".main .instance").eq(subnetting.currentInstance).removeClass("offLeft");
-        }, 300);
-      } else {
-        $(".main .instance").eq(subnetting.currentInstance).removeClass("offLeft");
+        }
       }
     },
     nextInstance: function() {
+      if(!this.cooldown) {
+        this.cooldown = true;
+        var that = this;
+        setTimeout(function() {
+          that.cooldown = false;
+        },500);
       $(".main .instance").eq(subnetting.currentInstance).addClass("offLeft");
       this.currentInstance++;
       this.currentInstanceLazy++;
@@ -584,7 +617,7 @@ var subnetting = new Vue({
       } else {
         $(".main .instance").eq(subnetting.currentInstance).removeClass("offRight");
       }
-
+}
     },
     hostsMax: function(instance) {
       return Math.pow(2, 32 - parseInt(this.instances[instance].basePrefix));
@@ -642,6 +675,7 @@ var subnetting = new Vue({
         j++;
       }
       this.baseIPIn = this.bitToA(ip.substr(0, i) + zeros);
+      this.saveSettings();
     },
     updateSeed: function(e) {
       var val = e.target.value;
@@ -1093,7 +1127,12 @@ var subnetting = new Vue({
       }, 100);
     },
     generate: function() {
-
+      if(!this.cooldown) {
+        this.cooldown = true;
+        var that = this;
+        setTimeout(function() {
+          that.cooldown = false;
+        },500);
       if (subnetting.instances.length != 0 && subnetting.specsAnimations) {
         $(".main .instance").eq(subnetting.currentInstance).addClass("offLeft");
       } else {
@@ -1434,6 +1473,7 @@ var subnetting = new Vue({
         subnetting.currentInstanceLazy = subnetting.instances.length - 1;
 
       });
+    }
     },
     check: function() {
       var rightColor = "green";

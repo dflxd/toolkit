@@ -6,6 +6,7 @@ html, body {
 h1 {
   margin-bottom: 25px;
 }
+[v-cloak] { display:none; }
 #subnetting {
       height: 100%;
       min-width: fit-content;
@@ -519,7 +520,18 @@ overflow: hidden;
         position: relative;
         font-size: 18px;
         height: 328px;
-
+        .reset {
+          position: absolute;
+          font-size: 14px;
+          bottom: 5px;
+          right: 0px;
+          opacity: 0.5;
+          text-decoration: underline;
+          cursor: pointer;
+          &:hover {
+            opacity: 0.75;
+          }
+        }
         .info {
           color: #aaa;
           font-size: 75%;
