@@ -1894,7 +1894,7 @@ var subnetting = new Vue({
 
     if (json.length > 0) {
       var data = JSON.parse(json);
-      if(myObj.hasOwnProperty("data")){
+      if(data.hasOwnProperty("lang")){
         this.langSwitch = data.lang;
       }
       else {
