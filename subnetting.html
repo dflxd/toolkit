@@ -528,8 +528,8 @@
           <td rowspan="3" class="langSwitchBox">
             <div class="radioChoose langSwitch">
               <div class="sliderBackg" :style="{'left': langSwitchPosition.left, 'width': langSwitchPosition.width}"></div>
-              <label><input type="radio" name="langSwitch" v-model="langSwitch" v-bind:value="1" @input="mod1LangSwitch"><span>cs</span></label>
-              <label><input type="radio" name="langSwitch" v-model="langSwitch" v-bind:value="2" @input="mod1LangSwitch"><span>en</span></label>
+              <label><input type="radio" name="langSwitch" v-model="langSwitch" v-bind:value="1" @input="langSwitchProc"><span>cs</span></label>
+              <label><input type="radio" name="langSwitch" v-model="langSwitch" v-bind:value="2" @input="langSwitchProc"><span>en</span></label>
             </div>
           </td>
           <td>Matěj Motl</td>

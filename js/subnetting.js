@@ -1216,7 +1216,11 @@ var subnetting = new Vue({
       }
 
     },
-    mod1LangSwitch: function(){
+    langSwitchProc: function(){
+      this.$nextTick(() => {
+          this.saveSettings();
+      });
+
       if(this.location == "mod1") {
 
 
@@ -1890,8 +1894,29 @@ var subnetting = new Vue({
 
     if (json.length > 0) {
       var data = JSON.parse(json);
+      if(myObj.hasOwnProperty("data")){
+        this.langSwitch = data.lang;
+      }
+      else {
+        var that = this;
 
-      this.langSwitch = data.lang;
+
+
+        var allLangs = [];
+        allLangs = allLangs.concat(navigator.languages);
+
+        allLangs.push(navigator.language);
+        for (var i = 0; i < allLangs.length; i++) {
+          allLangs[i] = allLangs[i].substring(0, 2);
+        }
+        if (allLangs.includes("cs")) {
+          that.langSwitch = 1;
+        } else {
+          that.langSwitch = 2;
+        }
+        that.specsReserve = 1;
+        that.saveSettings();
+      }
 
 
       this.specsReserve = data.specsReserve;
