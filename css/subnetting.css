@@ -1,7 +1,6 @@
-html,
-body {
+body,
+html {
   color: white;
-  height: 100%;
 }
 h1 {
   margin-bottom: 25px;
@@ -10,7 +9,7 @@ h1 {
   display: none;
 }
 #subnetting {
-  height: 100%;
+  position: relative;
   min-width: fit-content;
   min-height: fit-content;
   text-align: center;
@@ -23,21 +22,15 @@ h1 {
   position: relative;
   width: 100%;
 }
-#subnetting .radioChoose.specsReserve .sliderBackg {
-  left: 0;
-  width: 123.25px;
-}
 #subnetting .radioChoose.mod2In .sliderBackg {
-  left: 0;
-  width: 97.95px;
   transform: scale(1);
-  transition: all .2s, left 0s, width 0s;
+  transition: all 0.2s, left 0s, width 0s;
 }
 #subnetting .radioChoose.mod2In .sliderBackg.downscale {
   transform: scale(0);
 }
 #subnetting .radioChoose.mod2In .sliderBackg.aftershock {
-  transition: all 0s, left .2s, width .2s;
+  transition: all 0s, left 0.2s, width 0.2s;
 }
 #subnetting .radioChoose.mod2In .sliderBackg.t {
   border-color: #00bd00;
@@ -83,31 +76,30 @@ h1 {
 #subnetting .instance {
   z-index: 1;
   position: absolute;
-  left: 15px;
-  right: 15px;
+  width: 100%;
+  overflow-x: hidden;
 }
 #subnetting .instance .subtitle {
   z-index: 1;
 }
-#subnetting .instance canvas {
-  transition-delay: 0.1s!important;
-}
 #subnetting .instance .interBox tr,
 #subnetting .instance .subtitle,
 #subnetting .instance canvas {
-  transition: all 1s;
+  transition: all .8s;
   transform: perspective(2000px) rotateY(0deg) translateZ(0px);
   opacity: 1;
 }
 #subnetting .instance .interBox {
   opacity: 1;
   transition: all 1s;
+  max-width: 90%;
+  margin: 0 auto;
 }
 #subnetting .instance.offLeft {
   z-index: -1;
 }
 #subnetting .instance.offLeft .interBox {
-  opacity: 0;
+  overflow: hidden;
 }
 #subnetting .instance.offLeft .interBox tr,
 #subnetting .instance.offLeft .subtitle,
@@ -115,11 +107,23 @@ h1 {
   transform: translateX(200px) perspective(2000px) rotateY(-80deg) translateZ(500px) scale(0.8);
   opacity: 0;
 }
+#subnetting .instance.offBlacklisted {
+  z-index: -1;
+}
+#subnetting .instance.offBlacklisted .interBox {
+  overflow: hidden;
+}
+#subnetting .instance.offBlacklisted .interBox tr,
+#subnetting .instance.offBlacklisted .subtitle,
+#subnetting .instance.offBlacklisted canvas {
+  transform: perspective(2000px) scale(0.001) !important;
+  opacity: 0;
+}
 #subnetting .instance.offRight {
   z-index: -1;
 }
 #subnetting .instance.offRight .interBox {
-  opacity: 0;
+  overflow: hidden;
 }
 #subnetting .instance.offRight .interBox tr,
 #subnetting .instance.offRight .subtitle,
@@ -146,6 +150,8 @@ h1 {
   transition-delay: 0.2s;
 }
 #subnetting .highlightArea .popout {
+  pointer-events: none;
+  user-select: none;
   z-index: 1;
   position: absolute;
   font-size: 14px;
@@ -187,66 +193,107 @@ h1 {
   border-color: transparent transparent rgba(25, 25, 25, 0.9) transparent;
 }
 #subnetting .helpBox {
-  min-width: 610px;
-  width: 800px;
+  min-width: 480px;
+  max-width: 1110px;
+  width: 840px;
   height: 800px;
   display: none;
   position: fixed;
   background: rgba(20, 20, 20, 0.9);
   border: 2px solid #ddd;
-  border-radius: 0 10px 10px 10px;
+  border-radius: 0 7px 7px 7px;
   top: 72px;
   left: 20px;
   z-index: 2;
   font-size: 18px;
   text-align: left;
   max-height: calc(100% - 95px);
-  max-width: calc(100% - 44px);
 }
 #subnetting .helpBox .help {
   max-height: 100%;
   padding: 20px;
   overflow: auto;
-  /*&::-webkit-scrollbar-track
-    {
-    	-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
-    	background-color: white;
-    }
-
-    &::-webkit-scrollbar
-    {
-    	width: 16px;
-
-    	background-color: white;
-    }
-
-    &::-webkit-scrollbar-thumb
-    {
-    	-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);
-    	background-color: #555;
-    }*/
 }
-#subnetting .helpBox .help .helper {
-  margin: 10px 0 5px;
+#subnetting .helpBox .help b {
+  text-decoration: underline;
 }
-#subnetting .helpBox .help .helper div {
-  border-radius: 5px;
-  font-size: 20px;
-  display: inline-block;
+#subnetting .helpBox .help .highlighted {
   text-transform: uppercase;
-  padding: 5px 10px;
-  background: #eee;
-  color: #111;
-}
-#subnetting .helpBox .help .helper div .smaller {
-  font-size: 75%;
+  color: #49eeff;
+  margin-bottom: 5px;
 }
 #subnetting .helpBox .help .title {
   font-size: 32px;
 }
+#subnetting .helpBox .help .warning {
+  margin: 10px 0;
+}
+#subnetting .helpBox .help .warning svg {
+  font-size: 24px;
+}
+#subnetting .helpBox .help .warning span {
+  margin-left: 15px;
+  position: relative;
+  bottom: 3px;
+  display: inline-block;
+  width: calc(100% - 25px);
+  vertical-align: middle;
+}
+#subnetting .helpBox .help ul:not(.noIndent) li:not(:last-child) {
+  margin-bottom: 20px;
+}
+#subnetting .helpBox .help ul {
+  margin-bottom: 20px;
+}
+#subnetting .helpBox .help ul ul li {
+  margin-bottom: 5px!important;
+}
+#subnetting .helpBox .help hr:not(.classic) {
+  margin: 3px;
+  visibility: hidden;
+}
+#subnetting .helpBox .help hr.classic {
+  background: lightgrey;
+}
+#subnetting .helpBox .help .helper {
+  margin-bottom: 15px;
+  border-radius: 5px;
+  font-size: 20px;
+  display: inline-block;
+  text-transform: uppercase;
+  padding: 5px 15px;
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+  font-weight: bold;
+  letter-spacing: 0.5px;
+  overflow-x: auto;
+  outline: 1px solid rgba(255, 255, 255, 0.4);
+  outline-offset: -3px;
+}
+#subnetting .helpBox .help .helper table {
+  min-width: max-content;
+}
+#subnetting .helpBox .help .helper.middlePadding tr td:first-child {
+  padding-right: 50px;
+}
+#subnetting .helpBox .help .helper .smaller {
+  font-size: 75%;
+}
+#subnetting .helpBox .help .helper .right {
+  text-align: right;
+}
+#subnetting .helpBox .help .helper .prefix {
+  float: right;
+  position: relative;
+  font-size: 50%;
+  right: -10px;
+}
+#subnetting .helpBox .help .helper .divider span {
+  margin: 0 5px;
+}
 #subnetting .settings {
   width: 100%;
-  height: 100%;
+  height: 100vh;
   background-image: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url("../img/header.jpg");
   background-size: 1920px;
   background-attachment: fixed;
@@ -271,9 +318,12 @@ h1 {
 #subnetting .settings .area h1 {
   padding-top: 0;
 }
+#subnetting .settings .area .inputs {
+  height: 328px;
+}
+#subnetting .settings .area .mainIn tr:first-child .countSubnets,
 #subnetting .settings .area .mainIn tr:first-child .ip,
-#subnetting .settings .area .mainIn tr:first-child .prefix,
-#subnetting .settings .area .mainIn tr:first-child .countSubnets {
+#subnetting .settings .area .mainIn tr:first-child .prefix {
   padding-bottom: 5px;
 }
 #subnetting .settings .area .mainIn tr td input {
@@ -352,7 +402,9 @@ h1 {
   cursor: pointer;
   font-size: 16px;
 }
-#subnetting .settings .area .diff .desc span:nth-child(2),
+#subnetting .settings .area .diff .desc span:nth-child(2) {
+  display: block;
+}
 #subnetting .settings .area .diff .desc span:nth-child(3) {
   display: block;
 }
@@ -453,7 +505,7 @@ h1 {
   position: absolute;
   font-size: 14px;
   bottom: 5px;
-  right: 0px;
+  right: 0;
   opacity: 0.5;
   text-decoration: underline;
   cursor: pointer;
@@ -535,7 +587,7 @@ h1 {
   stroke-width: 2;
   stroke-linecap: round;
   stroke-linejoin: round;
-  stroke-dasharray: 71px;
+  stroke-dasharray: 70.99px;
   stroke-dashoffset: 71px;
   transition: all 0.6s ease;
 }
@@ -545,7 +597,7 @@ h1 {
   stroke-width: 2;
   stroke-linecap: round;
   stroke-linejoin: round;
-  stroke-dasharray: 18px;
+  stroke-dasharray: 17.99px;
   stroke-dashoffset: 18px;
   transition: all 0.3s ease;
 }
@@ -588,7 +640,7 @@ h1 {
   color: #fff;
   position: relative;
   font-size: 20px;
-  transition: width .3s, height .3s;
+  transition: width 0.3s, height 0.3s;
 }
 #subnetting .settings .area .mods > div .prefix {
   display: inline-block;
@@ -603,19 +655,19 @@ h1 {
   margin-left: 10px;
 }
 #subnetting .settings .area .mods > div .profile {
-  padding: 20px 5px;
+  height: 98px;
   cursor: pointer;
-  transition: padding .3s;
-}
-#subnetting .settings .area .mods > div .profile.oneLine {
-  padding: 34px 5px;
+  transition: all 0.3s ease-out;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 #subnetting .settings .area .mods > div .onExpand {
   padding-top: 15px;
   margin: 0 10px;
-  border-top: 1px solid rgba(255, 255, 255, 0.8);
+  border-top: 1px solid rgba(255, 255, 255, 0.7);
   opacity: 0;
-  transition: opacity .1s;
+  transition: opacity 0.1s;
   transition-delay: 0s;
 }
 #subnetting .settings .area .mods > div .onExpand .description {
@@ -628,16 +680,16 @@ h1 {
 }
 #subnetting .settings .area .mods > div.expand {
   width: 250px;
-  height: 229px;
+  height: 225px;
   background: rgba(14, 144, 210, 0.1);
 }
 #subnetting .settings .area .mods > div.expand .profile {
-  padding: 15px 5px;
+  height: 60px;
 }
 #subnetting .settings .area .mods > div.expand .onExpand {
   opacity: 1;
-  transition: opacity .2s;
-  transition-delay: .1s;
+  transition: opacity 0.2s;
+  transition-delay: 0.1s;
 }
 #subnetting .settings .area .mods > div:hover {
   background: rgba(14, 144, 210, 0.1);
@@ -692,7 +744,7 @@ h1 {
   float: right;
 }
 #subnetting .modBox {
-  height: 100%;
+  height: 100vh;
 }
 #subnetting .mod {
   width: 600px;
@@ -709,10 +761,15 @@ h1 {
   text-align: center;
 }
 #subnetting .mod h5 span {
+  text-transform: uppercase;
   border-bottom: 2px solid white;
 }
 #subnetting .mod input {
-  transition: all .3s;
+  transition: all 0.3s;
+}
+#subnetting .mod input[type="text"] {
+  width: 222px;
+  transition: all 0.2s;
 }
 #subnetting .mod .buttons {
   text-align: right;
@@ -737,10 +794,10 @@ h1 {
   float: right;
 }
 #subnetting .mod .task .information {
-  padding: 2px 5px 0px 5px;
+  padding: 2px 5px 0;
   border-bottom: 2px solid #49eeff;
   font-size: 24px;
-  letter-spacing: .5px;
+  letter-spacing: 0.5px;
   display: inline-block;
 }
 #subnetting .mod .task .information > span {
@@ -773,16 +830,16 @@ h1 {
 #subnetting .mod.mod2 .question {
   display: inline-block;
   float: left;
-  line-height: 46px;
+  line-height: 26px;
 }
 #subnetting .mod.mod2 .mod2In {
-  width: 40%;
+  width: 35%;
   float: right;
-  display: inline-block;
 }
 #subnetting .mod.mod2 .mod2In label {
   display: inline-block;
   width: 50%;
+  float: left;
 }
 #subnetting .mod.mod2 .task {
   margin-bottom: 25px;
@@ -816,7 +873,8 @@ h1 {
   background-color: #00cde2;
 }
 #subnetting .interBox table.inter {
-  width: 100%;
+  max-width: 100%;
+  margin: 0 auto;
 }
 #subnetting .interBox table.inter .info {
   font-size: 12px;
@@ -824,10 +882,12 @@ h1 {
   top: 35px;
   left: 15px;
 }
+#subnetting .interBox table.inter tr:first-child td {
+  white-space: pre;
+}
 #subnetting .interBox table.inter td {
   position: relative;
   padding: 5px;
-  margin: 5px;
   /*
             &.prefixCell {
               width: 100px;
@@ -849,7 +909,8 @@ h1 {
   width: 100%;
 }
 #subnetting .interBox table.inter td input:not(.prefix) {
-  min-width: 200px;
+  min-width: 222px;
+  width: 222px;
 }
 #subnetting .interBox table.inter td.prefixCell {
   width: 100px;
@@ -863,9 +924,7 @@ h1 {
 }
 #subnetting .buttonsBox {
   position: relative;
-  transition: top 0.5s;
-  padding-top: 50px;
-  margin-bottom: 70px;
+  padding: 70px 0;
   min-width: fit-content;
 }
 #subnetting .buttonsBox .buttons {
@@ -874,17 +933,52 @@ h1 {
 #subnetting .buttonsBox .buttons .buttonsUp {
   margin-bottom: 12px;
 }
-#subnetting .buttonsBox .buttons .buttonsUp .inlineBlock {
-  display: inline-block;
-  padding-top: 3px;
+#subnetting .buttonsBox .buttons .buttonsUp .destroy {
+  filter: saturate(0%);
+}
+#subnetting .buttonsBox .buttons .buttonsUp .destroy:hover:not(:disabled) {
+  filter: none;
+}
+#subnetting .buttonsBox .buttons .buttonsUp .destroy:hover:not(:disabled) span {
+  border: 2px solid #ee2222;
+  background: rgba(50, 0, 0, 0.2);
+}
+#subnetting .buttonsBox .buttons .buttonsUp .sectionR {
+  display: flex;
+}
+#subnetting .buttonsBox .buttons .buttonsUp .sectionR > button {
+  margin: 0px 5px;
+}
+#subnetting .buttonsBox .buttons .buttonsUp .sectionR button:last-child {
+  margin-right: 0px;
+}
+#subnetting .buttonsBox .buttons .buttonsUp .instanceName {
   font-size: 20px;
   position: relative;
-  bottom: -2px;
   text-transform: uppercase;
-  background: rgba(0, 0, 0, 0.3);
-  color: #ffffff;
-  padding: 6px 12px 2px;
+  width: 150px;
   border-radius: 10px;
+}
+#subnetting .buttonsBox .buttons .buttonsUp .instanceName span {
+  line-height: 1px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  border-radius: 10px;
+  background: rgba(0, 0, 0, 0.3);
+  cursor: default;
+}
+#subnetting .buttonsBox .buttons .buttonsUp .instanceName span:hover {
+  background: rgba(0, 0, 0, 0.5);
+}
+#subnetting .buttonsBox .buttons .buttonsUp .instanceName input {
+  padding: 2px;
+  width: 100%;
+  display: inline-block;
+  text-align: center;
+  animation-duration: .5s;
 }
 #subnetting .buttonsBox .buttons .buttonsUp .specialFocus span {
   padding: 2px 16px;
@@ -899,6 +993,7 @@ h1 {
 }
 #subnetting .buttonsBox .buttons .sectionL input {
   height: 50px;
+  width: 255px;
 }
 #subnetting .buttonsBox .buttons .sectionL button {
   position: absolute;
@@ -912,11 +1007,116 @@ h1 {
 #subnetting .buttonsBox .buttons .sectionR {
   float: right;
 }
+#subnetting .buttonsBox .buttons .sectionR .re {
+  margin-left: 10px;
+}
 #subnetting .buttonsBox .buttons .sectionR button {
   margin-left: 5px;
 }
+#subnetting footer.subn {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  padding: 7px 14px;
+  text-align: center;
+}
+#subnetting footer.subn table td {
+  padding: 0;
+  line-height: 18px;
+  font-size: 14px;
+}
+#subnetting footer.subn table td a {
+  overflow: hidden;
+  text-align: right;
+  width: 190px;
+  padding-left: 15px;
+  margin-right: -5px;
+  display: inline-block;
+  position: relative;
+}
+#subnetting footer.subn table td a img {
+  opacity: 1;
+  float: left;
+  width: 170px;
+  transform: scale(1);
+  transition: all .3s;
+  filter: contrast(0%) brightness(190%);
+}
+#subnetting footer.subn table td a > span {
+  transform: scale(3);
+  position: absolute;
+  top: 0;
+  left: 0;
+  color: white;
+  display: inline-block;
+  height: 100%;
+  width: 100%;
+  text-align: center;
+  display: inline-flex;
+  align-items: center;
+  transition: all 0s;
+  transition-delay: 0s;
+  opacity: 0;
+  justify-content: center;
+  letter-spacing: -0.4px;
+}
+#subnetting footer.subn table td a:hover img {
+  transform: scale(0.5);
+  opacity: 0;
+}
+#subnetting footer.subn table td a:hover > span {
+  transform: scale(1);
+  opacity: 1;
+  transition: all .20s;
+  transition-delay: .10s;
+}
+#subnetting footer.subn table tr:nth-child(3) td {
+  position: relative;
+  bottom: 1px;
+}
+#subnetting .langSwitchBox {
+  padding-right: 15px!important;
+}
+#subnetting .langSwitchBox .langSwitch {
+  text-transform: uppercase;
+}
+#subnetting .langSwitchBox .langSwitch label {
+  padding: 0px 12px;
+  font-size: 16px;
+}
+#subnetting .langSwitchBox .langSwitch .sliderBackg {
+  z-index: 1;
+  background: transparent;
+  border: 2px solid white;
+  border-radius: 0;
+  height: 120%;
+  top: -10%;
+  opacity: .5;
+  transition-delay: 0.1s;
+}
+#subnetting .langSwitchBox .langSwitch input + span {
+  opacity: 0.5;
+  transition: opacity 0.2s;
+  transition-delay: 0.1s;
+  line-height: 26px;
+}
+#subnetting .langSwitchBox .langSwitch:hover input + span {
+  transition: opacity 0.1s;
+  transition-delay: 0s;
+}
+#subnetting .langSwitchBox .langSwitch:hover input:checked + span {
+  opacity: 1;
+}
+#subnetting .langSwitchBox .langSwitch:hover .sliderBackg {
+  opacity: 1;
+  transition: all 0.1s;
+  transition-delay: 0s;
+}
 .main {
   visibility: hidden;
+}
+.main > .instancesBox {
+  transition: height 0.5s;
 }
 .main h1 {
   margin-bottom: 20px;
@@ -959,4 +1159,36 @@ h1 {
     background-size: cover;
     background-attachment: fixed;
   }
+}
+@keyframes redBlink1 {
+  from {
+    border-color: red;
+  }
+  to {
+    border-color: initial;
+  }
+}
+@keyframes redBlink2 {
+  from {
+    border-color: red;
+  }
+  to {
+    border-color: initial;
+  }
+}
+.reserveClone {
+  cursor: pointer;
+  padding: 8px 12px;
+  margin-bottom: 0;
+  user-select: none;
+  text-align: center;
+  transition: 0.2s;
+  display: table-cell;
+  font-size: 18px;
+  position: absolute;
+  white-space: pre;
+  visibility: hidden;
+}
+.reserveClone input {
+  display: none;
 }

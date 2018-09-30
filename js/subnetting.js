@@ -3,7 +3,6 @@ String.prototype.replaceAt = function(index, replacement) {
 };
 
 function rand(min, max) {
-
   return Math.floor(Math.random() * (max - min + 1) + min);
 }
 
@@ -11,11 +10,11 @@ function isNumeric(n) {
   return !isNaN(parseFloat(n)) && isFinite(n);
 }
 
-(function($) {
+/*(function($) {
   $.fn.hasScrollBar = function() {
     return this.get(0).scrollHeight > this.height();
   }
-})(jQuery);
+})(jQuery);*/
 
 function bitFloor(number) {
   if (number <= 0) return 0;
@@ -115,7 +114,7 @@ var subnetting = new Vue({
     currentInstanceLazy: -1,
     subnetCountMin: 0,
     subnetCountMax: 0,
-
+    currentSubnetCount: 0,
 
     location: "settings",
     inputDisabled: false,
@@ -132,14 +131,28 @@ var subnetting = new Vue({
     page: "main",
     specsAnimations: true,
     diffInfo: false,
-    specsReserve: 1,
+    specsReserve: 0,
     specsReservePosition: {
       left: "0px",
-      width: "123.25px"
+      width: "0px"
     },
+    langSwitch: "-1",
+    langSwitchPosition: {
+      left: "0px",
+      width: "0px"
+    },
+    langSwitchAftefshock: false,
+    langChangeLazy: false,
+    jumpSelect: false,
+    jumpToInput: "",
+    jumpAnim: "",
+    jumpCurrentAnimNumber: 1,
+    answersChange: false,
+    resizeChange: false,
     specsSeed: "",
     cooldown: false,
     biggerFrame: "1400px",
+    blacklist: [],
     exclude: [{
         ip: "0.0.0.0",
         prefix: "/8"
@@ -153,7 +166,7 @@ var subnetting = new Vue({
         prefix: "/16"
       },
     ],
-    //currentInstanceHeightVar: "10px",
+    exerciseCounter: 1,
     mod1: {
       prefixIn: "26-30",
       prefixMin: "26",
@@ -183,30 +196,67 @@ var subnetting = new Vue({
       selected: false,
       result: "0",
       oneSubnet: false
-    }
+    },
+
   },
   computed: {
+    currentResults: function() {
+      if (this.instances.length >= 1) {
+        return this.instances[this.currentInstance].answers;
+      } else {
+        return false;
+      }
+    },
+    lang: function() {
+      var that = this;
+      setTimeout(function() {
+        that.langChangeLazy = !that.langChangeLazy;
+      }, 10);
+
+
+
+      switch (this.langSwitch) {
+        case 1:
+          return cs;
+        case 2:
+          return en;
+        default:
+          return en;
+      }
+
+
+    },
+    prevInstance: function() {
+      var prev = -1;
+      for (var i = this.currentInstance - 1; i >= 0; i--) {
+        if (!this.blacklist.includes(i)) {
+          prev = i
+          break;
+        }
+      }
+      return prev;
+    },
+    nextInstance: function() {
+      var next = -1;
+      for (var i = this.currentInstance + 1; i < this.instances.length; i++) {
+        if (!this.blacklist.includes(i)) {
+          next = i;
+          break;
+        }
+      }
+      return next;
+    },
     currentInstanceName: function() {
       if (this.instances.length != 0) {
         return this.instances[this.currentInstance].name;
       }
     },
     currentInstanceHeight: function() {
-      var top = 0;
-      if (this.instances.length != 0) {
-        if (this.instances[this.currentInstance].update == true) {
-          //top += 25;
-
-        }
-      }
-
+      this.answersChange;
+      this.resizeChange;
+      var top = 80;
       top += parseInt($(".main .instance").eq(this.currentInstanceLazy).outerHeight());
-
-
       return top;
-
-
-
     },
     reserve: function() {
       var reserve;
@@ -251,17 +301,39 @@ var subnetting = new Vue({
       return reserve;
     },
     specsReserveSelected: function() {
+      this.langChangeLazy;
+
       var left = 0;
       var width;
       for (var i = 1; i < this.specsReserve; i++) {
-        left += parseInt($(".specsReserve label").eq(i - 1).outerWidth());
+        left += parseInt(realWidth($(".specsReserve label").eq(i - 1)));
       }
-      width = $(".specsReserve label").eq(this.specsReserve - 1).outerWidth();
 
+      width = realWidth($(".specsReserve label").eq(this.specsReserve - 1));
       this.specsReservePosition.left = left + "px";
       this.specsReservePosition.width = width + "px";
 
       return left;
+    },
+    langSwitchSelected: function() {
+      this.langSwitchAftefshock;
+
+      var left = 0;
+      var width;
+      for (var i = 1; i < this.langSwitch; i++) {
+        left += parseInt($(".langSwitch label").eq(i - 1).outerWidth());
+      }
+      width = $(".langSwitch label").eq(this.langSwitch - 1).outerWidth();
+
+
+
+
+      this.langSwitchPosition.left = left + "px";
+      this.langSwitchPosition.width = width + "px";
+
+
+      return width;
+
     },
     mod2InSelected: function() {
 
@@ -277,21 +349,6 @@ var subnetting = new Vue({
 
       return left;
     },
-    /*specsMaskSelected: function() {
-
-      var left = 0;
-      var width;
-      var val;
-      if(!this.specsMask) val = 1;
-      else val = 2;
-      for (var i = 1; i < val; i++) {
-        left += parseInt($(".specsMask label").eq(i-1).outerWidth());
-      }
-      width = $(".specsMask label").eq(val-1).outerWidth();
-
-      $(".specsMask .sliderBackg").css("left",left+"px");
-      $(".specsMask .sliderBackg").css("width",width+"px");
-    },*/
     thediff: function() {
       var result = "";
 
@@ -362,7 +419,7 @@ var subnetting = new Vue({
       if (prefix.toString().split(' ').length > 1) valid = false;
 
       if (prefix.toString().length <= 2) {
-        if (!isNumeric(prefix) || parseInt(prefix) < 8 || parseInt(prefix) > 28 || prefix % 1 != 0) valid = false;
+        if (!isNumeric(prefix) || parseInt(prefix) < 0 || parseInt(prefix) > 28 || prefix % 1 != 0) valid = false;
 
         if (valid) {
           this.basePrefixMin = prefix;
@@ -373,8 +430,8 @@ var subnetting = new Vue({
         var prefix2 = prefix.split("-")[1];
         if (prefix.split(' ').length > 1) valid = false;
         if (prefix.split("-").length > 2) valid = false;
-        if (!isNumeric(prefix1) || parseInt(prefix1) < 8 || parseInt(prefix1) > 28 || prefix1 % 1 != 0) valid = false;
-        if (!isNumeric(prefix2) || parseInt(prefix2) < 8 || parseInt(prefix2) > 28 || prefix2 % 1 != 0) valid = false;
+        if (!isNumeric(prefix1) || parseInt(prefix1) < 0 || parseInt(prefix1) > 28 || prefix1 % 1 != 0) valid = false;
+        if (!isNumeric(prefix2) || parseInt(prefix2) < 0 || parseInt(prefix2) > 28 || prefix2 % 1 != 0) valid = false;
         if (parseInt(prefix1) >= parseInt(prefix2)) valid = false;
 
         if (valid) {
@@ -411,7 +468,7 @@ var subnetting = new Vue({
       if (prefix.toString().split(' ').length > 1) valid = false;
 
       if (prefix.toString().length <= 2) {
-        if (!isNumeric(prefix) || parseInt(prefix) < 8 || parseInt(prefix) > 30 || prefix % 1 != 0) valid = false;
+        if (!isNumeric(prefix) || parseInt(prefix) < 1 || parseInt(prefix) > 30 || prefix % 1 != 0) valid = false;
 
         if (valid) {
           this.mod1.prefixMin = prefix;
@@ -422,8 +479,8 @@ var subnetting = new Vue({
         var prefix2 = prefix.split("-")[1];
         if (prefix.split(' ').length > 1) valid = false;
         if (prefix.split("-").length > 2) valid = false;
-        if (!isNumeric(prefix1) || parseInt(prefix1) < 8 || parseInt(prefix1) > 30 || prefix1 % 1 != 0) valid = false;
-        if (!isNumeric(prefix2) || parseInt(prefix2) < 8 || parseInt(prefix2) > 30 || prefix2 % 1 != 0) valid = false;
+        if (!isNumeric(prefix1) || parseInt(prefix1) < 1 || parseInt(prefix1) > 30 || prefix1 % 1 != 0) valid = false;
+        if (!isNumeric(prefix2) || parseInt(prefix2) < 1 || parseInt(prefix2) > 30 || prefix2 % 1 != 0) valid = false;
         if (parseInt(prefix1) >= parseInt(prefix2)) valid = false;
 
         if (valid) {
@@ -441,7 +498,7 @@ var subnetting = new Vue({
       if (prefix.toString().split(' ').length > 1) valid = false;
 
       if (prefix.toString().length <= 2) {
-        if (!isNumeric(prefix) || parseInt(prefix) < 8 || parseInt(prefix) > 30 || prefix % 1 != 0) valid = false;
+        if (!isNumeric(prefix) || parseInt(prefix) < 1 || parseInt(prefix) > 30 || prefix % 1 != 0) valid = false;
 
         if (valid) {
           this.mod2.prefixMin = prefix;
@@ -452,8 +509,8 @@ var subnetting = new Vue({
         var prefix2 = prefix.split("-")[1];
         if (prefix.split(' ').length > 1) valid = false;
         if (prefix.split("-").length > 2) valid = false;
-        if (!isNumeric(prefix1) || parseInt(prefix1) < 8 || parseInt(prefix1) > 30 || prefix1 % 1 != 0) valid = false;
-        if (!isNumeric(prefix2) || parseInt(prefix2) < 8 || parseInt(prefix2) > 30 || prefix2 % 1 != 0) valid = false;
+        if (!isNumeric(prefix1) || parseInt(prefix1) < 1 || parseInt(prefix1) > 30 || prefix1 % 1 != 0) valid = false;
+        if (!isNumeric(prefix2) || parseInt(prefix2) < 1 || parseInt(prefix2) > 30 || prefix2 % 1 != 0) valid = false;
         if (parseInt(prefix1) >= parseInt(prefix2)) valid = false;
 
         if (valid) {
@@ -529,6 +586,74 @@ var subnetting = new Vue({
 
   },
   methods: {
+
+    blacklistInstance: function() {
+      if (!this.cooldown) {
+        this.cooldown = true;
+        var that = this;
+        setTimeout(function() {
+          that.cooldown = false;
+        }, 300);
+
+        this.blacklist.push(this.currentInstance);
+
+        var newInstance = -1;
+        for (var i = this.currentInstance + 1; i < this.instances.length; i++) {
+          if (!this.blacklist.includes(i)) {
+            newInstance = i;
+            break;
+          }
+        }
+        if (newInstance == -1) {
+          for (var i = this.currentInstance - 1; i >= 0; i--) {
+            if (!this.blacklist.includes(i)) {
+              newInstance = i;
+              break;
+            }
+          }
+        }
+
+
+
+        $(".main .instance").eq(this.currentInstance).addClass("offBlacklisted");
+
+        if (newInstance == -1) {
+
+          this.cooldown = false;
+          if (this.instances.length >= 50 && this.blacklist.length >= 50) {
+            this.instances = [];
+            this.blacklist = [];
+            this.generate();
+            $(".main .instance").removeClass("offBlacklisted offLeft offRight");
+          } else {
+            this.generate();
+          }
+
+
+        } else {
+
+
+          for (var i = 0; i < newInstance; i++) {
+            $(".main .instance").eq(i).removeClass("offRight");
+            $(".main .instance").eq(i).addClass("offLeft");
+          }
+          for (var i = (newInstance + 1); i < this.instances.length; i++) {
+            $(".main .instance").eq(i).removeClass("offLeft");
+            $(".main .instance").eq(i).addClass("offRight");
+          }
+          this.currentInstance = newInstance;
+          this.currentInstanceLazy = newInstance;
+          if (subnetting.specsAnimations) {
+            setTimeout(function() {
+              $(".main .instance").eq(newInstance).removeClass("offRight").removeClass("offLeft");
+            }, 250);
+          } else {
+            $(".main .instance").eq(newInstance).removeClass("offRight").removeClass("offLeft");
+          }
+        }
+      }
+
+    },
     mod2Actuate: function() {
       if (!this.mod2.selected) {
         this.mod2.selected = true;
@@ -554,70 +679,88 @@ var subnetting = new Vue({
         prefixIn: this.prefixIn,
         specsOpts: this.specsOpts,
         specsReserve: this.specsReserve,
-        specsSeed: this.specsSeed,
         specsAnimations: this.specsAnimations,
         mod1PrefixIn: this.mod1.prefixIn,
-        mod2PrefixIn: this.mod2.prefixIn
+        mod2PrefixIn: this.mod2.prefixIn,
+        lang: this.langSwitch
       };
       var json = JSON.stringify(data);
       setCookie("subnettingSettings", json, 1000);
     },
     resetSettings: function() {
-      this.subnetCountIn = "4-6";
-      this.baseIPIn = "192.0.2.0";
-      this.prefixIn = "24";
-      this.specsOpts = {
-        firstA: true,
-        firstH: false,
-        lastH: false,
-        lastA: true,
-        mask: false,
-        prefix: true
-      };
-      this.specsReserve = 1;
-      this.specsSeed = "";
-      this.specsAnimations = true;
-      this.mod1.prefixIn = "26-30";
-      this.mod2.prefixIn = "26-28";
-      this.saveSettings();
+      if (!this.inputDisabled) {
+        this.subnetCountIn = "4-6";
+        this.baseIPIn = "192.0.2.0";
+        this.prefixIn = "24";
+        this.specsOpts = {
+          firstA: true,
+          firstH: false,
+          lastH: false,
+          lastA: true,
+          mask: false,
+          prefix: true
+        };
+        this.specsReserve = 1;
+        this.specsSeed = "";
+        this.specsAnimations = true;
+        this.mod1.prefixIn = "26-30";
+        this.mod2.prefixIn = "26-28";
+        this.saveSettings();
+      }
     },
-    prevInstance: function() {
-      if(!this.cooldown) {
+
+    jumpToInstance: function(id) {
+      if (!this.cooldown) {
         this.cooldown = true;
         var that = this;
         setTimeout(function() {
           that.cooldown = false;
-        },500);
-        $(".main .instance").eq(subnetting.currentInstance).addClass("offRight");
-        this.currentInstance--;
-        this.currentInstanceLazy--;
+        }, 300);
+
+        for (var i = 0; i < id; i++) {
+          $(".main .instance").eq(i).removeClass("offRight");
+          $(".main .instance").eq(i).addClass("offLeft");
+        }
+        for (var i = (id + 1); i < this.instances.length; i++) {
+          $(".main .instance").eq(i).removeClass("offLeft");
+          $(".main .instance").eq(i).addClass("offRight");
+        }
+        this.currentInstance = id;
+        this.currentInstanceLazy = id;
         if (subnetting.specsAnimations) {
           setTimeout(function() {
-            $(".main .instance").eq(subnetting.currentInstance).removeClass("offLeft");
-          }, 300);
+            $(".main .instance").eq(id).removeClass("offRight").removeClass("offLeft");
+          }, 250);
         } else {
-          $(".main .instance").eq(subnetting.currentInstance).removeClass("offLeft");
+          $(".main .instance").eq(id).removeClass("offRight").removeClass("offLeft");
         }
       }
     },
-    nextInstance: function() {
-      if(!this.cooldown) {
-        this.cooldown = true;
-        var that = this;
-        setTimeout(function() {
-          that.cooldown = false;
-        },500);
-      $(".main .instance").eq(subnetting.currentInstance).addClass("offLeft");
-      this.currentInstance++;
-      this.currentInstanceLazy++;
-      if (subnetting.specsAnimations) {
-        setTimeout(function() {
-          $(".main .instance").eq(subnetting.currentInstance).removeClass("offRight");
-        }, 300);
+    validateJump: function() {
+      var input = parseInt(this.jumpToInput);
+      if (isNumeric(input) && input % 1 == 0 && input >= 1 && input <= this.instances.length && !this.blacklist.includes(input - 1)) {
+
+        this.jumpToInstance(this.jumpToInput - 1);
+        this.$refs.jumpInput.blur();
+
       } else {
-        $(".main .instance").eq(subnetting.currentInstance).removeClass("offRight");
+        var notRightColor = "#f33";
+        if (this.jumpCurrentAnimNumber == 1) {
+          this.jumpAnim = "redBlink2";
+          this.jumpCurrentAnimNumber = 2;
+        } else {
+          this.jumpAnim = "redBlink1";
+          this.jumpCurrentAnimNumber = 1;
+        }
+
       }
-}
+    },
+    jumpInit: function() {
+      this.jumpAnim = "";
+      this.jumpSelect = true;
+      this.$nextTick(() => {
+        this.$refs.jumpInput.focus();
+      });
     },
     hostsMax: function(instance) {
       return Math.pow(2, 32 - parseInt(this.instances[instance].basePrefix));
@@ -677,16 +820,6 @@ var subnetting = new Vue({
       this.baseIPIn = this.bitToA(ip.substr(0, i) + zeros);
       this.saveSettings();
     },
-    updateSeed: function(e) {
-      var val = e.target.value;
-      if (val == "") {
-        Math.seedrandom();
-      } else {
-        Math.seedrandom(val);
-      }
-      this.saveSettings();
-      console.log("seed nastaven na " + val);
-    },
     prefixToMask: function(prefix) {
       var bit = "";
       for (var i = 0; i < 32; i++) {
@@ -738,7 +871,11 @@ var subnetting = new Vue({
     },
     prefixToBit: function(prefix) {
       var str = "00000000000000000000000000000000";
-      return str.replaceAt(prefix - 1, "1");
+      if (prefix == 0) {
+        return str;
+      } else {
+        return str.replaceAt(prefix - 1, "1");
+      }
     },
     bitToA: function(bit) {
       var a = "";
@@ -953,7 +1090,7 @@ var subnetting = new Vue({
     checkMod1: function() {
       var rightColor = "green";
       var notRightColor = "#f33";
-      if (this.mod1.address2 == this.mod1.address2In) {
+      if (this.mod1.address2 == this.mod1.address2In.replace(/\s/g, '')) {
         this.mod1.checkColor = rightColor;
       } else {
         this.mod1.checkColor = notRightColor;
@@ -983,11 +1120,26 @@ var subnetting = new Vue({
     showResultsMod1: function() {
       this.mod1.answers = true;
     },
+    generateNewMod1: function() {
+      if (this.specsSeed != "") {
+        Math.seedrandom(this.specsSeed);
+      }
+      this.exerciseCounter = 0;
+      this.generateMod1();
+    },
+    generateNewMod2: function() {
+      if (this.specsSeed != "") {
+        Math.seedrandom(this.specsSeed);
+      }
+      this.exerciseCounter = 0;
+      this.generateMod2();
+    },
     generateMod1: function() {
       this.location = "mod1";
       this.mod1.answers = false;
       this.mod1.checkColor = "";
       this.mod1.address2In = "";
+      this.exerciseCounter++;
       this.mod1.prefix = rand(parseInt(this.mod1.prefixMin), parseInt(this.mod1.prefixMax));
 
       var ip = this.toIP("", this.mod1.prefix);
@@ -1012,42 +1164,110 @@ var subnetting = new Vue({
       });
       switch (a) {
         case 1:
-          this.mod1.address1Type = "Adresa";
+
+          if(this.lang.language == "cs") this.mod1.address1Type = "Adresa";
+          else this.mod1.address1Type = "Address";
           this.mod1.address1 = ip;
           break;
         case 2:
-          this.mod1.address1Type = "První host";
+
+          if(this.lang.language == "cs")this.mod1.address1Type = "První host";
+          else this.mod1.address1Type = "First host";
           this.mod1.address1 = this.bitToA(this.bitAdd(ipBit, "00000000000000000000000000000001"));
           break;
         case 3:
-          this.mod1.address1Type = "Poslední host";
+
+          if(this.lang.language == "cs")          this.mod1.address1Type = "Poslední host";
+          else this.mod1.address1Type = "Last host";
           this.mod1.address1 = this.bitToA(this.bitDeduct(this.bitAdd(ipBit, this.prefixToBit(this.mod1.prefix)), "00000000000000000000000000000010"));
           break;
         case 4:
           this.mod1.address1Type = "Broadcast";
+
           this.mod1.address1 = this.bitToA(this.bitDeduct(this.bitAdd(ipBit, this.prefixToBit(this.mod1.prefix)), "00000000000000000000000000000001"));
           break;
       }
       this.mod1.octets = this.mod1.address1.split(".").reverse();
       switch (b) {
         case 1:
-          this.mod1.address2Type = "podsítě";
+
+          if(this.lang.language == "cs") this.mod1.address2Type = "podsítě";
+          else this.mod1.address2Type = "subnet";
           this.mod1.address2 = ip;
           break;
         case 2:
-          this.mod1.address2Type = "prvního hosta";
+
+          if(this.lang.language == "cs")  this.mod1.address2Type = "prvního hosta";
+          else this.mod1.address2Type = "first host";
           this.mod1.address2 = this.bitToA(this.bitAdd(ipBit, "00000000000000000000000000000001"));
           break;
         case 3:
-          this.mod1.address2Type = "posledního hosta";
+
+          if(this.lang.language == "cs")this.mod1.address2Type = "posledního hosta";
+          else this.mod1.address2Type = "last host";
           this.mod1.address2 = this.bitToA(this.bitDeduct(this.bitAdd(ipBit, this.prefixToBit(this.mod1.prefix)), "00000000000000000000000000000010"));
           break;
         case 4:
-          this.mod1.address2Type = "broadcastu";
+
+          if(this.lang.language == "cs")this.mod1.address2Type = "broadcastu";
+          else this.mod1.address2Type = "broadcast";
           this.mod1.address2 = this.bitToA(this.bitDeduct(this.bitAdd(ipBit, this.prefixToBit(this.mod1.prefix)), "00000000000000000000000000000001"));
           break;
       }
 
+    },
+    mod1LangSwitch: function(){
+      if(this.location == "mod1") {
+
+
+      switch(this.mod1.address1Type) {
+        case "Adresa":
+          this.mod1.address1Type = "Address";
+          break;
+        case "První host":
+        this.mod1.address1Type = "First host";
+          break;
+        case "Poslední host":
+        this.mod1.address1Type = "Last host";
+          break;
+        case "Address":
+          this.mod1.address1Type = "Adresa";
+          break;
+        case "First host":
+        this.mod1.address1Type = "První host";
+          break;
+        case "Last host":
+        this.mod1.address1Type = "Poslední host";
+          break;
+      }
+
+      switch(this.mod1.address2Type) {
+        case "podsítě":
+          this.mod1.address2Type = "subnet";
+          break;
+        case "prvního hosta":
+        this.mod1.address2Type = "first host";
+          break;
+        case "posledního hosta":
+        this.mod1.address2Type = "last host";
+          break;
+        case "broadcastu":
+          this.mod1.address2Type = "broadcast";
+          break;
+        case "subnet":
+          this.mod1.address2Type = "podsítě";
+          break;
+        case "first host":
+        this.mod1.address2Type = "prvního hosta";
+          break;
+        case "last host":
+        this.mod1.address2Type = "posledního hosta";
+          break;
+        case "broadcast":
+          this.mod1.address2Type = "broadcastu";
+          break;
+      }
+      }
     },
     generateMod2: function() {
       this.mod2.selected = false;
@@ -1058,246 +1278,305 @@ var subnetting = new Vue({
 
       this.location = "mod2";
       this.mod2.checkColor = "";
+      this.exerciseCounter++;
       this.mod2.prefix = rand(parseInt(this.mod2.prefixMin), parseInt(this.mod2.prefixMax));
 
-      var ip = this.toIP("", this.mod2.prefix);
+      var prefix = this.mod2.prefix;
+      var startIp = this.toIP("", prefix);
 
-      var ipBit = "";
-      var i = 0;
-      var octets = ip.split(".");
+
+      var octets = startIp.split(".");
+      var startBit = "";
       var that = this;
       octets.forEach(function(octet) {
         if (octet == "?") octet = 0;
         if (that.dec2bin(parseInt(octet)).length == 8) {
-          ipBit += that.dec2bin(parseInt(octet));
+          startBit += that.dec2bin(parseInt(octet));
         } else {
-          ipBit += "00000000";
+          startBit += "00000000";
         }
       });
 
-      this.mod2.oneSubnet = !!rand(0, 1);
 
-      if (this.mod2.oneSubnet) {
-        do {
-          this.mod2.address1 = this.bitToA(this.toRandAddress(ipBit, this.mod2.prefix));
-          this.mod2.address2 = this.bitToA(this.toRandAddress(ipBit, this.mod2.prefix));
-        } while (this.mod2.address1 == this.mod2.address2);
-      } else {
-        //if(rand(0,1) == 1) {
 
-        if (rand(0, 1) == 1) {
 
-          this.mod2.address1 = this.bitToA(this.toRandAddress(ipBit, this.mod2.prefix));
-          var rng = this.dec2bin32(Math.ceil(Math.sqrt(rand(1, Math.pow(Math.pow(32 - this.mod2.prefix, 2), 2)))))
 
-          this.mod2.address2 = this.bitToA(this.bitDeduct(ipBit, rng));
-        } else {
 
-          this.mod2.address1 = this.bitToA(this.toRandAddress(ipBit, this.mod2.prefix));
-          this.mod2.address2 = this.bitToA(this.bitAdd(this.bitAdd(ipBit, this.prefixToBit(this.mod2.prefix)), this.dec2bin32(Math.ceil(Math.sqrt(rand(0, Math.pow(Math.pow(32 - this.mod2.prefix, 2), 2)))))));
-        }
-        /*}
-        else {
-          if(rand(0,1) == 1) {
-            this.mod2.address2 = this.bitToA(this.toRandAddress(ipBit, this.mod2.prefix));
-            this.mod2.address1 = this.bitToA(this.bitDeduct(ipBit, this.dec2bin32(Math.ceil(Math.sqrt(rand(0,Math.pow(Math.pow(32-this.mod2.prefix,2),2)))))));
-          }
-          else {
-            this.mod2.address2 = this.bitToA(this.toRandAddress(ipBit, this.mod2.prefix));
-            this.mod2.address1 = this.bitToA(this.bitAdd(this.bitAdd(ipBit, this.prefixToBit(this.mod2.prefix)), this.dec2bin32(Math.ceil(Math.sqrt(rand(0,Math.pow(Math.pow(32-this.mod2.prefix,2),2)))))));
-          }
-        }*/
+      var size = Math.pow(2, 32 - prefix);
+
+      var first = 0;
+      var start = -rand(0, size - 1);
+      var end = start + size - 1;
+
+      var range = Math.round(size * 1.1);
+      var base = 10;
+      var possibilities = [];
+      var modifier = 0.33;
+
+      var step = 1;
+      if (range * 2 > 1000) {
+        step = Math.floor(Math.pow(Math.sqrt(range * 2 / 1000), 1.9));
+
       }
 
+      if (rand(0, 1)) { //same subnet
+        this.mod2.oneSubnet = true;
+        for (var i = -range; i <= range; i += step) {
+          if ((i >= start && i <= end) && (i != first)) {
+            var localModifier = modifier + ((1 - modifier) * (1 - ((range - Math.abs(i)) / range)));
+            for (var j = 0; j < Math.round(base * localModifier); j++) {
+              possibilities.push(i);
+            }
+          }
+        }
+      } else { //not same subnet
+        this.mod2.oneSubnet = false;
+        for (var i = -range; i <= range; i += step) {
+          if (i < start || i > end) {
+            var localModifier = modifier + ((1 - modifier) * ((range - Math.abs(i)) / range));
+            for (var j = 0; j < Math.round(base * localModifier); j++) {
+              possibilities.push(i);
+            }
+          }
+        }
+      }
+
+      var second = possibilities[rand(0, possibilities.length - 1)];
+
+
+      var firstBit = this.bitAdd(startBit, this.dec2bin32(-start))
+      var firstIp = this.bitToA(firstBit);
+      var secondIp;
+      if (second < 0) {
+        secondIp = this.bitToA(this.bitDeduct(firstBit, this.dec2bin32(-second)));
+      } else if (second == 0) {
+        console.error("same ip");
+      } else {
+        secondIp = this.bitToA(this.bitAdd(firstBit, this.dec2bin32(second)));
+      }
+      this.mod2.address1 = firstIp;
+      this.mod2.address2 = secondIp;
 
     },
     generateNew: function() {
+      $(".buttonsBox").css("display","none");
+      $("footer").css("display","none");
       this.location = "main";
       this.inputDisabled = true;
+      this.blacklist = [];
+      if (this.specsSeed != "") {
+        Math.seedrandom(this.specsSeed);
+      }
       this.generate();
-      $(".buttonsBox").css({
+      $(".main > .instancesBox").css({
         "transition": "0s",
-        "visibility": "hidden"
       });
       setTimeout(function() {
-        $(".buttonsBox").css({
-          "transition": "",
-          "visibility": ""
+        $(".main > .instancesBox").css({
+          "transition": ""
         });
       }, 100);
     },
     generate: function() {
-      if(!this.cooldown) {
+      if (!this.cooldown) {
         this.cooldown = true;
         var that = this;
         setTimeout(function() {
           that.cooldown = false;
-        },500);
-      if (subnetting.instances.length != 0 && subnetting.specsAnimations) {
-        $(".main .instance").eq(subnetting.currentInstance).addClass("offLeft");
-      } else {
-        var previousInstance = subnetting.currentInstance;
-      }
-      $(".offRight").removeClass("offRight").addClass("offLeft");
-      this.currentInstance = this.instances.length;
-      var currentEx = this.instances.length + 1;
-      this.instances.push({
-        name: "Příklad " + currentEx,
-        baseIP: "192.0.2.0",
-        basePrefix: 24,
-        subnets: [],
-        subnetsCount: "00000000000000000000000000000000",
-        answers: false,
-        update: false,
-      });
-      if (subnetting.instances.length == 1) {
-        this.$nextTick(() => {
-          $(".main .instance").eq(subnetting.currentInstance).removeClass("offRight");
-        });
-      }
-      this.instances[this.currentInstance].basePrefix = rand(parseInt(this.basePrefixMin), parseInt(this.basePrefixMax));
-      var subnetCount = rand(parseInt(this.subnetCountMin), parseInt(this.subnetCountMax));
-      if (Math.pow(2, 29 - this.instances[this.currentInstance].basePrefix) < subnetCount) {
-        subnetCount = Math.pow(2, 29 - this.instances[this.currentInstance].basePrefix);
+        }, 300);
 
-      }
-
-      this.instances[this.currentInstance].baseIP = this.toIP(this.baseIPIn, this.instances[this.currentInstance].basePrefix);
-
-      this.instances[this.currentInstance].answers = false;
-      $(".settings").hide();
-      this.instances[this.currentInstance].subnets = [];
-      this.instances[this.currentInstance].subnetsCount = "00000000000000000000000000000000";
-
-      //generace počtu routerů(schéma);
-      var rCountOpts = [];
-      for (var i = 1; i <= 3; i++) {
-        var limitS = (i * 2) - 1;
-        var limitE = (i * 5) - 1;
-        if (subnetCount >= limitS && subnetCount <= limitE) {
-
-          if (rCountOpts.length == 0) rCountOpts.push(i);
-          else if (rand(1, 2) == 1) rCountOpts.push(i);
+        if (this.instances.length >= 50) {
+          this.instances = [];
+          this.blacklist = [];
+          this.cooldown = false;
+          this.generate();
+          $(".main .instance").removeClass("offBlacklisted offLeft offRight");
+          return;
         }
-      }
-      var rCount = rCountOpts[rand(1, rCountOpts.length) - 1];
 
-
-      for (var i = 0; i < subnetCount; i++) {
-        if (this.countHosts() >= this.hostsMax(this.currentInstance)) {
-          alert("Víc podsítí nelze vytvořit");
-          break;
-        }
-        var limit;
-        var minLimit = (subnetCount - i - 1) * 8;
-        if (this.instances[this.currentInstance].basePrefix <= 24) {
-          //  limit = Math.ceil(((subnetCount - i - 2)) + Math.pow((subnetCount - i - 1), 1.8));
-          limit = Math.ceil(Math.pow((subnetCount - i), 2) - (i * 2));
-          if (limit < minLimit) limit = minLimit;
+        if (subnetting.instances.length != 0 && subnetting.specsAnimations) {
+          $(".main .instance").eq(subnetting.currentInstance).addClass("offLeft");
         } else {
-          limit = minLimit;
+          var previousInstance = subnetting.currentInstance;
         }
-        var max = this.convertToBit(bitFloor(this.hostsMax(this.currentInstance) - this.countHosts() - limit));
-        if (max < 3) max = 3;
-        var bitRange = rand(3, max);
-        if (rCount > subnetCount - i) bitRange = 2;
-        this.addToSubnetsCount(bitRange, 1);
-        this.instances[this.currentInstance].subnets.push({
-          nth: 0,
-          name: "Subnet " + 'abcdefghijklmnopqrstuvwxyz' [this.instances[this.currentInstance].subnets.length].toUpperCase(),
-          hosts: this.randInBitRange(bitRange),
-          bitCeil: bitRange,
-          prefix: 32 - bitRange,
-          mask: this.prefixToMask(32 - bitRange),
-          parent: "",
-          firstA: "",
-          lastA: "",
-          firstH: "",
-          lastH: "",
-          inFirstA: "",
-          inLastA: "",
-          inFirstH: "",
-          inLastH: "",
-          inMask: "",
-          inPrefix: "",
-          firstACheckColor: "",
-          lastACheckColor: "",
-          firstHCheckColor: "",
-          lastHCheckColor: "",
-          prefixCheckColor: "",
-          maskCheckColor: ""
+        $(".offRight").removeClass("offRight").addClass("offLeft");
+        this.currentInstance = this.instances.length;
+        var currentEx = this.instances.length + 1;
+        this.instances.push({
+          name: currentEx,
+          baseIP: "192.0.2.0",
+          basePrefix: 24,
+          subnets: [],
+          subnetsCount: "00000000000000000000000000000000",
+          answers: false,
+          update: false,
         });
-      }
-      this.instances[this.currentInstance].subnets = shuffle(this.instances[this.currentInstance].subnets, rCount - 1);
+        if (subnetting.instances.length == 1) {
+          this.$nextTick(() => {
+            $(".main .instance").eq(subnetting.currentInstance).removeClass("offRight");
+          });
+        }
+        this.instances[this.currentInstance].basePrefix = rand(parseInt(this.basePrefixMin), parseInt(this.basePrefixMax));
+        var subnetCount = rand(parseInt(this.subnetCountMin), parseInt(this.subnetCountMax));
+        this.currentSubnetCount = subnetCount;
+        if (Math.pow(2, 29 - this.instances[this.currentInstance].basePrefix) < subnetCount) {
+          subnetCount = Math.pow(2, 29 - this.instances[this.currentInstance].basePrefix);
 
-      for (var i = 0; i < (rCount - 1); i++) {
-        this.instances[this.currentInstance].subnets[this.instances[this.currentInstance].subnets.length - i - 1].parent = "btw";
-      }
+        }
 
-      for (i = 0; i < this.instances[this.currentInstance].subnets.length; i++) {
-        this.instances[this.currentInstance].subnets[i].name = "Subnet " + 'abcdefghijklmnopqrstuvwxyz' [i].toUpperCase();
-        this.instances[this.currentInstance].subnets[i].nth = (i + 1);
-      }
-      this.instances[this.currentInstance].subnets.sort(function(a, b) {
-        if (a.prefix < b.prefix) return -1;
-        if (a.prefix > b.prefix) return 1;
-        return 0;
-      });
-      var base = this.baseIPBit(this.currentInstance);
-      var that = this;
-      this.instances[this.currentInstance].subnets.forEach(function(item) {
-        item.firstA = that.bitToA(base);
-        item.firstH = that.bitToA(that.bitAdd(base, "00000000000000000000000000000001"))
-        base = that.bitAdd(base, that.prefixToBit(item.prefix));
-        item.lastA = that.bitToA(that.bitDeduct(base, "00000000000000000000000000000001"));
-        item.lastH = that.bitToA(that.bitDeduct(base, "00000000000000000000000000000010"));
-      });
-      this.instances[this.currentInstance].subnets.sort(function(a, b) {
-        if (a.name[7] < b.name[7]) return -1;
-        if (a.name[7] > b.name[7]) return 1;
-        return 0;
-      });
+        this.instances[this.currentInstance].baseIP = this.toIP(this.baseIPIn, this.instances[this.currentInstance].basePrefix);
 
+        this.instances[this.currentInstance].answers = false;
+        $(".settings").hide();
+        this.instances[this.currentInstance].subnets = [];
+        this.instances[this.currentInstance].subnetsCount = "00000000000000000000000000000000";
 
+        //generace počtu routerů(schéma);
+        var rCountOpts = [];
+        for (var i = 1; i <= 3; i++) {
+          var limitS = (i * 2) - 1;
+          var limitE = (i * 5) - 1;
+          if (subnetCount >= limitS && subnetCount <= limitE) {
 
-      var width = 1110;
-      var height = 520;
-      var offset = 350;
-      var offsetSubnetsX = 150;
-      var offsetSubnetsY = 125;
+            if (rCountOpts.length == 0) rCountOpts.push(i);
+            else if (rand(1, 2) == 1) rCountOpts.push(i);
+          }
+        }
+        var rCount = rCountOpts[rand(1, rCountOpts.length) - 1];
 
 
-      var rs = [];
-      var rsBetween = [];
-      for (var i = 0; i < rCount; i++) {
-        rs.push({
-          position: {
-            x: 0,
-            y: 0
-          },
-          subnets: []
+        for (var i = 0; i < subnetCount; i++) {
+          if (this.countHosts() >= this.hostsMax(this.currentInstance)) {
+            alert("Víc podsítí nelze vytvořit");
+            break;
+          }
+          var limit;
+          var minLimit = (subnetCount - i - 1) * 8;
+          if (this.instances[this.currentInstance].basePrefix <= 24) {
+
+            limit = Math.ceil(Math.pow((subnetCount - i), 2) - (i * 2));
+            if (limit < minLimit) limit = minLimit;
+          } else {
+            limit = minLimit;
+          }
+          var max = this.convertToBit(bitFloor(this.hostsMax(this.currentInstance) - this.countHosts() - limit));
+          if (max < 3) max = 3;
+          var bitRange = rand(3, max);
+          if (rCount > subnetCount - i) bitRange = 2;
+          this.addToSubnetsCount(bitRange, 1);
+          this.instances[this.currentInstance].subnets.push({
+            nth: 0,
+            name: "Subnet " + 'abcdefghijklmnopqrstuvwxyz' [this.instances[this.currentInstance].subnets.length].toUpperCase(),
+            hosts: this.randInBitRange(bitRange),
+            bitCeil: bitRange,
+            prefix: 32 - bitRange,
+            mask: this.prefixToMask(32 - bitRange),
+            parent: "",
+            firstA: "",
+            lastA: "",
+            firstH: "",
+            lastH: "",
+            inFirstA: "",
+            inLastA: "",
+            inFirstH: "",
+            inLastH: "",
+            inMask: "",
+            inPrefix: "",
+            firstACheckColor: "",
+            lastACheckColor: "",
+            firstHCheckColor: "",
+            lastHCheckColor: "",
+            prefixCheckColor: "",
+            maskCheckColor: ""
+          });
+        }
+        this.instances[this.currentInstance].subnets = shuffle(this.instances[this.currentInstance].subnets, rCount - 1);
+
+        for (var i = 0; i < (rCount - 1); i++) {
+          this.instances[this.currentInstance].subnets[this.instances[this.currentInstance].subnets.length - i - 1].parent = "btw";
+        }
+
+        for (i = 0; i < this.instances[this.currentInstance].subnets.length; i++) {
+          this.instances[this.currentInstance].subnets[i].name = "Subnet " + 'abcdefghijklmnopqrstuvwxyz' [i].toUpperCase();
+          this.instances[this.currentInstance].subnets[i].nth = (i + 1);
+        }
+        this.instances[this.currentInstance].subnets.sort(function(a, b) {
+          if (a.prefix < b.prefix) return -1;
+          if (a.prefix > b.prefix) return 1;
+          return 0;
         });
-      }
+        var base = this.baseIPBit(this.currentInstance);
+        var that = this;
+        this.instances[this.currentInstance].subnets.forEach(function(item) {
+          item.firstA = that.bitToA(base);
+          item.firstH = that.bitToA(that.bitAdd(base, "00000000000000000000000000000001"))
+          base = that.bitAdd(base, that.prefixToBit(item.prefix));
+          item.lastA = that.bitToA(that.bitDeduct(base, "00000000000000000000000000000001"));
+          item.lastH = that.bitToA(that.bitDeduct(base, "00000000000000000000000000000010"));
+        });
+        this.instances[this.currentInstance].subnets.sort(function(a, b) {
+          if (a.name[7] < b.name[7]) return -1;
+          if (a.name[7] > b.name[7]) return 1;
+          return 0;
+        });
 
-      var rDistribution = [];
-      var subnetsTotal = this.instances[this.currentInstance].subnets.length;
 
-      for (var i = 0; i < rCount; i++) {
-        var rLimitMin = subnetsTotal - (((rCount - (i + 1)) * 4) + (rCount - 1));
 
-        if (rLimitMin < 1) rLimitMin = 1;
-        var rLimitMax = subnetsTotal - (rCount - 1) - (rCount - (i + 1));
-        if (rLimitMax > 4) rLimitMax = 4;
-        var add = rand(rLimitMin, rLimitMax);
+        var width = 1110;
+        var height = 520;
+        var offset = 350;
+        var offsetSubnetsX = 150;
+        var offsetSubnetsY = 125;
 
-        rDistribution.push(add);
-        subnetsTotal -= add;
-      }
 
-      var k = 0;
-      for (var i = 0; i < rDistribution.length; i++) {
-        for (var j = 0; j < rDistribution[i]; j++) {
-          rs[i].subnets.push({
+        var rs = [];
+        var rsBetween = [];
+        for (var i = 0; i < rCount; i++) {
+          rs.push({
+            position: {
+              x: 0,
+              y: 0
+            },
+            subnets: []
+          });
+        }
+
+        var rDistribution = [];
+        var subnetsTotal = this.instances[this.currentInstance].subnets.length;
+
+        for (var i = 0; i < rCount; i++) {
+          var rLimitMin = subnetsTotal - (((rCount - (i + 1)) * 4) + (rCount - 1));
+
+          if (rLimitMin < 1) rLimitMin = 1;
+          var rLimitMax = subnetsTotal - (rCount - 1) - (rCount - (i + 1));
+          if (rLimitMax > 4) rLimitMax = 4;
+          var add = rand(rLimitMin, rLimitMax);
+
+          rDistribution.push(add);
+          subnetsTotal -= add;
+        }
+
+        var k = 0;
+        for (var i = 0; i < rDistribution.length; i++) {
+          for (var j = 0; j < rDistribution[i]; j++) {
+            rs[i].subnets.push({
+              name: this.instances[this.currentInstance].subnets[k].name,
+              hosts: this.instances[this.currentInstance].subnets[k].hosts,
+              position: {
+                x: 0,
+                y: 0
+              },
+              placement: ""
+            });
+            k++;
+
+          }
+        }
+
+        for (var i = 1; i < rCount; i++) {
+
+
+          rsBetween.push({
             name: this.instances[this.currentInstance].subnets[k].name,
             hosts: this.instances[this.currentInstance].subnets[k].hosts,
             position: {
@@ -1307,173 +1586,159 @@ var subnetting = new Vue({
             placement: ""
           });
           k++;
-
         }
-      }
-
-      for (var i = 1; i < rCount; i++) {
 
 
-        rsBetween.push({
-          name: this.instances[this.currentInstance].subnets[k].name,
-          hosts: this.instances[this.currentInstance].subnets[k].hosts,
-          position: {
-            x: 0,
-            y: 0
-          },
-          placement: ""
-        });
-        k++;
-      }
+        $(document).ready(function() {
+          var imgR = new Image();
 
-      /*  for (var i = 0; i < this.instances[this.currentInstance].subnets.length; i++) {
-          this.instances[this.currentInstance].subnets[i]
-        }*/
-      $(document).ready(function() {
-        var imgR = new Image();
+          imgR.onload = function() {
+            drawImageRs();
+          }
+          imgR.src = "img/r.png";
+          var imgS = new Image();
+          imgS.onload = function() {
+            drawImageSs();
+          }
+          imgS.src = "img/s.png";
 
-        imgR.onload = function() {
-          drawImageRs();
-        }
-        imgR.src = "img/r.png";
-        var imgS = new Image();
-        imgS.onload = function() {
-          drawImageSs();
-        }
-        imgS.src = "img/s.png";
+          var canvas = document.getElementById("canvas" + subnetting.currentInstance);
+          var ctx = canvas.getContext("2d");
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+          if (rCount == 1) {
+            rs[0].position.x = width / 2;
+            rs[0].position.y = height / 2;
+          } else if (rCount == 2) {
+            rs[0].position.x = width / 2 - offset / 2;
+            rs[0].position.y = height / 2;
 
-        var canvas = document.getElementById("canvas" + subnetting.currentInstance);
-        var ctx = canvas.getContext("2d");
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        if (rCount == 1) {
-          rs[0].position.x = width / 2;
-          rs[0].position.y = height / 2;
-        } else if (rCount == 2) {
-          rs[0].position.x = width / 2 - offset / 2;
-          rs[0].position.y = height / 2;
+            rs[1].position.x = width / 2 + offset / 2;
+            rs[1].position.y = height / 2;
+          } else if (rCount == 3) {
+            rs[0].position.x = width / 2 - offset;
+            rs[0].position.y = height / 2;
 
-          rs[1].position.x = width / 2 + offset / 2;
-          rs[1].position.y = height / 2;
-        } else if (rCount == 3) {
-          rs[0].position.x = width / 2 - offset;
-          rs[0].position.y = height / 2;
+            rs[1].position.x = width / 2;
+            rs[1].position.y = height / 2;
 
-          rs[1].position.x = width / 2;
-          rs[1].position.y = height / 2;
-
-          rs[2].position.x = width / 2 + offset;
-          rs[2].position.y = height / 2;
-        } else {
-          throw new Error("Diagram draw error. Out of range.");
-        }
-        for (var i = 0; i < rCount; i++) {
-          var sCount = rs[i].subnets.length;
-          var subnetsUp;
-          if (sCount % 2 != 0) {
-            if (rand(1, 2) == 1) {
-              subnetsUp = Math.ceil(sCount / 2);
-            } else {
-              subnetsUp = Math.floor(sCount / 2);
-            }
+            rs[2].position.x = width / 2 + offset;
+            rs[2].position.y = height / 2;
           } else {
-            subnetsUp = sCount / 2;
+            throw new Error("Diagram draw error. Out of range.");
           }
-
-
-          var subnetsDown = sCount - subnetsUp;
-          if ((subnetsUp < 0 || subnetsUp > 2) || (subnetsDown < 0 || subnetsDown > 2)) throw new Error("Diagram draw error. instances[this.currentInstance].subnets out of range.");
-          for (var j = 0; j < subnetsUp; j++) {
-
-            var subnet = rs[i].subnets[j];
-            subnet.position.y = height / 2 - offsetSubnetsY;
-
-            if (subnetsUp == 1) {
-              subnet.position.x = rs[i].position.x;
-            } else if (subnetsUp == 2) {
-              subnet.position.x = rs[i].position.x + (j - 0.5) * offsetSubnetsX;
-            }
-            subnet.placement = "up";
-          }
-          for (var j = subnetsUp; j < sCount; j++) {
-            var subnet = rs[i].subnets[j];
-            subnet.position.y = height / 2 + offsetSubnetsY;
-            if (subnetsDown == 1) {
-              subnet.position.x = rs[i].position.x;
-            } else if (subnetsDown == 2) {
-              subnet.position.x = rs[i].position.x + (j - subnetsUp - 0.5) * offsetSubnetsX;
+          for (var i = 0; i < rCount; i++) {
+            var sCount = rs[i].subnets.length;
+            var subnetsUp;
+            if (sCount % 2 != 0) {
+              if (rand(1, 2) == 1) {
+                subnetsUp = Math.ceil(sCount / 2);
+              } else {
+                subnetsUp = Math.floor(sCount / 2);
+              }
             } else {
-              throw new Error("Diagram draw error. Out of range.");
+              subnetsUp = sCount / 2;
             }
-            subnet.placement = "down";
+
+
+            var subnetsDown = sCount - subnetsUp;
+            if ((subnetsUp < 0 || subnetsUp > 2) || (subnetsDown < 0 || subnetsDown > 2)) throw new Error("Diagram draw error. instances[this.currentInstance].subnets out of range.");
+            for (var j = 0; j < subnetsUp; j++) {
+
+              var subnet = rs[i].subnets[j];
+              subnet.position.y = height / 2 - offsetSubnetsY;
+
+              if (subnetsUp == 1) {
+                subnet.position.x = rs[i].position.x;
+              } else if (subnetsUp == 2) {
+                subnet.position.x = rs[i].position.x + (j - 0.5) * offsetSubnetsX;
+              }
+              subnet.placement = "up";
+            }
+            for (var j = subnetsUp; j < sCount; j++) {
+              var subnet = rs[i].subnets[j];
+              subnet.position.y = height / 2 + offsetSubnetsY;
+              if (subnetsDown == 1) {
+                subnet.position.x = rs[i].position.x;
+              } else if (subnetsDown == 2) {
+                subnet.position.x = rs[i].position.x + (j - subnetsUp - 0.5) * offsetSubnetsX;
+              } else {
+                throw new Error("Diagram draw error. Out of range.");
+              }
+              subnet.placement = "down";
+            }
           }
-        }
-        ctx.beginPath();
-        var wirelessSize = 7;
-        ctx.font = '18px Nunito';
-        ctx.fillStyle = "white";
-        ctx.textAlign = "center";
-        for (var i = 0; i < rCount; i++) {
-          if (i != 0) {
-            ctx.moveTo(rs[i].position.x, rs[i].position.y + wirelessSize);
-            ctx.lineTo(rs[i - 1].position.x + (offset / 2) - wirelessSize, rs[i - 1].position.y + wirelessSize);
-            ctx.lineTo(rs[i].position.x - (offset / 2) + wirelessSize, rs[i].position.y - wirelessSize);
-            ctx.lineTo(rs[i - 1].position.x, rs[i - 1].position.y - wirelessSize);
-
-            ctx.fillText(rsBetween[i - 1].name, (rs[i].position.x + rs[i - 1].position.x) / 2, rs[i].position.y - 50);
-
-            ctx.fillText(rsBetween[i - 1].hosts + " hosts", (rs[i].position.x + rs[i - 1].position.x) / 2, rs[i].position.y - 25);
-          }
-          for (var j = 0; j < rs[i].subnets.length; j++) {
-            ctx.moveTo(rs[i].position.x, rs[i].position.y);
-            ctx.lineTo(rs[i].subnets[j].position.x, rs[i].subnets[j].position.y);
-
-            var margin;
-            if (rs[i].subnets[j].placement == "up") margin = -60;
-            else margin = 45;
-
-            ctx.fillText(rs[i].subnets[j].name, rs[i].subnets[j].position.x, rs[i].subnets[j].position.y + margin);
-
-            ctx.fillText(rs[i].subnets[j].hosts + " hosts", rs[i].subnets[j].position.x, rs[i].subnets[j].position.y + margin + 25);
-          }
-        }
-
-        ctx.lineWidth = 3;
-        ctx.strokeStyle = 'white';
-        ctx.stroke();
-
-
-
-
-        function drawImageRs() {
+          ctx.beginPath();
+          var wirelessSize = 7;
+          ctx.font = '18px Nunito';
+          ctx.fillStyle = "white";
+          ctx.textAlign = "center";
           for (var i = 0; i < rCount; i++) {
-            ctx.drawImage(imgR, rs[i].position.x - imgR.width / 2, rs[i].position.y - imgR.height / 2);
-          }
-        }
+            if (i != 0) {
+              ctx.moveTo(rs[i].position.x, rs[i].position.y + wirelessSize);
+              ctx.lineTo(rs[i - 1].position.x + (offset / 2) - wirelessSize, rs[i - 1].position.y + wirelessSize);
+              ctx.lineTo(rs[i].position.x - (offset / 2) + wirelessSize, rs[i].position.y - wirelessSize);
+              ctx.lineTo(rs[i - 1].position.x, rs[i - 1].position.y - wirelessSize);
 
-        function drawImageSs() {
-          for (var i = 0; i < rCount; i++) {
+              ctx.fillText(rsBetween[i - 1].name, (rs[i].position.x + rs[i - 1].position.x) / 2, rs[i].position.y - 50);
+
+              ctx.fillText(rsBetween[i - 1].hosts + " hosts", (rs[i].position.x + rs[i - 1].position.x) / 2, rs[i].position.y - 25);
+            }
             for (var j = 0; j < rs[i].subnets.length; j++) {
-              ctx.drawImage(imgS, rs[i].subnets[j].position.x - imgS.width / 2, rs[i].subnets[j].position.y - imgS.height / 2);
+              ctx.moveTo(rs[i].position.x, rs[i].position.y);
+              ctx.lineTo(rs[i].subnets[j].position.x, rs[i].subnets[j].position.y);
+
+              var margin;
+              if (rs[i].subnets[j].placement == "up") margin = -60;
+              else margin = 45;
+
+              ctx.fillText(rs[i].subnets[j].name, rs[i].subnets[j].position.x, rs[i].subnets[j].position.y + margin);
+
+              ctx.fillText(rs[i].subnets[j].hosts + " hosts", rs[i].subnets[j].position.x, rs[i].subnets[j].position.y + margin + 25);
             }
           }
-        }
-        if (subnetting.specsAnimations) {
-          setTimeout(function() {
-            $(".main .instance").eq(subnetting.currentInstance).removeClass("offRight");
-          }, 300);
-        } else {
-          if (subnetting.currentInstance == 0) {
 
-            $(".main .instance").eq(subnetting.currentInstance).removeClass("offLeft");
-          } else {
-            $(".main .instance").eq(previousInstance).addClass("offLeft");
-            $(".main .instance").eq(subnetting.currentInstance).removeClass("offRight");
+          ctx.lineWidth = 3;
+          ctx.strokeStyle = 'white';
+          ctx.stroke();
+
+
+
+
+          function drawImageRs() {
+            for (var i = 0; i < rCount; i++) {
+              ctx.drawImage(imgR, rs[i].position.x - imgR.width / 2, rs[i].position.y - imgR.height / 2);
+            }
           }
-        }
-        subnetting.currentInstanceLazy = subnetting.instances.length - 1;
 
-      });
-    }
+          function drawImageSs() {
+            for (var i = 0; i < rCount; i++) {
+              for (var j = 0; j < rs[i].subnets.length; j++) {
+                ctx.drawImage(imgS, rs[i].subnets[j].position.x - imgS.width / 2, rs[i].subnets[j].position.y - imgS.height / 2);
+              }
+            }
+          }
+          if (subnetting.specsAnimations) {
+            setTimeout(function() {
+              $(".main .instance").eq(subnetting.currentInstance).removeClass("offRight");
+            }, 250);
+          } else {
+            if (subnetting.currentInstance == 0) {
+
+              $(".main .instance").eq(subnetting.currentInstance).removeClass("offLeft");
+            } else {
+              $(".main .instance").eq(previousInstance).addClass("offLeft");
+              $(".main .instance").eq(subnetting.currentInstance).removeClass("offRight");
+            }
+          }
+          subnetting.currentInstanceLazy = subnetting.instances.length - 1;
+
+        });
+        setTimeout(function(){
+          $(".buttonsBox").css("display","block");
+          $("footer").css("display","block");
+        }, 50);
+
+      }
     },
     check: function() {
       var rightColor = "green";
@@ -1534,10 +1799,9 @@ var subnetting = new Vue({
     },
     showResults: function() {
       this.instances[this.currentInstance].answers = true;
-      /*setTimeout(function(){
-        subnetting.instances[subnetting.currentInstance].update = true;
-      },10);*/
+
       this.$nextTick(() => {
+        this.answersChange = !this.answersChange;
         subnetting.instances[subnetting.currentInstance].update = true;
       });
     },
@@ -1595,41 +1859,7 @@ var subnetting = new Vue({
     toCanvasId: function(index) {
       return "canvas" + index;
     },
-    /*save: function() {
-      var input = $("#switch input").val();
-      var valid = true;
 
-      if (!isNumeric(input) || input % 1 != 0) valid = false;
-      if (input < 2 || input > 14) valid = false;
-      if (valid) {
-        $("#switch span").eq(0).text($("#switch input").val());
-        if ($("#switch input").val() <= 4) $("#switch span").eq(1).text("subnety");
-        else $("#switch span").eq(1).text("subnetů");
-        $("#switch input").hide();
-        $("#switch span").eq(0).show();
-      } else {
-        subnetting.picked = null;
-        $("#switch span").eq(0).text("custom");
-        $("#switch span").eq(1).text("");
-        $("#switch input").val("");
-        $("#switch input").hide();
-        $("#switch span").eq(0).show();
-        $("#c").prop('checked', false);
-      }
-    },
-    cust: function() {
-      if (!this.inputDisabled) {
-        var that = this;
-        $("#switch span").eq(0).hide();
-        $("#switch span").eq(1).text("");
-        $("#switch input").show();
-        $("#switch input").focus();
-        $("#switch input").focusout(function() {
-          that.save();
-        });
-
-      }
-    }*/
   },
   beforeMount() {
     var json = getCookie("subnettingSettings");
@@ -1639,14 +1869,62 @@ var subnetting = new Vue({
       this.baseIPIn = data.baseIPIn;
       this.prefixIn = data.prefixIn;
       this.specsOpts = data.specsOpts;
-      this.specsReserve = data.specsReserve;
-      this.specsSeed = data.specsSeed;
       this.specsAnimations = data.specsAnimations;
       this.mod1.prefixIn = data.mod1PrefixIn;
       this.mod2.prefixIn = data.mod2PrefixIn;
+
     }
 
   },
+  mounted() {
+
+    var json = getCookie("subnettingSettings");
+    $(".langSwitch .sliderBackg").css({
+      "transition": "all 0s",
+      "transition-delay": "0s",
+      "visibility":"hidden"
+    });
+    var that = this;
+
+
+
+    if (json.length > 0) {
+      var data = JSON.parse(json);
+
+      this.langSwitch = data.lang;
+
+
+      this.specsReserve = data.specsReserve;
+    } else {
+      var that = this;
+
+
+
+      var allLangs = [];
+      allLangs = allLangs.concat(navigator.languages);
+
+      allLangs.push(navigator.language);
+      for (var i = 0; i < allLangs.length; i++) {
+        allLangs[i] = allLangs[i].substring(0, 2);
+      }
+      if (allLangs.includes("cs")) {
+        that.langSwitch = 1;
+      } else {
+        that.langSwitch = 2;
+      }
+      that.specsReserve = 1;
+      that.saveSettings();
+
+
+
+
+    }
+
+
+
+
+  }
+
 });
 
 var inAnim = false;
@@ -1664,7 +1942,33 @@ $(".sectionL button").click(function() {
 
 });
 $(".main").css("visibility", "visible");
-$(function() {
+
+
+function realWidth(obj) {
+  var clone = obj.clone();
+  clone.addClass("reserveClone");
+  $('body').append(clone);
+  var width = clone.outerWidth();
+  clone.remove();
+  return width + 1;
+}
+$(window).on('resize', function(){
+  subnetting.resizeChange = !subnetting.resizeChange;
+});
+$(document).ready(function(){
+  $(".langSwitch .sliderBackg").css({
+
+    "visibility":"visible"
+  });
+  setTimeout(function() {
+
+    $(".langSwitch .sliderBackg").css({
+      "transition": "",
+      "transition-delay": ""
+
+    });
+}, 50);
+  subnetting.langSwitchAftefshock = true;
   $(".helpBox").resizable();
   $(document).on("click", ".mods>div .profile", function() {
 
@@ -1676,5 +1980,4 @@ $(function() {
     }
 
   });
-
-});
+})

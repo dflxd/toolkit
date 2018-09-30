@@ -28,14 +28,14 @@ header #logo {
   height: 200px;
 }
 ::selection {
-  background: #49eeff;
+  background: #00cde2;
+  color: white;
 }
 button {
   border: 2px solid #49eeff;
   border-radius: 10px;
   background: rgba(6, 45, 65, 0.5);
   color: #fff;
-  cursor: pointer;
   padding: 8px 16px;
   font-size: 20px;
   outline: none!important;
@@ -49,9 +49,13 @@ button:active:not(:disabled) {
 }
 button:disabled {
   opacity: 0.5;
+  cursor: default;
 }
 button:disabled:hover:not(.specialFocus) {
   background: rgba(6, 45, 65, 0.5);
+}
+button:not(:disabled) {
+  cursor: pointer;
 }
 button.specialFocus {
   border: none;
@@ -61,21 +65,20 @@ button.specialFocus {
   padding: 0px;
   outline: none;
 }
-button.specialFocus span {
+button.specialFocus > span {
   border: 2px solid #49eeff;
   border-radius: 10px;
   background: rgba(6, 45, 65, 0.5);
   color: #fff;
-  cursor: pointer;
   padding: 8px 16px;
   font-size: 20px;
   outline: none;
   display: inline-block;
 }
-button.specialFocus span:hover {
+button.specialFocus > span:hover {
   background: rgba(14, 144, 210, 0.5);
 }
-button.specialFocus span:active:not(.noActiveEffect) {
+button.specialFocus > span:active:not(.noActiveEffect) {
   transform: scale(0.95);
   transition: all 0.1s;
 }
@@ -266,37 +269,6 @@ h1 {
 .modules a:link {
   text-decoration: none;
   color: white;
-}
-footer.subn {
-  position: absolute;
-  bottom: 0;
-  right: 0;
-  padding: 5px;
-  text-align: center;
-}
-footer.subn.toEnd {
-  bottom: -70px;
-}
-footer.subn table td {
-  padding: 0;
-  line-height: 10px;
-  font-size: 16px;
-}
-footer.subn table td a {
-  text-align: right;
-  width: 60px;
-  height: 60px;
-  display: inline-block;
-  margin-left: 5px;
-}
-footer.subn table td a img {
-  width: 100%;
-  transform: perspective(100px) rotateY(0deg);
-}
-footer.subn table td a:hover img {
-  animation: rotatee .6s;
-  animation-timing-function: ease-out;
-  animation-fill-mode: forwards;
 }
 @keyframes rotatee {
   0% {

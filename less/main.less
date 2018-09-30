@@ -1,4 +1,4 @@
-//"out": "../css/main.css"
+//out: ../css/main.css
 
 .clearfix:after {
     content: "";
@@ -30,7 +30,8 @@ header #logo {
     }
 
 ::selection {
-    background: #49eeff;
+  background: darken(#49eeff,20%);
+  color: white;
 }
 
 button {
@@ -38,7 +39,7 @@ button {
     border-radius: 10px;
     background: rgba(6, 45, 65, 0.5);
     color: #fff;
-    cursor: pointer;
+
     padding: 8px 16px;
     font-size: 20px;
     outline: none!important;
@@ -58,10 +59,15 @@ button {
 
     &:disabled {
         opacity: 0.5;
+        cursor: default;
     }
 
     &:disabled:hover:not(.specialFocus) {
         background: rgba(6, 45, 65, 0.5);
+    }
+
+    &:not(:disabled) {
+      cursor: pointer;
     }
 }
 
@@ -72,12 +78,11 @@ button.specialFocus {
     color: #fff;
     padding: 0px;
     outline: none;
-    span {
+    >span {
       border: 2px solid #49eeff;
       border-radius: 10px;
       background: rgba(6, 45, 65, 0.5);
       color: #fff;
-      cursor: pointer;
       padding: 8px 16px;
       font-size: 20px;
       outline: none;
@@ -320,47 +325,7 @@ h1 {
     }
 }
 
-footer.subn {
 
-    position: absolute;
-    bottom: 0;
-    right: 0;
-    padding: 5px;
-    text-align: center;
-
-    &.toEnd {
-      bottom: -70px;
-    }
-    table {
-      td {
-        padding: 0;
-        line-height: 10px;
-        font-size: 16px;
-        a {
-          text-align: right;
-    width: 60px;
-    height: 60px;
-      display: inline-block;
-        margin-left: 5px;
-          img {
-            width: 100%;
-            transform: perspective(100px) rotateY(0deg);
-          }
-          &:hover {
-            img {
-              animation: rotatee .6s;
-              animation-timing-function: ease-out;
-              animation-fill-mode: forwards;
-            }
-
-          }
-
-
-        }
-
-      }
-    }
-}
 @keyframes rotatee {
   0% {
     transform: perspective(100px) rotateY(0deg);
