@@ -154,7 +154,7 @@ var cs = {
       </li>
       </li>
       </ul>
-        <div class="highlighted">subnets example</div>
+        <div class="highlighted">příklad podsítí</div>
         <ul>
       <li>
         Máme síť 192.0.2.0/24. Příklad první podsítě, prefix /28, poslední oktet binárně:
