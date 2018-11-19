@@ -223,10 +223,6 @@ h1 {
 #subnetting .settings .area .mainIn tr:first-child .prefix {
   padding-bottom: 5px;
 }
-#subnetting .settings .area .mainIn tr td input::-webkit-input-placeholder {
-  font-size: 10px;
-  line-height: 3;
-}
 #subnetting .settings .area .mainIn tr td input {
   width: 100%;
   text-align: center;
