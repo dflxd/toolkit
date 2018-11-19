@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+  <meta charset="utf-8">
+  <title>Soustavy | ToolkIT</title>
+
+  <link href="https://fonts.googleapis.com/css?family=Nunito:400,700" rel="stylesheet">
+  <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.5.3/vue.js"></script>
+  <script defer src="https://use.fontawesome.com/releases/v5.0.13/js/all.js" integrity="sha384-xymdQtn1n3lH2wcu0qhcdaOpQwyoarkgLVxC/wZ5q7h9gHtxICrpcaSUfygqZGOe" crossorigin="anonymous"></script>
+
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
+  <link rel="shortcut icon" href="../favicon.ico" type="image/x-icon">
+  <link rel="icon" href="../favicon.ico" type="image/x-icon">
+
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js" integrity="sha256-T0Vest3yCU7pafRw9r+settMBX6JkKN06dqBnpQ8d30=" crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+  <link rel="stylesheet" href="../common/main.css">
+  <link rel="stylesheet" href="num-systems.css">
+</head>
+
+<body>
+  <div id="num-systems" v-cloak>
+    <div class="smallMenu">
+      <div class="menuItem menuSettings" title="Nastavení" @click="swapSettings" v-bind:class="{'active': location =='settings'}"><i class="fas fa-cog" aria-hidden="true"></i></div>
+      <div class="menuItem menuSubnettingHelp" title="Nápověda" @click="swapHelp" v-bind:class="{'active': help, 'border': help && location =='settings'}"><i class="fas fa-question-circle" aria-hidden="true"></i></div>
+      <div class="menuItem menuBack" title="Úvodní stránka" v-if="location =='settings'"><a href="../index.html"><i class="fas fa-home"></i><span>ToolkIT</span></a></div>
+
+    </div>
+
+    <div class="helpBox">
+      <div class="help">
+      <div>
+        <div class='title'>Jak převádět mezi číselnými soustavami</div>
+        <div class="highlighted">z desítkové soustavy</div>
+        <div class="helper">42<sub>(10)</sub></div>
+        <div><ul><li>Číslo vydělíme základem požadované soustavy a zapíšeme zbytek po dělení</li></ul></div>
+        <div><ul><li>Výsledek dokola dělíme a zapisujeme zbytek, dokud se nedostaneme k 0</li></ul></div>
+          <div class="helper" style="text-transform:lowercase">
+        <table style="width: 250px;text-align:center">
+          <tr>
+            <td>42</td>
+            <td>/</td>
+            <td>2</td>
+            <td>=</td>
+            <td>21</td>
+            <td>zb. 0</td>
+            <td>↑</td>
+          </tr>
+          <tr>
+            <td>21</td>
+            <td>/</td>
+            <td>2</td>
+            <td>=</td>
+            <td>10</td>
+            <td>zb. 1</td>
+            <td>↑</td>
+          </tr>
+          <tr>
+            <td>10</td>
+            <td>/</td>
+            <td>2</td>
+            <td>=</td>
+            <td>5</td>
+            <td>zb. 0</td>
+            <td>↑</td>
+          </tr>
+          <tr>
+            <td>5</td>
+            <td>/</td>
+            <td>2</td>
+            <td>=</td>
+            <td>2</td>
+            <td>zb. 1</td>
+            <td>↑</td>
+          </tr>
+          <tr>
+            <td>2</td>
+            <td>/</td>
+            <td>2</td>
+            <td>=</td>
+            <td>1</td>
+            <td>zb. 0</td>
+            <td>↑</td>
+          </tr>
+          <tr>
+            <td>1</td>
+            <td>/</td>
+            <td>2</td>
+            <td>=</td>
+            <td>0</td>
+            <td>zb. 1</td>
+            <td>↑</td>
+          </tr>
+          <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+        </table>
+        </div>
+        <div><ul><li>Zbytky po dělení od konce do začátku tvoří číslo v požadované soustavě</li></ul></div>
+        <div class="helper">101010<sub>(2)</sub></div>
+
+
+
+
+        <div class="highlighted">do desítkové soustavy</div>
+        <div class="helper">101010<sub>(2)</sub></div>
+        <div><ul><li>Číslo z původní soustavy rozdělíme na jednotlivé číslice</li></ul> </div>
+        <div class="helper" style="letter-spacing:70.5px">10101<span style="letter-spacing: 0">0</span></div>
+<div><ul><li>Každou číslici vynásobíme základem původní soustavy umocněným podle řádu číslice</li></ul></div>
+
+<div class="helper">1 × 2<sup>5</sup> &nbsp;&nbsp; 0 × 2<sup>4</sup> &nbsp;&nbsp; 1 × 2<sup>3</sup> &nbsp;&nbsp; 0 × 2<sup>2</sup> &nbsp;&nbsp; 1 × 2<sup>1</sup> &nbsp;&nbsp; 0 × 2<sup>0</sup></div>
+<div><ul><li>Tyto výrazy sečteme</li></ul></div>
+<div class="helper">1 × 2<sup>5</sup> <span style="color:#49eeff">+</span> 0 × 2<sup>4</sup> <span style="color:#49eeff">+</span> 1 × 2<sup>3</sup> <span style="color:#49eeff">+</span> 0 × 2<sup>2</sup> <span style="color:#49eeff">+</span> 1 × 2<sup>1</sup> <span style="color:#49eeff">+</span> 0 × 2<sup>0</sup></div>
+<div><ul><li>Po vypočtení dostaneme číslo v desítkové soustavě</li></ul></div>
+<div class="helper">32 <span style="color:#49eeff">+</span> 0 <span style="color:#49eeff">+</span> 8 <span style="color:#49eeff">+</span> 0 <span style="color:#49eeff">+</span> 2 <span style="color:#49eeff">+</span> 0 <span style="color:#49eeff;margin: 0 15px">=</span> 42<sub>(10)</sub></div>
+
+        <div class="highlighted">mezi dvěma jinými než desítkovými soustavami</div>
+
+        <div><ul><li>Číslo nejprve převedeme do desítkové soustavy, kterou použijeme jako mezisoustavu a poté ho z desítkové převedeme do požadované soustavy</li></ul></div>
+        <div><ul><li>Nebo pokud jsou soustavy příbuzné:</li></ul></div>
+        <div class="highlighted">příbuzné soustavy</div>
+        <div><ul><li>Pokud převádíme 2 soustavy jejichž základ vychází ze stejného čísla, které je jen umocněné jiným exponentem, můžeme ho převádět po skupinách</li></ul></div>
+  	    <div class="helper">
+
+
+                            <table class="spacing">
+                              <tr style="text-decoration: underline">
+                                <td>soustava</td>
+                                <td colspan="3">číslo</td>
+                              </tr>
+                              <tr>
+                                <td>2 (2<sup>1</sup>)&nbsp;&nbsp;&nbsp;</td>
+                                <td>110</td>
+                                <td>010</td>
+                                <td>010</td>
+                              </tr>
+                            <tr>
+                              <td>8 (2<sup>3</sup>)&nbsp;&nbsp;&nbsp;</td>
+                              <td>6</td>
+                              <td>4</td>
+                              <td>4</td>
+                            </tr></table><div class="text">lze převádět po třech</div></div>
+      <div class="highlighted">převod hodnot na znaky</div>
+      <div><ul><li>Při počítání s vyšší než desítkovou soustavou narazíme v zápisu kromě běžných arabských číslic ještě na písmena. Ty reprezentují hodnoty vyšší než 9. Pro počítání je převádíme na čísla v desítkové soustavě a ve výsledku zase zpět na písmena</li></ul></div>
+<div class="helper textCenter">
+  <table>
+    <tr>
+      <td>A</td>
+      <td>-</td>
+      <td>10</td>
+    </tr>
+    <tr>
+      <td>B</td>
+      <td>-</td>
+      <td>11</td>
+    </tr>
+    <tr>
+      <td>C</td>
+      <td>-</td>
+      <td>12</td>
+    </tr>
+    <tr>
+      <td></td>
+      <td>...</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>Z</td>
+      <td>-</td>
+      <td>35</td>
+    </tr>
+  </table>
+</div>
+      </div>
+      </div>
+    </div>
+    <div class="settings" v-show="location =='settings'">
+
+      <div class="area">
+        <div class="inputs clearfix" :style="{ 'opacity': inputDisabled ? 0.5 : 1.0 }" v-show="page=='main'">
+          <h1>Soustavy</h1>
+          <div class="shift">
+          převody
+          </div>
+<div class="poolsBox">
+    <div class="pools">
+
+      <div v-for="item,index in pools" class="lineRow">
+        <div>{{index+1}}.</div>
+        <div>{{item.fromIn}}</div>
+        <div>
+          <span v-show="item.direction=='right'"><i class="fas fa-arrow-right"></i></span>
+          <span v-show="item.direction=='left'"><i class="fas fa-arrow-left"></i></span>
+          <span v-show="item.direction=='both'"><i class="fas fa-arrows-alt-h"></i></span>
+        </div>
+        <div>{{item.toIn}}</div>
+        <div @click="removePool(index)" :class="{'disabled':inputDisabled}"><i class="fas fa-times"></i></div>
+      </div>
+    </div>
+  </div>
+
+
+          <table class="poolInput">
+            <tr>
+              <td>Nový převod:</td>
+              <td><input type="text" placeholder="soustava 1" v-model="ns1In" :disabled="inputDisabled" :style="{'border-color': system1Valid ? '' : 'red'}"></td>
+              <td @click="nextDirection">
+                <span v-show="direction=='right'"><i class="fas fa-arrow-right"></i></span>
+                <span v-show="direction=='left'"><i class="fas fa-arrow-left"></i></span>
+                <span v-show="direction=='both'"><i class="fas fa-arrows-alt-h"></i></span>
+              </td>
+              <td><input type="text" placeholder="soustava 2" v-model="ns2In" :disabled="inputDisabled" :style="{'border-color': system2Valid ? '' : 'red'}"></td>
+              <td><button class="specialFocus" type="button" @click="addPool" :disabled="inputDisabled || !system1Valid || !system2Valid || ns1In == '' || ns2In == ''"><span tabindex="-1" class="noActiveEffect"><i class="fas fa-chevron-up"></i></span></button></td>
+            </tr>
+          </table>
+          <div class="range"><input type="text" v-model="rangeIn" :disabled="inputDisabled" :style="{ 'border-color': rangeValid ? '' : 'red' }"><div>Rozsah čísel pro počítání:</div><div class="info">(v desítkové soustavě)</div></div>
+        </div>
+
+
+        <div class="opts clearfix">
+
+          <button type="button" @click="generateNew" v-if="!inputDisabled" :disabled="!rangeValid || pools.length < 1">
+            Nový příklad
+          </button>
+          <button type="button" @click="swapSettings" v-if="inputDisabled">
+            Pokračovat v řešení
+          </button>
+          <button type="button" @click="changeSettings" v-if="inputDisabled">
+            Změnit zadání
+          </button>
+
+        </div>
+      </div>
+    </div>
+    <div class="main clearfix" v-if="location == 'main'" :class="{'animStart':anim==-1, 'animEnd': anim==1}">
+      <div class="container">
+        <h1>Soustavy</h1>
+        <div class="subtitle">Převeďte číslo do jiné soustavy podle následujícího zadání:</div>
+        <div class="row system" :class="{'mini': answers}">
+          <div class="col-md-4"><span>{{currentPool.fromIn}}</span><div class="popout"><div>K&nbsp;zápisu&nbsp;se&nbsp;používají&nbsp;tyto&nbsp;znaky:</div><span v-for="n in currentPool.fromInInt">{{toSymbol(n-1)}}</span></div></div>
+          <div class="col-md-4">SOUSTAVA</div>
+          <div class="col-md-4"><span>{{currentPool.toIn}}</span><div class="popout"><div>K&nbsp;zápisu&nbsp;se&nbsp;používají&nbsp;tyto&nbsp;znaky:</div><span v-for="n in currentPool.toInInt">{{toSymbol(n-1)}}</span></div></div>
+        </div>
+        <div class="row number" v-show="currentDirection=='right'" :class="{'mini': answers}">
+          <div class="col-md-4"><span>{{currentNumberReal}}</span></div>
+          <div class="col-md-4 direction right"><span><i class="fas fa-chevron-right"></i></span></div>
+          <div class="col-md-4"><input type="text" v-model="answerIn" :style="{'width': answerIn.length > 10 ? '315px' : '175px', 'border-color' : checkColor}" @input="resetCheckColor"></div>
+        </div>
+        <div class="row number" v-show="currentDirection=='left'" :class="{'mini': answers}">
+          <div class="col-md-4"><input type="text" v-model="answerIn" :style="{'width': answerIn.length > 10 ? '315px' : '175px', 'border-color' : checkColor}" @input="resetCheckColor"></div>
+          <div class="col-md-4 direction left"><span><i class="fas fa-chevron-left"></i></span></div>
+          <div class="col-md-4"><span>{{currentNumberReal}}</span></div>
+        </div>
+        <div class="answers" v-for="part in all">
+          <div>{{part.heading}}</div>
+          <table :class="[part.tableStyle, part.extended? 'extended':'']">
+            <tr v-for="row in part.table">
+              <td v-for="cell in row" v-html="cell"></td>
+            </tr>
+          </table>
+          <div>
+            = {{part.result}}
+          </div>
+        </div>
+            <div class="buttons clearfix" :class="{'mini': answers}">
+              <button class="specialFocus" @click="check"><span tabindex="-1">Zkontrolovat</span></button>
+              <button class="specialFocus" @click="showResults" :disabled="answers"><span tabindex="-1">Zobrazit postup</span></button>
+              <button class="specialFocus" @click="generate"><span tabindex="-1">Nový příklad</span></button>
+
+            </div>
+
+      </div>
+    </div>
+    <footer class="footer">
+      <table>
+        <tr>
+          <td>Matěj Motl</td>
+          <td rowspan="3"><a href="https://ssinfis.cz" target="_blank"><img src="../img/infisLogo.png" alt="infis">
+           <span>Střední škola informatiky<br>a finančních služeb, Plzeň</span>
+          </a></td>
+        </tr>
+
+        <tr>
+          <td>&copy; <span class="currentYear"></span></td>
+        </tr>
+        <tr>
+          <td>Soustavy v2.0</td>
+        </tr>
+      </table>
+    </footer>
+
+</div>
+<script>$(".currentYear").html((new Date()).getFullYear());</script>
+<script src="num-systems.js"></script>
+</body>
+</html>

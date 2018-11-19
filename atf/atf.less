@@ -1,0 +1,48 @@
+//out: atf.css
+#atf {
+  position: relative;
+  min-width: fit-content;
+  min-height: fit-content;
+  text-align: center;
+
+  .settings {
+    width: 100%;
+    height: 100vh;
+    background-image: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url("../img/background.jpg");
+    background-size: 1920px;
+    background-attachment: fixed;
+    position: relative;
+    min-width: fit-content;
+    overflow: hidden;
+    min-height: 550px;
+    /*bug
+              top: 50%;
+                  transform: translateY(-50%);*/
+    .area {
+      animation: zoomIn 0.2s ease-out;
+      transform-origin: top;
+      width: 700px;
+      padding: 50px;
+      display: inline-block;
+      position: relative;
+      top: 50%;
+      transform: translateY(-50%);
+      .opts {
+        margin-top: 15px;
+        text-align: right;
+        button {
+          margin-left: 10px;
+          float: right;
+        }
+      }
+.inputs {
+  position: relative;
+}
+      .caption {
+        text-align: left;
+        margin-top: 20px;
+        font-size: 24px;
+      }
+    }
+  }
+}

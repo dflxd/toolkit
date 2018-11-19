@@ -14,10 +14,11 @@ html {
   padding: 0!important;
   font-family: 'Nunito', sans-serif;
   font-size: 20px;
+  color: white;
 }
 body {
-  background-color: #383838;
-  background-image: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url("../img/header.jpg");
+  background-color: #3c393f;
+  background-image: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url("../img/background.jpg");
   background-size: 1920px;
   background-attachment: fixed;
   background-repeat: no-repeat;
@@ -105,7 +106,7 @@ input {
   font-size: 20px;
 }
 input:focus {
-  border-color: white;
+  border: 2px solid white;
 }
 header {
   margin: 0;
@@ -293,9 +294,173 @@ h1 {
 .hide {
   display: none;
 }
+.helpBox {
+  min-width: 480px;
+  max-width: 1110px;
+  width: 840px;
+  height: 800px;
+  display: none;
+  position: fixed;
+  background: rgba(20, 20, 20, 0.9);
+  border: 2px solid #ddd;
+  border-radius: 0 7px 7px 7px;
+  top: 72px;
+  left: 20px;
+  z-index: 2;
+  font-size: 18px;
+  text-align: left;
+  max-height: calc(100% - 95px);
+}
+.helpBox .help {
+  max-height: 100%;
+  padding: 20px;
+  overflow: auto;
+}
+.helpBox .help b {
+  text-decoration: underline;
+}
+.helpBox .help .highlighted {
+  text-transform: uppercase;
+  color: #49eeff;
+  margin-bottom: 5px;
+}
+.helpBox .help .title {
+  font-size: 32px;
+}
+.helpBox .help .warning {
+  margin: 10px 0;
+}
+.helpBox .help .warning svg {
+  font-size: 24px;
+}
+.helpBox .help .warning span {
+  margin-left: 15px;
+  position: relative;
+  bottom: 3px;
+  display: inline-block;
+  width: calc(100% - 25px);
+  vertical-align: middle;
+}
+.helpBox .help ul:not(.noIndent) li:not(:last-child) {
+  margin-bottom: 20px;
+}
+.helpBox .help ul {
+  margin-bottom: 20px;
+}
+.helpBox .help ul ul li {
+  margin-bottom: 5px!important;
+}
+.helpBox .help hr:not(.classic) {
+  margin: 3px;
+  visibility: hidden;
+}
+.helpBox .help hr.classic {
+  background: lightgrey;
+}
+.helpBox .help .helper {
+  margin-bottom: 15px;
+  border-radius: 5px;
+  font-size: 20px;
+  display: inline-block;
+  text-transform: uppercase;
+  padding: 5px 15px;
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+  font-weight: bold;
+  letter-spacing: 0.5px;
+  overflow-x: auto;
+  outline: 1px solid rgba(255, 255, 255, 0.4);
+  outline-offset: -3px;
+}
+.helpBox .help .helper table {
+  min-width: max-content;
+}
+.helpBox .help .helper.middlePadding tr td:first-child {
+  padding-right: 50px;
+}
+.helpBox .help .helper .text {
+  text-transform: initial;
+  font-size: 18px;
+  text-align: center;
+}
+.helpBox .help .helper .smaller {
+  font-size: 75%;
+}
+.helpBox .help .helper .right {
+  text-align: right;
+}
+.helpBox .help .helper .prefix {
+  float: right;
+  position: relative;
+  font-size: 50%;
+  right: -10px;
+}
+.helpBox .help .helper .divider span {
+  margin: 0 5px;
+}
+footer.footer {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  padding: 7px 14px;
+  text-align: center;
+}
+footer.footer table td {
+  padding: 0;
+  line-height: 18px;
+  font-size: 14px;
+}
+footer.footer table td a {
+  overflow: hidden;
+  text-align: right;
+  width: 190px;
+  padding-left: 15px;
+  margin-right: -5px;
+  display: inline-block;
+  position: relative;
+}
+footer.footer table td a img {
+  opacity: 1;
+  float: left;
+  width: 170px;
+  transform: scale(1);
+  transition: all .3s;
+  filter: contrast(0%) brightness(190%);
+}
+footer.footer table td a > span {
+  transform: scale(3);
+  position: absolute;
+  top: 0;
+  left: 0;
+  color: white;
+  display: inline-block;
+  height: 100%;
+  width: 100%;
+  text-align: center;
+  display: inline-flex;
+  align-items: center;
+  transition: all 0s;
+  transition-delay: 0s;
+  opacity: 0;
+  justify-content: center;
+}
+footer.footer table td a:hover img {
+  transform: scale(0.5);
+  opacity: 0;
+}
+footer.footer table td a:hover > span {
+  transform: scale(1);
+  opacity: 1;
+  transition: all .20s;
+  transition-delay: .10s;
+}
+footer.footer table tr:nth-child(3) td {
+  position: relative;
+  bottom: 1px;
+}
 @media screen and (min-width: 1921px) {
   body {
-    background-image: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url("../img/header.jpg");
+    background-image: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url("../img/background.jpg");
     background-size: cover;
     background-attachment: fixed;
   }

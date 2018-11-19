@@ -1,9 +1,5 @@
-//out: ../css/subnetting.css
+//out: subnetting.css
 
-body,
-html {
-  color: white;
-}
 
 h1 {
   margin-bottom: 25px;
@@ -244,122 +240,122 @@ h1 {
     }
   }
 
-  .helpBox {
-    min-width: 480px;
-    max-width: 1110px;
-    width: 840px;
-    height: 800px;
-    display: none;
-    position: fixed;
-    background: rgba(20,20,20,0.9);
-    border: 2px solid #ddd;
-    border-radius: 0 7px 7px 7px;
-    top: 72px;
-    left: 20px;
-    z-index: 2;
-    font-size: 18px;
-    text-align: left;
-    max-height: calc(~"100% - 95px");
-    // max-width: calc(~"100% - 44px");
-
-    .help {
-      max-height: 100%;
-      padding: 20px;
-      overflow: auto;
-
-      b {
-        text-decoration: underline;
-      }
-      .highlighted {
-        text-transform: uppercase;
-        color: #49eeff;
-        margin-bottom: 5px;
-      }
-      .title {
-        font-size: 32px;
-      }
-      .warning {
-        margin: 10px 0;
-        svg {
-          font-size: 24px;
-        }
-        span {
-          margin-left: 15px;
-          position: relative;
-          bottom: 3px;
-          display: inline-block;
-          width: calc(~"100% - 25px");
-          vertical-align: middle;
-      }
-
-      }
-
-      ul:not(.noIndent) li:not(:last-child) {
-        margin-bottom: 20px;
-      }
-      ul {
-        margin-bottom: 20px;
-        ul li{
-          margin-bottom: 5px!important;
-        }
-
-      }
-      hr:not(.classic) {
-        margin: 3px;
-        visibility: hidden;
-      }
-      hr.classic {
-        background: lightgrey;
-      }
-      .helper {
-        margin-bottom: 15px;
-border-radius: 5px;
-font-size: 20px;
-display: inline-block;
-text-transform: uppercase;
-padding: 5px 15px;
-background: rgba(255, 255, 255, 0.2);
-color: white;
-font-weight: bold;
-letter-spacing: 0.5px;
-overflow-x: auto;
-outline: 1px solid rgba(255, 255, 255, 0.4);
-outline-offset: -3px;
-        table {
-          min-width: max-content;
-        }
-        &.middlePadding {
-          tr {
-            td:first-child {
-              padding-right: 50px;
-
-            }
-          }
-        }
-        .smaller {
-          font-size: 75%;
-        }
-        .right {
-          text-align: right;
-        }
-        .prefix {
-
-          float: right;
-position: relative;
-font-size: 50%;
-right: -10px;
-        }
-        .divider span{
-          margin: 0 5px;
-        }
-      }
-    }
-  }
+//   .helpBox {
+//     min-width: 480px;
+//     max-width: 1110px;
+//     width: 840px;
+//     height: 800px;
+//     display: none;
+//     position: fixed;
+//     background: rgba(20,20,20,0.9);
+//     border: 2px solid #ddd;
+//     border-radius: 0 7px 7px 7px;
+//     top: 72px;
+//     left: 20px;
+//     z-index: 2;
+//     font-size: 18px;
+//     text-align: left;
+//     max-height: calc(~"100% - 95px");
+//     // max-width: calc(~"100% - 44px");
+//
+//     .help {
+//       max-height: 100%;
+//       padding: 20px;
+//       overflow: auto;
+//
+//       b {
+//         text-decoration: underline;
+//       }
+//       .highlighted {
+//         text-transform: uppercase;
+//         color: #49eeff;
+//         margin-bottom: 5px;
+//       }
+//       .title {
+//         font-size: 32px;
+//       }
+//       .warning {
+//         margin: 10px 0;
+//         svg {
+//           font-size: 24px;
+//         }
+//         span {
+//           margin-left: 15px;
+//           position: relative;
+//           bottom: 3px;
+//           display: inline-block;
+//           width: calc(~"100% - 25px");
+//           vertical-align: middle;
+//       }
+//
+//       }
+//
+//       ul:not(.noIndent) li:not(:last-child) {
+//         margin-bottom: 20px;
+//       }
+//       ul {
+//         margin-bottom: 20px;
+//         ul li{
+//           margin-bottom: 5px!important;
+//         }
+//
+//       }
+//       hr:not(.classic) {
+//         margin: 3px;
+//         visibility: hidden;
+//       }
+//       hr.classic {
+//         background: lightgrey;
+//       }
+//       .helper {
+//         margin-bottom: 15px;
+// border-radius: 5px;
+// font-size: 20px;
+// display: inline-block;
+// text-transform: uppercase;
+// padding: 5px 15px;
+// background: rgba(255, 255, 255, 0.2);
+// color: white;
+// font-weight: bold;
+// letter-spacing: 0.5px;
+// overflow-x: auto;
+// outline: 1px solid rgba(255, 255, 255, 0.4);
+// outline-offset: -3px;
+//         table {
+//           min-width: max-content;
+//         }
+//         &.middlePadding {
+//           tr {
+//             td:first-child {
+//               padding-right: 50px;
+//
+//             }
+//           }
+//         }
+//         .smaller {
+//           font-size: 75%;
+//         }
+//         .right {
+//           text-align: right;
+//         }
+//         .prefix {
+//
+//           float: right;
+// position: relative;
+// font-size: 50%;
+// right: -10px;
+//         }
+//         .divider span{
+//           margin: 0 5px;
+//         }
+//       }
+//     }
+//   }
 
   .settings {
     width: 100%;
     height: 100vh;
-    background-image: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url("../img/header.jpg");
+    background-image: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url("../img/background.jpg");
     background-size: 1920px;
     background-attachment: fixed;
     position: relative;
@@ -398,10 +394,15 @@ right: -10px;
           }
 
           td {
+            input::-webkit-input-placeholder {
+    font-size: 10px;
+    line-height: 3;
+}
             input {
               width: 100%;
               text-align: center;
               border-color: white;
+
             }
 
             &.ip {
@@ -1242,81 +1243,7 @@ right: -10px;
       }
     }
   }
-  footer.subn {
 
-      position: absolute;
-      bottom: 0;
-      right: 0;
-      padding: 7px 14px;
-      text-align: center;
-
-      table {
-        td {
-          padding: 0;
-          line-height: 18px;
-          font-size: 14px;
-          a {
-            overflow: hidden;
-text-align: right;
-width: 190px;
-padding-left: 15px;
-margin-right: -5px;
-display: inline-block;
-position: relative;
-
-
-            img {
-              opacity: 1;
-    float: left;
-              width: 170px;
-  transform: scale(1);
-transition: all .3s;
-  filter: contrast(0%) brightness(190%);
-            }
-            >span {
-              transform: scale(3);
-              position: absolute;
-top: 0;
-left: 0;
-color: white;
-display: inline-block;
-height: 100%;
-width: 100%;
-text-align: center;
-display: inline-flex;
-align-items: center;
-transition: all 0s;
-transition-delay: 0s;
-opacity: 0;
-justify-content: center;
-letter-spacing: -.4px;
-            }
-            &:hover {
-              img {
-                transform: scale(0.5);
-                opacity: 0;
-              }
->span{
-  transform: scale(1);
-  opacity: 1;
-  transition: all .20s;
-  transition-delay: .10s;
-}
-
-            }
-
-&:hover {
-
-}
-          }
-
-        }
-        tr:nth-child(3) td {
-          position: relative;
-          bottom: 1px;
-        }
-      }
-  }
   .langSwitchBox {
     padding-right: 15px!important;
 
@@ -1416,7 +1343,7 @@ font-size: 16px;
 }
 @media screen and (min-width:1921px) {
   #subnetting .settings {
-    background-image: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url("../img/header.jpg");
+    background-image: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url("../img/background.jpg");
     background-size: cover;
     background-attachment: fixed;
   }

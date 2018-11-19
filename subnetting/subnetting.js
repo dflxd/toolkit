@@ -1599,12 +1599,12 @@ var subnetting = new Vue({
           imgR.onload = function() {
             drawImageRs();
           }
-          imgR.src = "img/r.png";
+          imgR.src = "../img/router.png";
           var imgS = new Image();
           imgS.onload = function() {
             drawImageSs();
           }
-          imgS.src = "img/s.png";
+          imgS.src = "../img/switch.png";
 
           var canvas = document.getElementById("canvas" + subnetting.currentInstance);
           var ctx = canvas.getContext("2d");
