@@ -1,14 +1,3 @@
-String.prototype.replaceAt = function(index, replacement) {
-  return this.substr(0, index) + replacement + this.substr(index + replacement.length);
-}
-
-function rand(min, max) {
-  return Math.floor(Math.random() * (max - min + 1) + min);
-}
-
-function isNumeric(n) {
-  return !isNaN(parseFloat(n)) && isFinite(n);
-}
 var numsystems = new Vue({
   el: '#num-systems',
   data: {
@@ -21,7 +10,7 @@ var numsystems = new Vue({
     direction: "right",
     rangeIn: "0-100",
     rangeMin: 0,
-    rangeMax: 1000,
+    rangeMax: 100,
     answerIn: "",
     checkColor: "",
     answers: false,
@@ -63,49 +52,49 @@ var numsystems = new Vue({
           this.rangeMax = parseInt(count2);
         }
       }
-
       return valid;
     },
     system1Valid: function() {
       var valid = true;
-      if(this.ns1In != "?" && this.ns1In != "") {
+      if (this.ns1In != "?" && this.ns1In != "") {
         var system1 = this.ns1In;
-
         if (!isNumeric(system1) || system1 < 2 || system1 > 36 || system1 % 1 != 0) valid = false;
       }
       return valid;
     },
     system2Valid: function() {
       var valid = true;
-      if(this.ns2In != "?" && this.ns2In != "") {
+      if (this.ns2In != "?" && this.ns2In != "") {
         var system2 = this.ns2In;
-
         if (!isNumeric(system2) || system2 < 2 || system2 > 36 || system2 % 1 != 0) valid = false;
       }
       return valid;
     }
   },
   methods: {
+    saveSettings: function() {
+      var data = {
+        rangeIn: this.rangeIn,
+        pools: this.pools
+      };
+      var json = JSON.stringify(data);
+      setCookie("numSystemsSettings", json, 1000);
+    },
     toSymbol: function(n) {
-      if(n < 10) return n;
+      if (n < 10) return n;
       else {
-        return 'abcdefghijklmnopqrstuvwxyz'[n-10].toUpperCase();
+        return 'abcdefghijklmnopqrstuvwxyz' [n - 10].toUpperCase();
       }
     },
-  /*  toDecimal: function(ch) {
-      if(ch >= "0" && ch <= '9') return ch;
-      else {
-        return parseInt(ch.toLowerCase().charCodeAt())-87;
-      }
-    },*/
     removePool: function(index) {
-      if(!this.inputDisabled) {
+      if (!this.inputDisabled) {
         this.pools.splice(index, 1);
+        this.saveSettings();
       }
     },
     nextDirection: function() {
-      if(!this.inputDisabled) {
-        switch(this.direction) {
+      if (!this.inputDisabled) {
+        switch (this.direction) {
           case "left":
             this.direction = "right";
             break;
@@ -128,6 +117,7 @@ var numsystems = new Vue({
       });
       this.ns1In = "";
       this.ns2In = "";
+      this.saveSettings();
     },
     swapSettings: function() {
       if (this.inputDisabled) {
@@ -144,10 +134,9 @@ var numsystems = new Vue({
       this.help = !this.help;
     },
     check: function() {
-      if(this.currentAnswerCorrect.toLowerCase() == this.answerIn.toLowerCase()) {
+      if (this.currentAnswerCorrect.toLowerCase() == this.answerIn.toLowerCase()) {
         this.checkColor = "green";
-      }
-      else {
+      } else {
         this.checkColor = "#f33";
       }
     },
@@ -158,29 +147,25 @@ var numsystems = new Vue({
       var all = [];
       var part = {};
       part.table = [];
-
-
       var from;
       var to;
-      if(this.currentDirection == "right") {
+      if (this.currentDirection == "right") {
         from = this.currentPool.fromIn;
         to = this.currentPool.toIn;
-      }
-      else {
+      } else {
         from = this.currentPool.toIn;
         to = this.currentPool.fromIn;
       }
 
-      if(from == to) {
+      if (from == to) {
         part.heading = "Stejná soustava - výsledné číslo je stejné.";
         part.table = [];
-        part.result = this.currentNumberReal;
+        part.result = this.currentNumberReal + "<sub>(" + to + ")</sub>";
         all.push(part);
-      }
-      else if(from == "10") {
+      } else if (from == "10") {
         part.heading = "Použijeme metodu pro převod z desítkové soustavy:";
         part.tableStyle = "horizontal";
-part.extended = false;
+        part.extended = false;
         var number = this.currentNumber10;
         var base = to;
         var rest;
@@ -191,128 +176,112 @@ part.extended = false;
           row.push("/");
           row.push(base);
           row.push("=");
-          rest = number%base;
-          if(rest >= 10) afterRest = " = " + this.toSymbol(rest);
+          rest = number % base;
+          if (rest >= 10) afterRest = " = " + this.toSymbol(rest);
           else afterRest = "";
           number = Math.floor(number / base);
           row.push(number);
           row.push("zb.");
           row.push(rest + afterRest);
-          row.push("↑")
+          row.push("↑");
 
           part.table.push(row);
-        }while(number>0);
-        part.result = numsystems.currentAnswerCorrect.toUpperCase();
+        } while (number > 0);
+        part.result = numsystems.currentAnswerCorrect.toUpperCase() + "<sub>(" + to + ")</sub>";
         all.push(part);
-      }
-      else if(to == "10") {
+      } else if (to == "10") {
         part.heading = "Použijeme metodu pro převod do desítkové soustavy:";
         part.tableStyle = "vertical";
-
-        if(parseInt(from) > 10) {
+        if (parseInt(from) > 10) {
           part.extended = true;
-        }
-        else {
+        } else {
           part.extended = false;
         }
         var row1 = [];
         var row1b = [];
         var row2 = [];
         var row3 = [];
-
         for (var i = 0; i < this.currentNumberReal.length; i++) {
           row1.push(this.currentNumberReal.charAt(i));
-          if(part.extended) row1b.push(parseInt(this.currentNumberReal.charAt(i), 36));
-          row2.push(parseInt(this.currentNumberReal.charAt(i), 36) + "×" + from + "<sup>" + (this.currentNumberReal.length-i-1) + "</sup>");
-          row3.push(parseInt(this.currentNumberReal.charAt(i), 36) * Math.pow(parseInt(from),(this.currentNumberReal.length-i-1)));
-
-          if(i != this.currentNumberReal.length-1) {
+          if (part.extended) row1b.push(parseInt(this.currentNumberReal.charAt(i), 36));
+          row2.push(parseInt(this.currentNumberReal.charAt(i), 36) + "×" + from + "<sup>" + (this.currentNumberReal.length - i - 1) + "</sup>");
+          row3.push(parseInt(this.currentNumberReal.charAt(i), 36) * Math.pow(parseInt(from), (this.currentNumberReal.length - i - 1)));
+          if (i != this.currentNumberReal.length - 1) {
             row1.push("");
-            if(part.extended) row1b.push("");
+            if (part.extended) row1b.push("");
             row2.push("+");
             row3.push("+");
           }
         }
         part.table.push(row1);
-        if(part.extended) part.table.push(row1b);
+        if (part.extended) part.table.push(row1b);
         part.table.push(row2);
         part.table.push(row3);
-        part.result = numsystems.currentAnswerCorrect;
+        part.result = numsystems.currentAnswerCorrect + "<sub>(10)</sub>";
         all.push(part);
-
-      }
-      else {
+      } else {
         part.heading = "Číslo nejdříve převedeme do desítkové soustavy:";
         part.tableStyle = "vertical";
-        if(parseInt(from) > 10) {
+        if (parseInt(from) > 10) {
           part.extended = true;
-        }
-        else {
+        } else {
           part.extended = false;
         }
         var row1 = [];
         var row1b = [];
         var row2 = [];
         var row3 = [];
-
         for (var i = 0; i < this.currentNumberReal.length; i++) {
           row1.push(this.currentNumberReal.charAt(i));
-          if(part.extended) row1b.push(parseInt(this.currentNumberReal.charAt(i), 36));
-          row2.push(parseInt(this.currentNumberReal.charAt(i), 36) + "×" + from + "<sup>" + (this.currentNumberReal.length-i-1) + "</sup>");
-          row3.push(parseInt(this.currentNumberReal.charAt(i), 36) * Math.pow(parseInt(from),(this.currentNumberReal.length-i-1)));
-
-          if(i != this.currentNumberReal.length-1) {
+          if (part.extended) row1b.push(parseInt(this.currentNumberReal.charAt(i), 36));
+          row2.push(parseInt(this.currentNumberReal.charAt(i), 36) + "×" + from + "<sup>" + (this.currentNumberReal.length - i - 1) + "</sup>");
+          row3.push(parseInt(this.currentNumberReal.charAt(i), 36) * Math.pow(parseInt(from), (this.currentNumberReal.length - i - 1)));
+          if (i != this.currentNumberReal.length - 1) {
             row1.push("");
-            if(part.extended) row1b.push("");
+            if (part.extended) row1b.push("");
             row2.push("+");
             row3.push("+");
           }
         }
         part.table.push(row1);
-        if(part.extended) part.table.push(row1b);
+        if (part.extended) part.table.push(row1b);
         part.table.push(row2);
         part.table.push(row3);
-        part.result = this.currentNumber10;
+        part.result = this.currentNumber10 + "<sub>(10)</sub>";
         all.push(part);
-var part2 = {};
+        var part2 = {};
         part2.table = [];
-
         part2.heading = "Výsledek převedeme do konečné soustavy:";
         part2.tableStyle = "horizontal";
-part2.extended = false;
+        part2.extended = false;
         var number = this.currentNumber10;
         var base = to;
         var rest;
-          var afterRest;
+        var afterRest;
         do {
           var row = [];
           row.push(number);
           row.push("/");
           row.push(base);
           row.push("=");
-          rest = number%base;
-          if(rest >= 10) afterRest = " = " + this.toSymbol(rest);
+          rest = number % base;
+          if (rest >= 10) afterRest = " = " + this.toSymbol(rest);
           else afterRest = "";
           number = Math.floor(number / base);
           row.push(number);
           row.push("zb.");
           row.push(rest + afterRest);
-          row.push("↑")
-
+          row.push("↑");
           part2.table.push(row);
-        }while(number>0);
-        part2.result = numsystems.currentAnswerCorrect.toUpperCase();
+        } while (number > 0);
+        part2.result = numsystems.currentAnswerCorrect.toUpperCase() + "<sub>(" + base + ")</sub>";
         all.push(part2);
-
-
       }
       this.all = all;
       this.answers = true;
-        setTimeout(function(){
-          $(".answers").slideUp(1).slideDown();
-        },250);
-
-
+      setTimeout(function() {
+        $(".answers").slideUp(1).slideDown();
+      }, 250);
     },
     generateNew: function() {
       this.location = "main";
@@ -321,66 +290,54 @@ part2.extended = false;
       this.generate();
     },
     generate: function() {
-        $(".answers").slideUp();
-
+      $(".answers").slideUp();
       this.answers = false;
       this.anim = 1;
       var that = this;
       var timeout;
-      if(this.firstAnim) {
+      if (this.firstAnim) {
         timeout = 0;
         this.firstAnim = false;
-      }
-      else timeout = 300;
-
-      setTimeout(function(){
+      } else timeout = 300;
+      setTimeout(function() {
         that.anim = -1;
-        setTimeout(function(){
+        setTimeout(function() {
           that.anim = 0;
-        },20)
-
-
-
-
-      that.answerIn = "";
-      that.checkColor= "";
-      that.answers = false;
-
-      that.currentPool = that.pools[rand(0, that.pools.length-1)];
-      that.currentPool.fromInInt = parseInt(that.currentPool.fromIn);
-      that.currentPool.toInInt = parseInt(that.currentPool.toIn);
-      if(that.currentPool.direction == "both") that.currentDirection = ["left","right"][rand(0,1)];
-      else that.currentDirection = that.currentPool.direction;
-      that.currentNumber10 = rand(that.rangeMin,that.rangeMax);
-
-      if(that.currentDirection == "right") {
-        that.currentNumberReal = that.currentNumber10.toString(that.currentPool.fromIn);
-        that.currentAnswerCorrect = that.currentNumber10.toString(that.currentPool.toIn);
-      }
-      else {
-        that.currentNumberReal = that.currentNumber10.toString(that.currentPool.toIn);
-        that.currentAnswerCorrect = that.currentNumber10.toString(that.currentPool.fromIn);
-      }
-      that.currentNumberReal = that.currentNumberReal.toUpperCase();
-
-
-},timeout);
+        }, 20);
+        that.answerIn = "";
+        that.checkColor = "";
+        that.answers = false;
+        that.currentPool = that.pools[rand(0, that.pools.length - 1)];
+        that.currentPool.fromInInt = parseInt(that.currentPool.fromIn);
+        that.currentPool.toInInt = parseInt(that.currentPool.toIn);
+        if (that.currentPool.direction == "both") that.currentDirection = ["left", "right"][rand(0, 1)];
+        else that.currentDirection = that.currentPool.direction;
+        that.currentNumber10 = rand(that.rangeMin, that.rangeMax);
+        if (that.currentDirection == "right") {
+          that.currentNumberReal = that.currentNumber10.toString(that.currentPool.fromIn);
+          that.currentAnswerCorrect = that.currentNumber10.toString(that.currentPool.toIn);
+        } else {
+          that.currentNumberReal = that.currentNumber10.toString(that.currentPool.toIn);
+          that.currentAnswerCorrect = that.currentNumber10.toString(that.currentPool.fromIn);
+        }
+        that.currentNumberReal = that.currentNumberReal.toUpperCase();
+      }, timeout);
     },
-  }
+  },
+  beforeMount() {
+    var json = getCookie("numSystemsSettings");
+    if (json.length > 0) {
+      var data = JSON.parse(json);
+      this.rangeIn = data.rangeIn;
+      this.pools = data.pools;
+    }
+  },
 });
 
+$(".helpBox").resizable();
 
-$(".main").css("visibility", "visible");
-
-$(document).ready(function(){
-
-  $(".helpBox").resizable();
-//numsystems.swapHelp();
-//numsystems.generateNew();
-})
 var inAnim = false;
 $(".poolInput button").click(function() {
-
   if (!inAnim) {
     inAnim = true;
     var theButton = $(this);
@@ -390,5 +347,4 @@ $(".poolInput button").click(function() {
       inAnim = false;
     }, 500);
   }
-
 });

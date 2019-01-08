@@ -1,0 +1,158 @@
+//out: intro.css
+
+body {
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 500px;
+}
+#intro {
+  .box {
+    width: 1000px;
+    height: 500px;
+    position: relative;
+
+    > div {
+      float: left;
+
+      &.apps {
+        width: 30%;
+        margin-right: 5%;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+
+        > a {
+          color: white;
+          font-size: 24px;
+          flex: 1;
+          border: 2px solid;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          cursor: pointer;
+          position: relative;
+          overflow: hidden;
+          user-select: none;
+
+          &:not(:last-child) {
+            margin-bottom: 20px;
+          }
+
+          .icon {
+            display: none;
+            position: absolute;
+            height: 90px;
+            z-index: 1;
+          }
+
+          .background {
+            opacity: 0;
+            user-select: none;
+            pointer-events: none;
+            position: absolute;
+            left: -640px;
+            top: -640px;
+            width: 1280px;
+            height: 1280px;
+            background: #ffffff00!important;
+            border: 160px solid;
+            border-radius: 50%;
+            transition: all 1.5s ease-out;
+          }
+
+          &:hover {
+            .icon {
+              display: block;
+            }
+
+            .background {
+              opacity: 1;
+              left: -320px;
+              top: -320px;
+              width: 640px;
+              height: 640px;
+              border: 320px solid;
+              transition: all 0s;
+            }
+          }
+        }
+      }
+
+      &.about {
+        width: 60%;
+
+        .logo {
+          width: 80%;
+          margin: 0 10%;
+        }
+
+        h2 {
+          text-transform: uppercase;
+          letter-spacing: 2px;
+          font-size: 20px;
+          text-align: center;
+          margin-top: 15px;
+        }
+
+        .delimiter {
+          margin-top: 30px;
+          margin-bottom: 25px;
+          height: 3px;
+          background: white;
+
+          .overlay {
+            width: 0;
+            height: 100%;
+            transition: width 1s cubic-bezier(0.19, 1, 0.22, 1);
+
+            &.active {
+              width: 100%;
+              transition: width 0s;
+            }
+          }
+        }
+
+        .description {
+          > div:not(:last-child) {
+            margin-bottom: 15px;
+          }
+
+          .credits {
+            text-align: center;
+
+            span {
+              margin: 0 20px;
+            }
+
+            b {
+              font-size: 24px;
+            }
+          }
+
+          .made {
+            text-align: center;
+
+            span {
+              color: #49eeff;
+            }
+
+            img {
+              filter: contrast(0%) sepia(100%) hue-rotate(140deg) saturate(300%) brightness(110%);
+              width: 100px;
+              margin-left: 4px;
+              margin-bottom: 3px;
+            }
+          }
+        }
+
+        .appsDescription {
+          h3 {
+            font-weight: bold;
+          }
+        }
+      }
+    }
+  }
+}

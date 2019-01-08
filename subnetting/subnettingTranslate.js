@@ -157,7 +157,7 @@ var cs = {
         <div class="highlighted">příklad podsítí</div>
         <ul>
       <li>
-        Máme síť 192.0.2.0/24. Příklad první podsítě, prefix /28, poslední oktet binárně:
+        Máme síť 192.0.2.0/24. Příklad první podsítě s prefixem /28, poslední oktet binárně:
       </li>
       <div class='helper middlePadding'>
 
@@ -181,7 +181,7 @@ var cs = {
           </table>
 
       </div>
-      <li>Příklad další možné podsítě, taky prefix /28:</li>
+      <li>Další možná podsíť, znovu prefix /28:</li>
       <div class='helper middlePadding'>
 
           <table>
@@ -207,7 +207,7 @@ var cs = {
 
   </div>`
 
-}
+};
 
 var en = {
   language: "en",
@@ -317,13 +317,13 @@ var en = {
   label103: "and financial services, Pilsen",
   label104: " address",
   help: `<div>
-    <div class='title'>Instructions for calculating subnets</div>
+    <div class='title'>Instructions for subnet calculation</div>
 <div class="warning">
-    <i class='fas fa-info'></i><span>These rules are simplified. In practice, several factors can alter the calculations.</span>
+    <i class='fas fa-info'></i><span>Rules here are simplified. In practice, several factors can alter the calculation methods.</span>
 </div>
     <div class="highlighted">how to proceed</div>
     <ul class="noIndent">
-      <li>Subnets are as small as possible while fullfiling the required number of hosts</li>
+      <li>Subnets are as small as possible while fulfilling the required number of hosts</li>
       <li>Subnets order is determined by their size - from biggest to smallest</li>
       <li>If there are more subnets with the same size, they are ordered alphabetically by name</li>
       <li>Subnets are placed right behind each other</li>
@@ -335,7 +335,7 @@ var en = {
       <hr>
       For example for 8 hosts subnet we need 10 addresses and therefore we need 4 bits (up to 16 addresses). 3 bits (8 addresses) wouldn’t be enough because of the 2 special addresses and 5 bits (32 addresses) is unnecessary waste of space.
       </li>
-      <li><b>Divide whole address into subnet address part and hosts part.</b> In our example we need 4 bits for the hosts part. So for the subnet address part we're left with 28 out of 32 bits in the whole address. And that’s the prefix - /28</li>
+      <li><b>Divide whole address into subnet address part and hosts part.</b> In our example we need 4 bits for the hosts part. And for the subnet address part we're left with 28 out of 32 bits in the whole address. And that is the prefix - /28</li>
         <div class='helper'>
             <table>
               <tr>
@@ -369,7 +369,7 @@ var en = {
       <div class="highlighted">subnets example</div>
       <ul>
       <li>
-        Possible first subnet of network 192.0.2.0/24, subnet's prefix /28, last octet binary:
+        Let's have a network 192.0.2.0/24. Possible first subnet with prefix /28, last octet binary:
       </li>
       <div class='helper middlePadding'>
 
@@ -418,4 +418,4 @@ var en = {
 
 
   </div>`
-}
+};

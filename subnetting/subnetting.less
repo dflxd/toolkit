@@ -1,6 +1,5 @@
 //out: subnetting.css
 
-
 h1 {
   margin-bottom: 25px;
 }
@@ -13,69 +12,11 @@ h1 {
   position: relative;
   min-width: fit-content;
   min-height: fit-content;
+  text-align: center;
 
   .container {
     position: relative;
   }
-
-  .radioChoose {
-    display: table;
-    position: relative;
-    width: 100%;
-
-    &.mod2In .sliderBackg {
-      transform: scale(1);
-      transition: all 0.2s, left 0s, width 0s;
-
-      &.downscale {
-        transform: scale(0);
-      }
-
-      &.aftershock {
-        transition: all 0s, left 0.2s, width 0.2s;
-      }
-
-      &.t {
-        border-color: #00bd00;
-        background-color: rgba(0, 189, 0, .15);
-      }
-
-      &.f {
-        border-color: #f33;
-        background-color: rgba(255, 51, 51, 0.1);
-      }
-    }
-
-    label {
-      cursor: pointer;
-      padding: 8px 12px;
-      margin-bottom: 0;
-      user-select: none;
-      text-align: center;
-      transition: 0.2s;
-      display: table-cell;
-    }
-
-    input {
-      display: none;
-    }
-
-    input:checked + label {
-      background: red;
-    }
-
-    .sliderBackg {
-      z-index: -1;
-      height: 100%;
-      position: absolute;
-      top: 0;
-      background: rgba(0, 231, 255, 0.05);
-      transition: all 0.2s;
-      border-radius: 10px;
-      border: solid 2px #49eeff;
-    }
-  }
-  text-align: center;
 
   .main.noanim * {
     transition: all 0s!important;
@@ -97,14 +38,10 @@ h1 {
       z-index: 1;
     }
 
-    canvas {
-      //  transition-delay: 0.1s!important;
-    }
-
     .interBox tr,
     .subtitle,
     canvas {
-      transition: all .8s;
+      transition: all 0.8s;
       transform: perspective(2000px) rotateY(0deg) translateZ(000px);
       opacity: 1;
     }
@@ -120,7 +57,6 @@ h1 {
       z-index: -1;
 
       .interBox {
-        //opacity: 0;
         overflow: hidden;
       }
 
@@ -131,18 +67,18 @@ h1 {
         opacity: 0;
       }
     }
+
     &.offBlacklisted {
       z-index: -1;
 
       .interBox {
-        //opacity: 0;
         overflow: hidden;
       }
 
       .interBox tr,
       .subtitle,
       canvas {
-        transform:  perspective(2000px) scale(0.001)!important;
+        transform: perspective(2000px) scale(0.001)!important;
         opacity: 0;
       }
     }
@@ -151,7 +87,6 @@ h1 {
       z-index: -1;
 
       .interBox {
-        //opacity: 0;
         overflow: hidden;
       }
 
@@ -162,7 +97,6 @@ h1 {
         opacity: 0;
       }
     }
-
   }
 
   .highlightArea {
@@ -193,7 +127,6 @@ h1 {
       position: absolute;
       font-size: 14px;
       background: rgba(25, 25, 25, 0.9);
-      //border: 2px solid rgba(0,0,0,0.3);
       top: calc(~"100% + 8px");
       left: 50%;
       transform: translateX(-50%);
@@ -240,131 +173,17 @@ h1 {
     }
   }
 
-//   .helpBox {
-//     min-width: 480px;
-//     max-width: 1110px;
-//     width: 840px;
-//     height: 800px;
-//     display: none;
-//     position: fixed;
-//     background: rgba(20,20,20,0.9);
-//     border: 2px solid #ddd;
-//     border-radius: 0 7px 7px 7px;
-//     top: 72px;
-//     left: 20px;
-//     z-index: 2;
-//     font-size: 18px;
-//     text-align: left;
-//     max-height: calc(~"100% - 95px");
-//     // max-width: calc(~"100% - 44px");
-//
-//     .help {
-//       max-height: 100%;
-//       padding: 20px;
-//       overflow: auto;
-//
-//       b {
-//         text-decoration: underline;
-//       }
-//       .highlighted {
-//         text-transform: uppercase;
-//         color: #49eeff;
-//         margin-bottom: 5px;
-//       }
-//       .title {
-//         font-size: 32px;
-//       }
-//       .warning {
-//         margin: 10px 0;
-//         svg {
-//           font-size: 24px;
-//         }
-//         span {
-//           margin-left: 15px;
-//           position: relative;
-//           bottom: 3px;
-//           display: inline-block;
-//           width: calc(~"100% - 25px");
-//           vertical-align: middle;
-//       }
-//
-//       }
-//
-//       ul:not(.noIndent) li:not(:last-child) {
-//         margin-bottom: 20px;
-//       }
-//       ul {
-//         margin-bottom: 20px;
-//         ul li{
-//           margin-bottom: 5px!important;
-//         }
-//
-//       }
-//       hr:not(.classic) {
-//         margin: 3px;
-//         visibility: hidden;
-//       }
-//       hr.classic {
-//         background: lightgrey;
-//       }
-//       .helper {
-//         margin-bottom: 15px;
-// border-radius: 5px;
-// font-size: 20px;
-// display: inline-block;
-// text-transform: uppercase;
-// padding: 5px 15px;
-// background: rgba(255, 255, 255, 0.2);
-// color: white;
-// font-weight: bold;
-// letter-spacing: 0.5px;
-// overflow-x: auto;
-// outline: 1px solid rgba(255, 255, 255, 0.4);
-// outline-offset: -3px;
-//         table {
-//           min-width: max-content;
-//         }
-//         &.middlePadding {
-//           tr {
-//             td:first-child {
-//               padding-right: 50px;
-//
-//             }
-//           }
-//         }
-//         .smaller {
-//           font-size: 75%;
-//         }
-//         .right {
-//           text-align: right;
-//         }
-//         .prefix {
-//
-//           float: right;
-// position: relative;
-// font-size: 50%;
-// right: -10px;
-//         }
-//         .divider span{
-//           margin: 0 5px;
-//         }
-//       }
-//     }
-//   }
-
   .settings {
     width: 100%;
     height: 100vh;
-    background-image: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url("../img/background.jpg");
+    background-image: url("../img/background.jpg");
     background-size: 1920px;
     background-attachment: fixed;
     position: relative;
     min-width: fit-content;
     overflow: hidden;
     min-height: 550px;
-    /*bug
-              top: 50%;
-                  transform: translateY(-50%);*/
+
     .area {
       animation: zoomIn 0.2s ease-out;
       transform-origin: top;
@@ -394,15 +213,10 @@ h1 {
           }
 
           td {
-            input::-webkit-input-placeholder {
-    //font-size: 10px;
-    //line-height: 3;
-}
             input {
               width: 100%;
               text-align: center;
               border-color: white;
-
             }
 
             &.ip {
@@ -635,10 +449,6 @@ h1 {
           line-height: 25px;
         }
 
-        td {
-          //text-align: center;
-        }
-
         h3 {
           margin-bottom: 20px;
         }
@@ -665,76 +475,6 @@ h1 {
         input[type=text] {
           width: 100%;
           text-align: center;
-        }
-
-        .label-cbx {
-          user-select: none;
-          cursor: pointer;
-          margin-bottom: 0;
-          float: left;
-          clear: both;
-          line-height: 30px;
-        }
-
-        .label-cbx input:checked + .checkbox {
-          border-color: #0ac;
-        }
-
-        .label-cbx input:checked + .checkbox svg path {
-          fill: #0ac;
-        }
-
-        .label-cbx input:checked + .checkbox svg polyline {
-          stroke-dashoffset: 0;
-          stroke: white;
-        }
-
-        .label-cbx:hover input:not(:disabled) + .checkbox svg path {
-          stroke-dashoffset: 0;
-        }
-
-        .label-cbx .checkbox {
-          position: relative;
-          top: 4px;
-          float: left;
-          margin-right: 8px;
-          width: 20px;
-          height: 20px;
-          border: 2px solid #C8CCD4;
-          border-radius: 3px;
-        }
-
-        .label-cbx .checkbox svg {
-          position: absolute;
-          top: -2px;
-          left: -2px;
-        }
-
-        .label-cbx .checkbox svg path {
-          fill: none;
-          stroke: #0ac;
-          stroke-width: 2;
-          stroke-linecap: round;
-          stroke-linejoin: round;
-          stroke-dasharray: 70.99px;
-          stroke-dashoffset: 71px;
-          transition: all 0.6s ease;
-        }
-
-        .label-cbx .checkbox svg polyline {
-          fill: none;
-          stroke: #FFF;
-          stroke-width: 2;
-          stroke-linecap: round;
-          stroke-linejoin: round;
-          stroke-dasharray: 17.99px;
-          stroke-dashoffset: 18px;
-          transition: all 0.3s ease;
-        }
-
-        .label-cbx > span {
-          pointer-events: none;
-          vertical-align: middle;
         }
 
         .cntr {
@@ -787,6 +527,10 @@ h1 {
             float: right;
             height: 44px;
             line-height: 25px;
+
+            &:disabled {
+              opacity: 1;
+            }
           }
 
           &:not(:first-of-type) {
@@ -796,11 +540,10 @@ h1 {
           .profile {
             height: 98px;
             cursor: pointer;
-            transition: all .3s ease-out;
+            transition: all 0.3s ease-out;
             display: flex;
             justify-content: center;
             align-items: center;
-
           }
 
           .onExpand {
@@ -884,17 +627,12 @@ h1 {
 
           svg {
             color: white;
-            /* line-height: 216px;*/
             vertical-align: middle;
-            margin: 2px 0;
-            //margin-top: -3px;
-            /* margin: 0 10px; */
             top: 0;
             font-size: 26px;
             bottom: 0;
             right: 0;
             left: 0;
-            /* position: absolute; */
             float: left;
             position: relative;
           }
@@ -902,7 +640,6 @@ h1 {
 
         button {
           float: right;
-          //margin: 5px;
         }
       }
     }
@@ -935,6 +672,7 @@ h1 {
 
     input {
       transition: all 0.3s;
+
       &[type="text"] {
         width: 222px;
         transition: all 0.2s;
@@ -1034,7 +772,7 @@ h1 {
         label {
           display: inline-block;
           width: 50%;
-              float: left;
+          float: left;
         }
       }
 
@@ -1062,7 +800,6 @@ h1 {
     &::-webkit-scrollbar-track {
       -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
       border-radius: 10px;
-      //background-color: #F5F5F5;
     }
 
     &::-webkit-scrollbar {
@@ -1093,6 +830,10 @@ h1 {
         white-space: pre;
       }
 
+      &.noopst td {
+        padding: 5px 20px;
+      }
+
       td {
         position: relative;
         padding: 5px;
@@ -1100,19 +841,14 @@ h1 {
         &:nth-child(1) {
           min-width: 100px;
           width: 100px;
+          white-space: nowrap;
         }
 
         &:nth-child(2) {
           min-width: 120px;
           width: 120px;
         }
-        /*
-            &.prefixCell {
-              width: 100px;
-              input {
-                text-align: center;
-              }
-            }*/
+
         input {
           transition: all 0.2s;
           width: 100%;
@@ -1135,49 +871,48 @@ h1 {
     }
   }
 
-  #schema {
-    margin-bottom: 50px;
-  }
-
   .buttonsBox {
-
     position: relative;
     padding: 70px 0;
     min-width: fit-content;
 
     .buttons {
       width: 100%;
-      //transition-delay: .5s;
+
       .buttonsUp {
         margin-bottom: 12px;
+
         .destroy {
           filter: saturate(0%);
-          &:hover:not(:disabled) {
-              filter: none;
-              span{
-                border: 2px solid #ee2222;
-                background: rgba(50, 0, 0, 0.20);
-              }
-          }
 
+          &:hover:not(:disabled) {
+            filter: none;
+
+            span {
+              border: 2px solid #ee2222;
+              background: rgba(50, 0, 0, 0.20);
+            }
+          }
         }
+
         .sectionR {
-          >button {
-            margin: 0px 5px;
+          > button {
+            margin: 0 5px;
           }
           display: flex;
+
           button:last-child {
-            margin-right: 0px;
+            margin-right: 0;
           }
         }
-        .instanceName {
 
+        .instanceName {
           font-size: 20px;
           position: relative;
           text-transform: uppercase;
-
           width: 150px;
           border-radius: 10px;
+
           span {
             line-height: 1px;
             display: flex;
@@ -1188,16 +923,18 @@ h1 {
             border-radius: 10px;
             background: rgba(0, 0, 0, 0.3);
             cursor: default;
+
             &:hover {
               background: rgba(0, 0, 0, 0.5);
             }
           }
+
           input {
             padding: 2px;
             width: 100%;
             display: inline-block;
             text-align: center;
-            animation-duration: .5s;
+            animation-duration: 0.75s;
           }
         }
 
@@ -1234,9 +971,11 @@ h1 {
 
       .sectionR {
         float: right;
+
         .re {
           margin-left: 10px;
         }
+
         button {
           margin-left: 5px;
         }
@@ -1251,9 +990,10 @@ h1 {
       text-transform: uppercase;
 
       label {
-padding: 0px 12px;
-font-size: 16px;
+        padding: 0 12px;
+        font-size: 16px;
       }
+
       .sliderBackg {
         z-index: 1;
         background: transparent;
@@ -1261,7 +1001,7 @@ font-size: 16px;
         border-radius: 0;
         height: 120%;
         top: -10%;
-        opacity: .5;
+        opacity: 0.5;
         transition-delay: 0.1s;
       }
 
@@ -1290,7 +1030,6 @@ font-size: 16px;
       }
     }
   }
-
 }
 
 .main {
@@ -1304,17 +1043,33 @@ font-size: 16px;
     margin-bottom: 20px;
   }
 }
-@keyframes zoomIn {
-  from {
-    opacity: 0;
-    transform: scale(2) translateY(-50%);
-  }
 
-  to {
-    opacity: 1;
-    transform: scale(1) translateY(-50%);
+.hiddenClone {
+  cursor: pointer;
+  padding: 8px 12px;
+  margin-bottom: 0;
+  user-select: none;
+  text-align: center;
+  transition: 0.2s;
+  display: table-cell;
+  font-size: 18px;
+  position: absolute;
+  white-space: pre;
+  visibility: hidden;
+
+  input {
+    display: none;
   }
 }
+
+@media screen and (min-width:1921px) {
+  #subnetting .settings {
+    background-image: url("../img/background.jpg");
+    background-size: cover;
+    background-attachment: fixed;
+  }
+}
+
 @keyframes arrowUp {
   from {
     transform: translateY(0);
@@ -1332,6 +1087,7 @@ font-size: 16px;
     transform: translateY(0px);
   }
 }
+
 @keyframes fadeIn {
   from {
     opacity: 0;
@@ -1341,43 +1097,23 @@ font-size: 16px;
     opacity: 1;
   }
 }
-@media screen and (min-width:1921px) {
-  #subnetting .settings {
-    background-image: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url("../img/background.jpg");
-    background-size: cover;
-    background-attachment: fixed;
-  }
-}
+
 @keyframes redBlink1 {
   from {
     border-color: red;
   }
+
   to {
     border-color: initial;
   }
 }
+
 @keyframes redBlink2 {
   from {
     border-color: red;
   }
+
   to {
     border-color: initial;
   }
-}
-.reserveClone {
-  cursor: pointer;
-padding: 8px 12px;
-margin-bottom: 0;
-user-select: none;
-text-align: center;
-transition: 0.2s;
-display: table-cell;
-font-size: 18px;
-position: absolute;
-white-space: pre;
-visibility: hidden;
-
-input {
-  display: none;
-}
 }

@@ -1,0 +1,126 @@
+body {
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 500px;
+}
+#intro .box {
+  width: 1000px;
+  height: 500px;
+  position: relative;
+}
+#intro .box > div {
+  float: left;
+}
+#intro .box > div.apps {
+  width: 30%;
+  margin-right: 5%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+#intro .box > div.apps > a {
+  color: white;
+  font-size: 24px;
+  flex: 1;
+  border: 2px solid;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  user-select: none;
+}
+#intro .box > div.apps > a:not(:last-child) {
+  margin-bottom: 20px;
+}
+#intro .box > div.apps > a .icon {
+  display: none;
+  position: absolute;
+  height: 90px;
+  z-index: 1;
+}
+#intro .box > div.apps > a .background {
+  opacity: 0;
+  user-select: none;
+  pointer-events: none;
+  position: absolute;
+  left: -640px;
+  top: -640px;
+  width: 1280px;
+  height: 1280px;
+  background: #ffffff00!important;
+  border: 160px solid;
+  border-radius: 50%;
+  transition: all 1.5s ease-out;
+}
+#intro .box > div.apps > a:hover .icon {
+  display: block;
+}
+#intro .box > div.apps > a:hover .background {
+  opacity: 1;
+  left: -320px;
+  top: -320px;
+  width: 640px;
+  height: 640px;
+  border: 320px solid;
+  transition: all 0s;
+}
+#intro .box > div.about {
+  width: 60%;
+}
+#intro .box > div.about .logo {
+  width: 80%;
+  margin: 0 10%;
+}
+#intro .box > div.about h2 {
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  font-size: 20px;
+  text-align: center;
+  margin-top: 15px;
+}
+#intro .box > div.about .delimiter {
+  margin-top: 30px;
+  margin-bottom: 25px;
+  height: 3px;
+  background: white;
+}
+#intro .box > div.about .delimiter .overlay {
+  width: 0;
+  height: 100%;
+  transition: width 1s cubic-bezier(0.19, 1, 0.22, 1);
+}
+#intro .box > div.about .delimiter .overlay.active {
+  width: 100%;
+  transition: width 0s;
+}
+#intro .box > div.about .description > div:not(:last-child) {
+  margin-bottom: 15px;
+}
+#intro .box > div.about .description .credits {
+  text-align: center;
+}
+#intro .box > div.about .description .credits span {
+  margin: 0 20px;
+}
+#intro .box > div.about .description .credits b {
+  font-size: 24px;
+}
+#intro .box > div.about .description .made {
+  text-align: center;
+}
+#intro .box > div.about .description .made span {
+  color: #49eeff;
+}
+#intro .box > div.about .description .made img {
+  filter: contrast(0%) sepia(100%) hue-rotate(140deg) saturate(300%) brightness(110%);
+  width: 100px;
+  margin-left: 4px;
+  margin-bottom: 3px;
+}
+#intro .box > div.about .appsDescription h3 {
+  font-weight: bold;
+}

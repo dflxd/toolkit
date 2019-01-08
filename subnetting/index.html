@@ -2,25 +2,24 @@
 <html>
 
 <head>
-
   <meta charset="utf-8">
   <title>Subnetting | ToolkIT</title>
 
   <link href="https://fonts.googleapis.com/css?family=Nunito:400,700" rel="stylesheet">
-  <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.5.3/vue.js"></script>
-  <script defer src="https://use.fontawesome.com/releases/v5.0.13/js/all.js" integrity="sha384-xymdQtn1n3lH2wcu0qhcdaOpQwyoarkgLVxC/wZ5q7h9gHtxICrpcaSUfygqZGOe" crossorigin="anonymous"></script>
-
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
-  <link rel="shortcut icon" href="../favicon.ico" type="image/x-icon">
-  <link rel="icon" href="../favicon.ico" type="image/x-icon">
-
-  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js" integrity="sha256-T0Vest3yCU7pafRw9r+settMBX6JkKN06dqBnpQ8d30=" crossorigin="anonymous"></script>
+  <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.5.3/vue.min.js"></script>
+  <script defer src="https://use.fontawesome.com/releases/v5.0.13/js/all.js" integrity="sha384-xymdQtn1n3lH2wcu0qhcdaOpQwyoarkgLVxC/wZ5q7h9gHtxICrpcaSUfygqZGOe" crossorigin="anonymous"></script>
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js" integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU=" crossorigin="anonymous"></script>
   <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/seedrandom/2.4.3/seedrandom.min.js"></script>
+
   <link rel="stylesheet" href="../common/main.css">
   <link rel="stylesheet" href="subnetting.css">
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/seedrandom/2.4.3/seedrandom.min.js">
-  </script>
+  <script src="../common/main.js"></script>
+
+  <link rel="shortcut icon" href="../favicon.ico" type="image/x-icon">
+  <link rel="icon" href="../favicon.ico" type="image/x-icon">
 </head>
 
 <body>
@@ -28,13 +27,14 @@
     <div class="smallMenu">
       <div class="menuItem menuSettings" :title="lang.label1" @click="swapSettings" v-bind:class="{'active': location =='settings'}"><i class="fas fa-cog" aria-hidden="true"></i></div>
       <div class="menuItem menuSubnettingHelp" :title="lang.label2" @click="swapSubnettingHelp" v-bind:class="{'active': help, 'border': help && location =='settings'}"><i class="fas fa-question-circle" aria-hidden="true"></i></div>
-      <div class="menuItem menuBack" :title="lang.label3" v-if="location =='settings'"><a href="index.html"><i class="fas fa-home"></i><span>ToolkIT</span></a></div>
+      <div class="menuItem menuBack" :title="lang.label3" v-if="location =='settings'"><a href="../"><i class="fas fa-home"></i><span>ToolkIT</span></a></div>
     </div>
+
     <div class="helpBox">
       <div class="help" v-html="lang.help"></div>
     </div>
-    <div class="settings" v-show="location =='settings'">
 
+    <div class="settings" v-show="location =='settings'">
       <div class="area">
         <div class="inputs clearfix" :style="{ 'opacity': inputDisabled ? 0.5 : 1.0 }" v-show="page=='main'">
           <h1>{{lang.label4}}</h1>
@@ -55,78 +55,74 @@
               <td class="prefix">
                 {{lang.label7}}
               </td>
-
             </tr>
             <tr>
               <td class="countSubnets">
-                <input type="text" @change="saveSettings" v-model="subnetCountIn" class="countSubnets" :disabled="inputDisabled" :style="{ 'border-color': baseCountColor }" :placeholder="lang.label8">
+                <input type="text" @input="saveSettings" v-model="subnetCountIn" class="countSubnets" :disabled="inputDisabled" :style="{ 'border-color': baseCountColor }" :placeholder="lang.label8">
               </td>
               <td class="space e">
                 &nbsp;
               </td>
               <td class="ip">
-                <input type="text" @change="saveSettings" v-model="baseIPIn" class="ip" :disabled="inputDisabled" :style="{'border-color': baseIPColor }" :placeholder="lang.label27">
+                <input type="text" @input="saveSettings" v-model="baseIPIn" class="ip" :disabled="inputDisabled" :style="{'border-color': baseIPColor }" :placeholder="lang.label27">
                 <div @click="downTheIP" class="downer" v-if="!comboValid && ipValid && prefixValid"><i class="fas fa-chevron-down"></i></div>
               </td>
               <td class="space">
                 /
               </td>
               <td class="prefix">
-                <input type="text" @change="saveSettings" v-model="prefixIn" class="prefix" :disabled="inputDisabled" :style="{ 'border-color': basePrefixColor }" :placeholder="lang.label9">
+                <input type="text" @input="saveSettings" v-model="prefixIn" class="prefix" :disabled="inputDisabled" :style="{ 'border-color': basePrefixColor }" :placeholder="lang.label9">
               </td>
             </tr>
           </table>
-
           <div class="caption">
             {{lang.label10}}<span @mouseleave="diffInfo = false" @mouseover="diffInfo = true"><i class="fas fa-info-circle"></i></span>
           </div>
           <div class="diff">
-
             <input type="radio" @change="saveSettings" name="diff" id="z" v-model="diff" value="1" :disabled="inputDisabled">
             <label for="z" class="desc" @click="setDiff1">
-                <div v-if="!diffInfo">
-                  <span class="diffName">{{lang.label11}}</span>
-                </div>
-                <div v-if="diffInfo">
-                  <span>{{lang.label12}}</span>
-                  <span>{{lang.label13}}</span>
-                  <span>{{lang.label14}}</span>
-                </div>
-              </label>
+              <div v-if="!diffInfo">
+                <span class="diffName">{{lang.label11}}</span>
+              </div>
+              <div v-if="diffInfo">
+                <span>{{lang.label12}}</span>
+                <span>{{lang.label13}}</span>
+                <span>{{lang.label14}}</span>
+              </div>
+            </label>
             <input type="radio" @change="saveSettings" name="diff" id="pr" v-model="diff" value="2" :disabled="inputDisabled" checked>
             <label for="pr" class="desc" @click="setDiff2">
-                <div v-if="!diffInfo">
-                  <span class="diffName">{{lang.label15}}</span>
-                </div>
-                <div v-if="diffInfo">
-                  <span>{{lang.label16}}</span>
-                  <span>{{lang.label17}}</span>
-                  <span>{{lang.label18}}</span>
-                </div>
-
-              </label>
+              <div v-if="!diffInfo">
+                <span class="diffName">{{lang.label15}}</span>
+              </div>
+              <div v-if="diffInfo">
+                <span>{{lang.label16}}</span>
+                <span>{{lang.label17}}</span>
+                <span>{{lang.label18}}</span>
+              </div>
+            </label>
             <input type="radio" @change="saveSettings" name="diff" id="po" v-model="diff" value="3" :disabled="inputDisabled">
             <label for="po" class="desc" @click="setDiff3">
-                <div v-if="!diffInfo">
-                  <span class="diffName">{{lang.label19}}</span>
-                </div>
-                <div v-if="diffInfo">
-                  <span>{{lang.label20}}</span>
-                  <span>{{lang.label21}}</span>
-                  <span>{{lang.label22}}</span>
-                </div>
-              </label>
+              <div v-if="!diffInfo">
+                <span class="diffName">{{lang.label19}}</span>
+              </div>
+              <div v-if="diffInfo">
+                <span>{{lang.label20}}</span>
+                <span>{{lang.label21}}</span>
+                <span>{{lang.label22}}</span>
+              </div>
+            </label>
             <input type="radio" @change="saveSettings" name="diff" id="e" v-model="diff" value="4" :disabled="inputDisabled">
             <label for="e" class="desc" @click="setDiff4">
-                <div v-if="!diffInfo">
-                  <span class="diffName">{{lang.label23}}</span>
-                </div>
-                <div v-if="diffInfo">
-                  <span>{{lang.label24}}</span>
-                  <span>{{lang.label25}}</span>
-                  <span>{{lang.label26}}</span>
-                </div>
-              </label>
+              <div v-if="!diffInfo">
+                <span class="diffName">{{lang.label23}}</span>
+              </div>
+              <div v-if="diffInfo">
+                <span>{{lang.label24}}</span>
+                <span>{{lang.label25}}</span>
+                <span>{{lang.label26}}</span>
+              </div>
+            </label>
           </div>
         </div>
         <div class="specs" v-show="page=='addit'" :style="{ 'opacity': inputDisabled ? 0.5 : 1.0 }">
@@ -136,10 +132,7 @@
               <td>
                 {{lang.label29}}
               </td>
-
               <td>
-
-
                 <div class="half">
                   <label class="label-cbx">
                     {{lang.label30}}
@@ -151,7 +144,6 @@
                       </svg>
                     </div>
                   </label>
-
                   <label class="label-cbx">
                     {{lang.label31}}
                     <input type="checkbox" @change="saveSettings" class="invisible" v-model="specsOpts.lastA" :disabled="inputDisabled">
@@ -162,9 +154,6 @@
                       </svg>
                     </div>
                   </label>
-
-
-
                   <label class="label-cbx">
                     {{lang.label32}}
                     <input type="checkbox" @change="saveSettings" class="invisible" v-model="specsOpts.prefix" :disabled="inputDisabled">
@@ -175,46 +164,39 @@
                       </svg>
                     </div>
                   </label>
-
-
-
-
                 </div>
                 <div class="half">
                   <label class="label-cbx">
-                      {{lang.label33}}
-                      <input type="checkbox" @change="saveSettings" class="invisible" v-model="specsOpts.firstH" :disabled="inputDisabled">
-                      <div class="checkbox">
-                        <svg width="20px" height="20px" viewBox="0 0 20 20">
-                          <path d="M3,1 L17,1 L17,1 C18.1045695,1 19,1.8954305 19,3 L19,17 L19,17 C19,18.1045695 18.1045695,19 17,19 L3,19 L3,19 C1.8954305,19 1,18.1045695 1,17 L1,3 L1,3 C1,1.8954305 1.8954305,1 3,1 Z"></path>
-                          <polyline points="4 11 8 15 16 6"></polyline>
-                        </svg>
-                      </div>
-                    </label>
+                    {{lang.label33}}
+                    <input type="checkbox" @change="saveSettings" class="invisible" v-model="specsOpts.firstH" :disabled="inputDisabled">
+                    <div class="checkbox">
+                      <svg width="20px" height="20px" viewBox="0 0 20 20">
+                        <path d="M3,1 L17,1 L17,1 C18.1045695,1 19,1.8954305 19,3 L19,17 L19,17 C19,18.1045695 18.1045695,19 17,19 L3,19 L3,19 C1.8954305,19 1,18.1045695 1,17 L1,3 L1,3 C1,1.8954305 1.8954305,1 3,1 Z"></path>
+                        <polyline points="4 11 8 15 16 6"></polyline>
+                      </svg>
+                    </div>
+                  </label>
                   <label class="label-cbx">
-                      {{lang.label34}}
-                      <input type="checkbox" @change="saveSettings" class="invisible" v-model="specsOpts.lastH" :disabled="inputDisabled">
-                      <div class="checkbox">
-                        <svg width="20px" height="20px" viewBox="0 0 20 20">
-                          <path d="M3,1 L17,1 L17,1 C18.1045695,1 19,1.8954305 19,3 L19,17 L19,17 C19,18.1045695 18.1045695,19 17,19 L3,19 L3,19 C1.8954305,19 1,18.1045695 1,17 L1,3 L1,3 C1,1.8954305 1.8954305,1 3,1 Z"></path>
-                          <polyline points="4 11 8 15 16 6"></polyline>
-                        </svg>
-                      </div>
-                    </label>
-
+                    {{lang.label34}}
+                    <input type="checkbox" @change="saveSettings" class="invisible" v-model="specsOpts.lastH" :disabled="inputDisabled">
+                    <div class="checkbox">
+                      <svg width="20px" height="20px" viewBox="0 0 20 20">
+                        <path d="M3,1 L17,1 L17,1 C18.1045695,1 19,1.8954305 19,3 L19,17 L19,17 C19,18.1045695 18.1045695,19 17,19 L3,19 L3,19 C1.8954305,19 1,18.1045695 1,17 L1,3 L1,3 C1,1.8954305 1.8954305,1 3,1 Z"></path>
+                        <polyline points="4 11 8 15 16 6"></polyline>
+                      </svg>
+                    </div>
+                  </label>
                   <label class="label-cbx">
-                      {{lang.label35}}
-                      <input type="checkbox" @change="saveSettings" class="invisible" v-model="specsOpts.mask" :disabled="inputDisabled">
-                      <div class="checkbox">
-                        <svg width="20px" height="20px" viewBox="0 0 20 20">
-                          <path d="M3,1 L17,1 L17,1 C18.1045695,1 19,1.8954305 19,3 L19,17 L19,17 C19,18.1045695 18.1045695,19 17,19 L3,19 L3,19 C1.8954305,19 1,18.1045695 1,17 L1,3 L1,3 C1,1.8954305 1.8954305,1 3,1 Z"></path>
-                          <polyline points="4 11 8 15 16 6"></polyline>
-                        </svg>
-                      </div>
-                    </label>
+                    {{lang.label35}}
+                    <input type="checkbox" @change="saveSettings" class="invisible" v-model="specsOpts.mask" :disabled="inputDisabled">
+                    <div class="checkbox">
+                      <svg width="20px" height="20px" viewBox="0 0 20 20">
+                        <path d="M3,1 L17,1 L17,1 C18.1045695,1 19,1.8954305 19,3 L19,17 L19,17 C19,18.1045695 18.1045695,19 17,19 L3,19 L3,19 C1.8954305,19 1,18.1045695 1,17 L1,3 L1,3 C1,1.8954305 1.8954305,1 3,1 Z"></path>
+                        <polyline points="4 11 8 15 16 6"></polyline>
+                      </svg>
+                    </div>
+                  </label>
                 </div>
-
-
               </td>
             </tr>
             <tr>
@@ -223,45 +205,34 @@
                 <div class="radioChoose specsReserve">
                   <div class="sliderBackg" :style="{'left': specsReservePosition.left, 'width': specsReservePosition.width}"></div>
                   <label>{{lang.label38}}<input type="radio" @change="saveSettings" name="specsReserve" v-model="specsReserve" v-bind:value="1" :disabled="inputDisabled"></label>
-                  <!--
-
-                 --><label>10%<input type="radio" @change="saveSettings" name="specsReserve" v-model="specsReserve" v-bind:value="2" :disabled="inputDisabled"></label>
-                  <!--
-
-                 --><label>25%<input type="radio" @change="saveSettings" name="specsReserve" v-model="specsReserve" v-bind:value="3" :disabled="inputDisabled"></label>
-                  <!--
-
-                 --><label>50%<input type="radio" @change="saveSettings" name="specsReserve" v-model="specsReserve" v-bind:value="4" :disabled="inputDisabled"></label>
+                  <label>10%<input type="radio" @change="saveSettings" name="specsReserve" v-model="specsReserve" v-bind:value="2" :disabled="inputDisabled"></label>
+                  <label>25%<input type="radio" @change="saveSettings" name="specsReserve" v-model="specsReserve" v-bind:value="3" :disabled="inputDisabled"></label>
+                  <label>50%<input type="radio" @change="saveSettings" name="specsReserve" v-model="specsReserve" v-bind:value="4" :disabled="inputDisabled"></label>
                 </div>
               </td>
-
             </tr>
             <tr>
               <td>{{lang.label39}}<br><span class="info">{{lang.label40}}</span></td>
               <td><input v-model="specsSeed" type="text" :placeholder="lang.label100" :disabled="inputDisabled"></td>
-
             </tr>
             <tr>
               <td>{{lang.label41}}</td>
               <td>
                 <label class="label-cbx">
-                    <span v-if="specsAnimations" style="position:relative;bottom:2px">{{lang.label42}}</span><span v-else style="position:relative;bottom:2px">{{lang.label43}}</span>
-                    <input type="checkbox" @change="saveSettings" class="invisible" v-model="specsAnimations" :disabled="inputDisabled">
-                    <div class="checkbox">
-                      <svg width="20px" height="20px" viewBox="0 0 20 20">
-                        <path d="M3,1 L17,1 L17,1 C18.1045695,1 19,1.8954305 19,3 L19,17 L19,17 C19,18.1045695 18.1045695,19 17,19 L3,19 L3,19 C1.8954305,19 1,18.1045695 1,17 L1,3 L1,3 C1,1.8954305 1.8954305,1 3,1 Z"></path>
-                        <polyline points="4 11 8 15 16 6"></polyline>
-                      </svg>
-                    </div>
-                  </label>
+                  <span v-if="specsAnimations" style="position:relative;bottom:2px">{{lang.label42}}</span><span v-else style="position:relative;bottom:2px">{{lang.label43}}</span>
+                  <input type="checkbox" @change="saveSettings" class="invisible" v-model="specsAnimations" :disabled="inputDisabled">
+                  <div class="checkbox">
+                    <svg width="20px" height="20px" viewBox="0 0 20 20">
+                      <path d="M3,1 L17,1 L17,1 C18.1045695,1 19,1.8954305 19,3 L19,17 L19,17 C19,18.1045695 18.1045695,19 17,19 L3,19 L3,19 C1.8954305,19 1,18.1045695 1,17 L1,3 L1,3 C1,1.8954305 1.8954305,1 3,1 Z"></path>
+                      <polyline points="4 11 8 15 16 6"></polyline>
+                    </svg>
+                  </div>
+                </label>
                 <div class="reset" @click="resetSettings">
                   {{lang.label44}}
                 </div>
               </td>
-
             </tr>
-
-
           </table>
         </div>
         <div class="mods" v-show="page=='mods'" :style="{ 'opacity': inputDisabled ? 0.5 : 1.0 }">
@@ -270,143 +241,128 @@
             <div class="profile oneLine">
               {{lang.label46}}
             </div>
-
             <div class="onExpand">
               <div class="description">
                 {{lang.label47}}
               </div>
               <div class="prefix">
                 <span>{{lang.label32}}: </span>
-                <input type="text" @change="saveSettings" v-model="mod1.prefixIn" :disabled="inputDisabled" :style="{ 'border-color': mod1PrefixColor }" placeholder="(1-30)">
+                <input type="text" @input="saveSettings" v-model="mod1.prefixIn" :disabled="inputDisabled" :style="{ 'border-color': mod1PrefixColor }" placeholder="(1-30)">
               </div>
               <button tabindex="-1" type="button" @click="generateNewMod1" :disabled="(!prefixValidMod1 || inputDisabled)">
-                  <i class="fas fa-arrow-right"></i>
-                </button>
-
+                <i class="fas fa-arrow-right"></i>
+              </button>
             </div>
           </div>
           <div>
             <div class="profile">
               {{lang.label48}}
             </div>
-
             <div class="onExpand">
               <div class="description">
-              {{lang.label49}}<br>{{lang.label50}}
-
+                {{lang.label49}}<br>{{lang.label50}}
               </div>
               <div class="prefix">
                 <span>{{lang.label51}}: </span>
-                <input type="text" @change="saveSettings" v-model="mod2.prefixIn" :disabled="inputDisabled" :style="{ 'border-color': mod2PrefixColor }" placeholder="(1-30)">
+                <input type="text" @input="saveSettings" v-model="mod2.prefixIn" :disabled="inputDisabled" :style="{ 'border-color': mod2PrefixColor }" placeholder="(1-30)">
               </div>
-
               <button tabindex="-1" type="button" @click="generateNewMod2" :disabled="(!prefixValidMod2 || inputDisabled)">
-                  <i class="fas fa-arrow-right"></i>
-                </button>
-
+                <i class="fas fa-arrow-right"></i>
+              </button>
             </div>
           </div>
         </div>
         <div class="opts clearfix">
-
           <button type="button" class="additional" @click="setPageAddit" :title="lang.label52" v-bind:class="{'active': page=='addit'}">
-              <i class="fas fa-sliders-h" aria-hidden="true"></i>
-            </button>
-
+            <i class="fas fa-sliders-h" aria-hidden="true"></i>
+          </button>
           <button type="button" class="additional" @click="setPageMods" :title="lang.label53" v-bind:class="{'active': page=='mods'}">
-              <i class="fas fa-archive"></i>
-            </button>
-
+            <i class="fas fa-archive"></i>
+          </button>
           <button type="button" @click="generateNew" :disabled="!ipValid || !prefixValid || !comboValid || !countValid" v-if="!inputDisabled">
-              {{lang.label54}}
-            </button>
+            {{lang.label54}}
+          </button>
           <button type="button" @click="swapSettings" v-if="inputDisabled">
-              {{lang.label55}}
-            </button>
+            {{lang.label55}}
+          </button>
           <button type="button" @click="changeSettings" v-if="inputDisabled">
-              {{lang.label56}}
-            </button>
-
+            {{lang.label56}}
+          </button>
         </div>
       </div>
-
-
     </div>
+
     <div class="main" :class="specsAnimations ? '' : 'noanim'" v-show="location == 'main'">
       <div class="instancesBox" :style="{ 'height' : currentInstanceHeight+'px'}">
         <h1>{{lang.label57}}</h1>
-
         <div class="instance offRight" v-for="instance, index in instances">
           <div class="subtitle">{{lang.label58}}
             <span class="highlightArea"><span class="highlight">{{instance.baseIP}} /{{instance.basePrefix}}</span>
-            <div class="popout">
-              <table>
-                <tr>
-                  <td colspan="2">{{lang.label59}} {{hostsMax(index)}} {{lang.label60}} ({{instance.baseIP}} - {{lastIP(index)}})</td>
-                </tr>
-                <tr>
-                  <td>{{lang.label61}}: </td>
-                  <td><span v-for="item in baseIPShow(index)">{{item}}</span></td>
-                </tr>
-                <tr>
-                  <td>{{lang.label62}}: </td>
-                  <td><span v-for="item in basePrefixShow(index)">{{item}}</span></td>
-                </tr>
-              </table>
-            </div>
+              <div class="popout">
+                <table>
+                  <tr>
+                    <td colspan="2">{{lang.label59}} {{hostsMax(index)}} {{lang.label60}} ({{instance.baseIP}} - {{lastIP(index)}})</td>
+                  </tr>
+                  <tr>
+                    <td>{{lang.label61}}: </td>
+                    <td><span v-for="item in baseIPShow(index)">{{item}}</span></td>
+                  </tr>
+                  <tr>
+                    <td>{{lang.label62}}: </td>
+                    <td><span v-for="item in basePrefixShow(index)">{{item}}</span></td>
+                  </tr>
+                </table>
+              </div>
             </span>
             <span v-if="reserve==0">{{lang.label63}}:</span>
             <span v-if="reserve!=0">{{lang.label64}} {{reserve}}%:</span>
-
           </div>
-
-
           <canvas v-bind:id="toCanvasId(index)" width="1110" height="520"></canvas>
           <div class="interBox">
-
-
-            <table v-if="instances[index].subnets.length > 0" class="inter">
+            <table v-if="instances[index].subnets.length > 0" class="inter" :class="{noopst: noneOpts}">
               <tr>
                 <td>{{lang.label65}}</td>
                 <td>{{lang.label66}}</td>
 
                 <td v-if="specsOpts.firstA"><span v-if="instances[index].answers">{{lang.label67}}<br></span>{{lang.label69}}</td>
-                <td v-if="instances[index].answers && specsOpts.firstA">{{lang.label69}}<br>{{lang.label75}}</td>
+                <td v-if="instances[index].answers && (specsOpts.firstA || noneOpts)">{{lang.label69}}<br>{{lang.label75}}</td>
 
                 <td v-if="specsOpts.firstH"><span v-if="instances[index].answers">{{lang.label68}}<br></span>{{lang.label70}}</td>
-                <td v-if="instances[index].answers && specsOpts.firstH">{{lang.label70}}<br>{{lang.label75}}</td>
+                <td v-if="instances[index].answers && (specsOpts.firstH || noneOpts)">{{lang.label70}}<br>{{lang.label75}}</td>
 
                 <td v-if="specsOpts.lastH"><span v-if="instances[index].answers">{{lang.label68}}<br></span>{{lang.label71}}</td>
-                <td v-if="instances[index].answers && specsOpts.lastH">{{lang.label71}}<br>{{lang.label75}}</td>
+                <td v-if="instances[index].answers && (specsOpts.lastH || noneOpts)">{{lang.label71}}<br>{{lang.label75}}</td>
 
                 <td v-if="specsOpts.lastA"><span v-if="instances[index].answers">{{lang.label68}}<br></span>{{lang.label72}}</td>
-                <td v-if="instances[index].answers && specsOpts.lastA">{{lang.label72}}<br>{{lang.label75}}</td>
+                <td v-if="instances[index].answers && (specsOpts.lastA || noneOpts)">{{lang.label72}}<br>{{lang.label75}}</td>
 
                 <td v-if="specsOpts.mask" class="maskCell"><span v-if="instances[index].answers">{{lang.label67}}<br></span>{{lang.label73}}</td>
-                <td v-if="instances[index].answers && specsOpts.mask">{{lang.label73}}<br>{{lang.label75}}</td>
+                <td v-if="instances[index].answers && (specsOpts.mask || noneOpts)">{{lang.label73}}<br>{{lang.label75}}</td>
 
                 <td v-if="specsOpts.prefix" class="prefixCell"><span v-if="instances[index].answers">{{lang.label68}}<br></span>{{lang.label74}}</td>
-                <td v-if="instances[index].answers && specsOpts.prefix">{{lang.label74}}<br>{{lang.label75}}</td>
+                <td v-if="instances[index].answers && (specsOpts.prefix || noneOpts)">{{lang.label74}}<br>{{lang.label75}}</td>
               </tr>
               <tr v-for="item in instances[index].subnets" :style="{ 'transition-delay': ((Math.pow(item.nth,0.33)*0.5)-0.5) + 's'}">
                 <td>{{item.name}}<span class="info" v-if="item.parent == 'btw' && reserve != 0">({{lang.label76}})</span></td>
                 <td>{{item.hosts}}</td>
+
                 <td v-if="specsOpts.firstA"><input type="text" v-model="item.inFirstA" @input="resetFirstA(item)" :style="{ 'border-color': item.firstACheckColor }"></td>
-                <td v-if="instances[index].answers && specsOpts.firstA">{{item.firstA}}</td>
+                <td v-if="instances[index].answers && (specsOpts.firstA || noneOpts)">{{item.firstA}}</td>
 
                 <td v-if="specsOpts.firstH"><input type="text" v-model="item.inFirstH" @input="resetFirstH(item)" :style="{ 'border-color': item.firstHCheckColor }"></td>
-                <td v-if="instances[index].answers && specsOpts.firstH">{{item.firstH}}</td>
+                <td v-if="instances[index].answers && (specsOpts.firstH || noneOpts)">{{item.firstH}}</td>
+
                 <td v-if="specsOpts.lastH"><input type="text" v-model="item.inLastH" @input="resetLastH(item)" :style="{ 'border-color': item.lastHCheckColor }"></td>
-                <td v-if="instances[index].answers && specsOpts.lastH">{{item.lastH}}</td>
+                <td v-if="instances[index].answers && (specsOpts.lastH || noneOpts)">{{item.lastH}}</td>
 
                 <td v-if="specsOpts.lastA"><input type="text" v-model="item.inLastA" @input="resetLastA(item)" :style="{ 'border-color': item.lastACheckColor }"></td>
-                <td v-if="instances[index].answers && specsOpts.lastA">{{item.lastA}}</td>
+                <td v-if="instances[index].answers && (specsOpts.lastA || noneOpts)">{{item.lastA}}</td>
 
                 <td class="maskCell" v-if="specsOpts.mask"><input type="text" v-model="item.inMask" @input="resetMask(item)" class="mask" :style="{ 'border-color': item.maskCheckColor }"></td>
-                <td v-if="instances[index].answers && specsOpts.mask">{{item.mask}}</td>
-                <td class="prefixCell" v-if="specsOpts.prefix"><input type="text" v-model="item.inPrefix" @input="resetPrefix(item)" class="prefix" :style="{ 'border-color': item.prefixCheckColor }"></td>
-                <td v-if="instances[index].answers && specsOpts.prefix">{{item.prefix}}</td>
+                <td v-if="instances[index].answers && (specsOpts.mask || noneOpts)">{{item.mask}}</td>
 
+                <td class="prefixCell" v-if="specsOpts.prefix"><input type="text" v-model="item.inPrefix" @input="resetPrefix(item)" class="prefix" :style="{ 'border-color': item.prefixCheckColor }"></td>
+                <td v-if="instances[index].answers && (specsOpts.prefix || noneOpts)">{{item.prefix}}</td>
               </tr>
             </table>
           </div>
@@ -414,14 +370,13 @@
       </div>
       <div class="buttonsBox">
         <div class="container">
-
-
           <div class="buttons clearfix">
             <div class="clearfix buttonsUp">
               <div class="sectionR">
                 <button class="specialFocus destroy" @click="blacklistInstance"><span tabindex="-1"><i class="fas fa-trash-alt"></i></span></button>
                 <button class="specialFocus" @click="jumpToInstance(prevInstance)" :disabled="prevInstance == -1"><span tabindex="-1"><i class="fas fa-arrow-left"></i></span></button>
-                <div class="instanceName"><span v-show="!jumpSelect" @click="jumpInit">{{lang.label99}} {{currentInstanceName}}</span><input ref="jumpInput" type="text" v-show="jumpSelect" v-model="jumpToInput" @keydown.enter="validateJump" @blur="jumpSelect = false;jumpToInput = ''" :style="{'animation-name':jumpAnim}" :placeholder="lang.label101"></div>
+                <div class="instanceName"><span v-show="!jumpSelect" @click="jumpInit">{{lang.label99}} {{currentInstanceName}}</span><input ref="jumpInput" type="text" v-show="jumpSelect" v-model="jumpToInput" @keydown.enter="validateJump" @blur="jumpSelect = false;jumpToInput = ''"
+                    :style="{'animation-name':jumpAnim}" :placeholder="lang.label101"></div>
                 <button class="specialFocus" @click="jumpToInstance(nextInstance)" :disabled="nextInstance == -1"><span tabindex="-1"><i class="fas fa-arrow-right"></i></span></button>
               </div>
             </div>
@@ -431,28 +386,19 @@
                 <button class="specialFocus" type="button" @click="fillAllTrigger"><span tabindex="-1" class="noActiveEffect"><i class="fas fa-chevron-up"></i></span></button>
               </div>
               <div class="sectionR">
-                <button class="specialFocus" @click="check"><span tabindex="-1">{{lang.label78}}</span></button>
+                <button class="specialFocus" @click="check" v-if="!noneOpts"><span tabindex="-1">{{lang.label78}}</span></button>
                 <button class="specialFocus" @click="showResults" :disabled="currentResults"><span tabindex="-1">{{lang.label79}}</span></button>
                 <button class="specialFocus" @click="generate"><span tabindex="-1">{{lang.label80}} <span class="re" v-if="instances.length >= 50"><i class="fas fa-sync-alt"></i></span></span></button>
               </div>
             </div>
-
           </div>
-
         </div>
-
       </div>
-
     </div>
+
     <div class="modBox" v-if="location == 'mod1'">
-
-
       <div class="mod mod1">
-
-
-
         <h3>{{lang.label81}}</h3>
-
         <div class="task clearfix">
           <h5><span>{{lang.label82}} {{exerciseCounter}}</span></h5>
           <div class="left">
@@ -467,26 +413,15 @@
         <div v-if="mod1.answers" class="answers">{{lang.label85}}: {{mod1.address2}}</div>
         <div class="buttons">
           <button class="specialFocus" @click="checkMod1"><span tabindex="-1">{{lang.label86}}</span></button>
-          <!--
-
-         --><button class="specialFocus" @click="showResultsMod1" :disabled="mod1.answers"><span tabindex="-1">{{lang.label87}}</span></button>
-          <!--
-
-         --><button class="specialFocus" @click="generateMod1"><span tabindex="-1">{{lang.label88}}</span></button>
+          <button class="specialFocus" @click="showResultsMod1" :disabled="mod1.answers"><span tabindex="-1">{{lang.label87}}</span></button>
+          <button class="specialFocus" @click="generateMod1"><span tabindex="-1">{{lang.label88}}</span></button>
         </div>
-
       </div>
-
     </div>
+
     <div class="modBox" v-if="location == 'mod2'">
-
-
       <div class="mod mod2">
-
-
-
         <h3>{{lang.label89}}</h3>
-
         <div class="task clearfix">
           <h5><span>{{lang.label90}} {{exerciseCounter}}</span></h5>
           <div class="left">
@@ -502,26 +437,19 @@
         <div class="clearfix">
           <div class="question" v-html="lang.label94" :style="{ 'margin': lang.language=='cs' ? '10px 0' : '' }">
           </div>
-
           <div class="radioChoose mod2In">
             <div class="sliderBackg" :class="{downscale:!mod2.selected, aftershock:mod2.aftershock, t:mod2.result==1, f:mod2.result==-1}" :style="{'left': mod2.inPosition.left, 'width': mod2.inPosition.width}"></div>
             <label>{{lang.label95}}<input type="radio" name="in" @click="mod2Actuate" v-model="mod2.in" v-bind:value="1" :disabled="mod2.result != 0"></label>
-            <!--
-
-           --><label>{{lang.label96}}<input type="radio" name="in" @click="mod2Actuate" v-model="mod2.in" v-bind:value="2" :disabled="mod2.result != 0"></label>
+            <label>{{lang.label96}}<input type="radio" name="in" @click="mod2Actuate" v-model="mod2.in" v-bind:value="2" :disabled="mod2.result != 0"></label>
           </div>
         </div>
-
         <div class="buttons">
           <button class="specialFocus" @click="checkMod2" :disabled="!mod2.selected || mod2.result != 0"><span tabindex="-1">{{lang.label97}}</span></button>
-          <!--
-
-         --><button class="specialFocus" @click="generateMod2"><span tabindex="-1">{{lang.label98}}</span></button>
+          <button class="specialFocus" @click="generateMod2"><span tabindex="-1">{{lang.label98}}</span></button>
         </div>
-
       </div>
-
     </div>
+
     <footer class="footer">
       <table>
         <tr>
@@ -534,22 +462,21 @@
           </td>
           <td>Matěj Motl</td>
           <td rowspan="3"><a href="https://ssinfis.cz" target="_blank"><img src="../img/infisLogo.png" alt="infis">
-           <span :style="{'letter-spacing': (lang.language=='en') ? '-0.3px' : '0px'}">{{lang.label102}}<br>{{lang.label103}}</span>
-          </a></td>
+              <span :style="{'letter-spacing': (lang.language=='en') ? '-0.3px' : '0px'}">{{lang.label102}}<br>{{lang.label103}}</span>
+            </a></td>
         </tr>
-
         <tr>
           <td>&copy; <span class="currentYear"></span></td>
         </tr>
         <tr>
-          <td>Subnetting v1.2</td>
+          <td>Subnetting v1.3</td>
         </tr>
       </table>
     </footer>
+
     <div class="hide">
       {{thediff}}{{specsReserveSelected}}{{langSwitchSelected}}{{mod2InSelected}}{{currentInstanceHeight}}
     </div>
-
   </div>
   <script src="subnettingTranslate.js"></script>
   <script src="subnetting.js"></script>

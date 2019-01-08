@@ -13,54 +13,6 @@ h1 {
 #subnetting .container {
   position: relative;
 }
-#subnetting .radioChoose {
-  display: table;
-  position: relative;
-  width: 100%;
-}
-#subnetting .radioChoose.mod2In .sliderBackg {
-  transform: scale(1);
-  transition: all 0.2s, left 0s, width 0s;
-}
-#subnetting .radioChoose.mod2In .sliderBackg.downscale {
-  transform: scale(0);
-}
-#subnetting .radioChoose.mod2In .sliderBackg.aftershock {
-  transition: all 0s, left 0.2s, width 0.2s;
-}
-#subnetting .radioChoose.mod2In .sliderBackg.t {
-  border-color: #00bd00;
-  background-color: rgba(0, 189, 0, 0.15);
-}
-#subnetting .radioChoose.mod2In .sliderBackg.f {
-  border-color: #f33;
-  background-color: rgba(255, 51, 51, 0.1);
-}
-#subnetting .radioChoose label {
-  cursor: pointer;
-  padding: 8px 12px;
-  margin-bottom: 0;
-  user-select: none;
-  text-align: center;
-  transition: 0.2s;
-  display: table-cell;
-}
-#subnetting .radioChoose input {
-  display: none;
-}
-#subnetting .radioChoose input:checked + label {
-  background: red;
-}
-#subnetting .radioChoose .sliderBackg {
-  z-index: -1;
-  height: 100%;
-  position: absolute;
-  top: 0;
-  background: rgba(0, 231, 255, 0.05);
-  transition: all 0.2s;
-  border-radius: 10px;
-  border: solid 2px #49eeff;
-}
 #subnetting .main.noanim * {
   transition: all 0s!important;
   transition-delay: 0s!important;
@@ -81,7 +33,7 @@ h1 {
 #subnetting .instance .interBox tr,
 #subnetting .instance .subtitle,
 #subnetting .instance canvas {
-  transition: all .8s;
+  transition: all 0.8s;
   transform: perspective(2000px) rotateY(0deg) translateZ(0px);
   opacity: 1;
 }
@@ -191,16 +143,13 @@ h1 {
 #subnetting .settings {
   width: 100%;
   height: 100vh;
-  background-image: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url("../img/background.jpg");
+  background-image: url("../img/background.jpg");
   background-size: 1920px;
   background-attachment: fixed;
   position: relative;
   min-width: fit-content;
   overflow: hidden;
   min-height: 550px;
-  /*bug
-              top: 50%;
-                  transform: translateY(-50%);*/
 }
 #subnetting .settings .area {
   animation: zoomIn 0.2s ease-out;
@@ -442,66 +391,6 @@ h1 {
   width: 100%;
   text-align: center;
 }
-#subnetting .settings .area .specs .label-cbx {
-  user-select: none;
-  cursor: pointer;
-  margin-bottom: 0;
-  float: left;
-  clear: both;
-  line-height: 30px;
-}
-#subnetting .settings .area .specs .label-cbx input:checked + .checkbox {
-  border-color: #0ac;
-}
-#subnetting .settings .area .specs .label-cbx input:checked + .checkbox svg path {
-  fill: #0ac;
-}
-#subnetting .settings .area .specs .label-cbx input:checked + .checkbox svg polyline {
-  stroke-dashoffset: 0;
-  stroke: white;
-}
-#subnetting .settings .area .specs .label-cbx:hover input:not(:disabled) + .checkbox svg path {
-  stroke-dashoffset: 0;
-}
-#subnetting .settings .area .specs .label-cbx .checkbox {
-  position: relative;
-  top: 4px;
-  float: left;
-  margin-right: 8px;
-  width: 20px;
-  height: 20px;
-  border: 2px solid #C8CCD4;
-  border-radius: 3px;
-}
-#subnetting .settings .area .specs .label-cbx .checkbox svg {
-  position: absolute;
-  top: -2px;
-  left: -2px;
-}
-#subnetting .settings .area .specs .label-cbx .checkbox svg path {
-  fill: none;
-  stroke: #0ac;
-  stroke-width: 2;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-  stroke-dasharray: 70.99px;
-  stroke-dashoffset: 71px;
-  transition: all 0.6s ease;
-}
-#subnetting .settings .area .specs .label-cbx .checkbox svg polyline {
-  fill: none;
-  stroke: #FFF;
-  stroke-width: 2;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-  stroke-dasharray: 17.99px;
-  stroke-dashoffset: 18px;
-  transition: all 0.3s ease;
-}
-#subnetting .settings .area .specs .label-cbx > span {
-  pointer-events: none;
-  vertical-align: middle;
-}
 #subnetting .settings .area .specs .cntr {
   position: absolute;
   top: 45%;
@@ -547,6 +436,9 @@ h1 {
   float: right;
   height: 44px;
   line-height: 25px;
+}
+#subnetting .settings .area .mods > div button:disabled {
+  opacity: 1;
 }
 #subnetting .settings .area .mods > div:not(:first-of-type) {
   margin-left: 10px;
@@ -624,16 +516,12 @@ h1 {
 }
 #subnetting .settings .area .opts .additional svg {
   color: white;
-  /* line-height: 216px;*/
   vertical-align: middle;
-  margin: 2px 0;
-  /* margin: 0 10px; */
   top: 0;
   font-size: 26px;
   bottom: 0;
   right: 0;
   left: 0;
-  /* position: absolute; */
   float: left;
   position: relative;
 }
@@ -782,20 +670,17 @@ h1 {
 #subnetting .interBox table.inter tr:first-child td {
   white-space: pre;
 }
+#subnetting .interBox table.inter.noopst td {
+  padding: 5px 20px;
+}
 #subnetting .interBox table.inter td {
   position: relative;
   padding: 5px;
-  /*
-            &.prefixCell {
-              width: 100px;
-              input {
-                text-align: center;
-              }
-            }*/
 }
 #subnetting .interBox table.inter td:nth-child(1) {
   min-width: 100px;
   width: 100px;
+  white-space: nowrap;
 }
 #subnetting .interBox table.inter td:nth-child(2) {
   min-width: 120px;
@@ -815,9 +700,6 @@ h1 {
 }
 #subnetting .interBox table.inter td.prefixCell .prefix {
   text-align: center;
-}
-#subnetting #schema {
-  margin-bottom: 50px;
 }
 #subnetting .buttonsBox {
   position: relative;
@@ -844,10 +726,10 @@ h1 {
   display: flex;
 }
 #subnetting .buttonsBox .buttons .buttonsUp .sectionR > button {
-  margin: 0px 5px;
+  margin: 0 5px;
 }
 #subnetting .buttonsBox .buttons .buttonsUp .sectionR button:last-child {
-  margin-right: 0px;
+  margin-right: 0;
 }
 #subnetting .buttonsBox .buttons .buttonsUp .instanceName {
   font-size: 20px;
@@ -875,7 +757,7 @@ h1 {
   width: 100%;
   display: inline-block;
   text-align: center;
-  animation-duration: .5s;
+  animation-duration: 0.75s;
 }
 #subnetting .buttonsBox .buttons .buttonsUp .specialFocus span {
   padding: 2px 16px;
@@ -917,7 +799,7 @@ h1 {
   text-transform: uppercase;
 }
 #subnetting .langSwitchBox .langSwitch label {
-  padding: 0px 12px;
+  padding: 0 12px;
   font-size: 16px;
 }
 #subnetting .langSwitchBox .langSwitch .sliderBackg {
@@ -927,7 +809,7 @@ h1 {
   border-radius: 0;
   height: 120%;
   top: -10%;
-  opacity: .5;
+  opacity: 0.5;
   transition-delay: 0.1s;
 }
 #subnetting .langSwitchBox .langSwitch input + span {
@@ -957,14 +839,27 @@ h1 {
 .main h1 {
   margin-bottom: 20px;
 }
-@keyframes zoomIn {
-  from {
-    opacity: 0;
-    transform: scale(2) translateY(-50%);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1) translateY(-50%);
+.hiddenClone {
+  cursor: pointer;
+  padding: 8px 12px;
+  margin-bottom: 0;
+  user-select: none;
+  text-align: center;
+  transition: 0.2s;
+  display: table-cell;
+  font-size: 18px;
+  position: absolute;
+  white-space: pre;
+  visibility: hidden;
+}
+.hiddenClone input {
+  display: none;
+}
+@media screen and (min-width: 1921px) {
+  #subnetting .settings {
+    background-image: url("../img/background.jpg");
+    background-size: cover;
+    background-attachment: fixed;
   }
 }
 @keyframes arrowUp {
@@ -989,13 +884,6 @@ h1 {
     opacity: 1;
   }
 }
-@media screen and (min-width: 1921px) {
-  #subnetting .settings {
-    background-image: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url("../img/background.jpg");
-    background-size: cover;
-    background-attachment: fixed;
-  }
-}
 @keyframes redBlink1 {
   from {
     border-color: red;
@@ -1011,20 +899,4 @@ h1 {
   to {
     border-color: initial;
   }
-}
-.reserveClone {
-  cursor: pointer;
-  padding: 8px 12px;
-  margin-bottom: 0;
-  user-select: none;
-  text-align: center;
-  transition: 0.2s;
-  display: table-cell;
-  font-size: 18px;
-  position: absolute;
-  white-space: pre;
-  visibility: hidden;
-}
-.reserveClone input {
-  display: none;
 }

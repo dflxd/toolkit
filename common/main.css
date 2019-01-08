@@ -8,25 +8,25 @@
 }
 body,
 html {
-  margin: 0!important;
-  margin-left: auto;
-  margin-right: auto;
-  padding: 0!important;
+  margin: 0 !important;
+  padding: 0 !important;
   font-family: 'Nunito', sans-serif;
   font-size: 20px;
   color: white;
 }
+a {
+  color: #49eeff;
+}
+a:hover {
+  color: #49eeff;
+}
 body {
   background-color: #3c393f;
-  background-image: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url("../img/background.jpg");
+  background-image: url("../img/background.jpg");
   background-size: 1920px;
   background-attachment: fixed;
   background-repeat: no-repeat;
   height: 100%;
-}
-header #logo {
-  width: 468px;
-  height: 200px;
 }
 ::selection {
   background: #00cde2;
@@ -63,7 +63,7 @@ button.specialFocus {
   border-radius: 0;
   background: none;
   color: #fff;
-  padding: 0px;
+  padding: 0;
   outline: none;
 }
 button.specialFocus > span {
@@ -96,7 +96,8 @@ button.specialFocus:disabled span:active {
   transform: scale(1) !important;
   transition: all 0s;
 }
-input {
+input,
+textarea {
   border: 2px solid #49eeff;
   background: rgba(0, 0, 0, 0.3);
   border-radius: 10px;
@@ -105,7 +106,8 @@ input {
   outline: none !important;
   font-size: 20px;
 }
-input:focus {
+input:focus,
+textarea:focus {
   border: 2px solid white;
 }
 header {
@@ -211,96 +213,20 @@ h1 {
   color: #16a;
 }
 .smallMenu div.border {
-  border: none!important;
-  border-left: 1px solid #444!important;
+  border: none !important;
+  border-left: 1px solid #444 !important;
 }
 .smallMenu div.disabled {
   opacity: 0.5;
 }
-.modulesHeading {
-  margin-top: 100px;
-  font-size: 32px;
-}
-.modules {
-  margin-top: 35px;
-  display: inline-block;
-}
-.modules a {
-  margin: 0 10px;
-  display: inline-block;
-}
-.modules .module {
-  height: 180px;
-  margin-left: 8px;
-  margin-right: 8px;
-  padding: 5px;
-}
-.modules .tech-en {
-  border: 2px solid #3498DB;
-}
-.modules .tech-en:hover {
-  background-color: rgba(52, 152, 219, 0.5);
-}
-.modules .networking {
-  border: 2px solid #26A65B;
-}
-.modules .networking p {
-  margin-top: 29px;
-}
-.modules .networking:hover {
-  background-color: rgba(38, 166, 91, 0.5);
-}
-.modules .numbers {
-  border: 2px solid #FF7F00;
-}
-.modules .numbers:hover {
-  background-color: rgba(255, 127, 0, 0.5);
-}
-.modules h2 {
-  transform: rotate(-90deg);
-  position: relative;
-  height: 100px;
-  width: 200px;
-  color: white;
-  line-height: 50px;
-  vertical-align: bottom;
-  left: 60px;
-}
-.modules p {
-  margin-top: 20px;
-  text-align: center;
-  color: white;
-  line-height: 25px;
-}
-.modules a,
-.modules a:focus,
-.modules a:hover,
-.modules a:link {
-  text-decoration: none;
-  color: white;
-}
-@keyframes rotatee {
-  0% {
-    transform: perspective(100px) rotateY(0deg);
-  }
-  45% {
-    transform: perspective(100px) rotateY(165deg) rotateX(0deg);
-  }
-  55% {
-    transform: perspective(100px) rotateY(180deg) rotateX(15deg);
-  }
-  75% {
-    transform: perspective(100px) rotateY(180deg) rotateX(90deg) rotateZ(0deg);
-  }
-  75.01% {
-    transform: perspective(100px) rotateY(180deg) rotateX(90deg) rotateZ(180deg);
-  }
-  100% {
-    transform: perspective(100px) rotateY(180deg) rotateX(180deg) rotateZ(180deg);
-  }
-}
 .hide {
   display: none;
+}
+.invis {
+  visibility: visible !important;
+  position: fixed;
+  top: 0;
+  left: 0;
 }
 .helpBox {
   min-width: 480px;
@@ -356,7 +282,7 @@ h1 {
   margin-bottom: 20px;
 }
 .helpBox .help ul ul li {
-  margin-bottom: 5px!important;
+  margin-bottom: 5px !important;
 }
 .helpBox .help hr:not(.classic) {
   margin: 3px;
@@ -432,7 +358,7 @@ footer.footer table td a img {
   float: left;
   width: 170px;
   transform: scale(1);
-  transition: all .3s;
+  transition: all 0.3s;
   filter: contrast(0%) brightness(190%);
 }
 footer.footer table td a > span {
@@ -459,26 +385,135 @@ footer.footer table td a:hover img {
 footer.footer table td a:hover > span {
   transform: scale(1);
   opacity: 1;
-  transition: all .20s;
-  transition-delay: .10s;
+  transition: all 0.20s;
+  transition-delay: 0.10s;
 }
 footer.footer table tr:nth-child(3) td {
   position: relative;
   bottom: 1px;
 }
+.label-cbx {
+  user-select: none;
+  cursor: pointer;
+  margin-bottom: 0;
+  float: left;
+  clear: both;
+  line-height: 30px;
+}
+.label-cbx input:checked + .checkbox {
+  border-color: #0ac;
+}
+.label-cbx input:checked + .checkbox svg path {
+  fill: #0ac;
+}
+.label-cbx input:checked + .checkbox svg polyline {
+  stroke-dashoffset: 0;
+  stroke: white;
+}
+.label-cbx:hover input:not(:disabled) + .checkbox svg path {
+  stroke-dashoffset: 0;
+}
+.label-cbx .checkbox {
+  position: relative;
+  top: 4px;
+  float: left;
+  margin-right: 8px;
+  width: 20px;
+  height: 20px;
+  border: 2px solid #C8CCD4;
+  border-radius: 3px;
+}
+.label-cbx .checkbox svg {
+  position: absolute;
+  top: -2px;
+  left: -2px;
+}
+.label-cbx .checkbox svg path {
+  fill: none;
+  stroke: #0ac;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 70.99px;
+  stroke-dashoffset: 71px;
+  transition: all 0.6s ease;
+}
+.label-cbx .checkbox svg polyline {
+  fill: none;
+  stroke: #FFF;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 17.99px;
+  stroke-dashoffset: 18px;
+  transition: all 0.3s ease;
+}
+.label-cbx > span {
+  pointer-events: none;
+  vertical-align: middle;
+}
+.radioChoose {
+  display: table;
+  position: relative;
+  width: 100%;
+}
+.radioChoose.mod2In .sliderBackg {
+  transform: scale(1);
+  transition: all 0.2s, left 0s, width 0s;
+}
+.radioChoose.mod2In .sliderBackg.downscale {
+  transform: scale(0);
+}
+.radioChoose.mod2In .sliderBackg.aftershock {
+  transition: all 0s, left 0.2s, width 0.2s;
+}
+.radioChoose.mod2In .sliderBackg.t {
+  border-color: #00bd00;
+  background-color: rgba(0, 189, 0, 0.15);
+}
+.radioChoose.mod2In .sliderBackg.f {
+  border-color: #f33;
+  background-color: rgba(255, 51, 51, 0.1);
+}
+.radioChoose label {
+  cursor: pointer;
+  padding: 8px 12px;
+  margin-bottom: 0;
+  user-select: none;
+  text-align: center;
+  transition: 0.2s;
+  display: table-cell;
+}
+.radioChoose input {
+  display: none;
+}
+.radioChoose input:checked + label {
+  background: red;
+}
+.radioChoose .sliderBackg {
+  z-index: -1;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  background: rgba(0, 231, 255, 0.05);
+  transition: all 0.2s;
+  border-radius: 10px;
+  border: solid 2px #49eeff;
+}
 @media screen and (min-width: 1921px) {
   body {
-    background-image: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url("../img/background.jpg");
+    background-image: url("../img/background.jpg");
     background-size: cover;
     background-attachment: fixed;
   }
 }
-@media screen and (max-width: 1366px) {
-  .container {
-    min-width: 1110px!important;
+@keyframes zoomIn {
+  from {
+    opacity: 0;
+    transform: scale(2) translateY(-50%);
   }
-  .modules .module {
-    max-width: 175px;
-    max-height: 220px;
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(-50%);
   }
 }
