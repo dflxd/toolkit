@@ -6,9 +6,7 @@ var intro = new Vue({
         color: "#3498DB",
         link: "tech-en/",
         icon: "english-language",
-        description: [
-          ""
-        ]
+        description: []
       },
       {
         name: "Subnetting",
@@ -16,7 +14,7 @@ var intro = new Vue({
         link: "subnetting/",
         icon: "peer-to-peer",
         description: [
-          "Procvičování počítání ipv4 posítí",
+          "Procvičování počítání IPv4 podsítí",
           "Grafické schéma příkladů",
           "Módy - odlišný způsob počítání",
           "Detailní nápověda k počítání"
@@ -28,7 +26,7 @@ var intro = new Vue({
         link: "num-systems/",
         icon: "binary-code",
         description: [
-          "Procvičování převodu čísel mezi soustavami",
+          "Procvičování převodů mezi číselnými soustavami",
           "Postup řešení krok po kroku",
           "Zásobník libovolného množství převodů",
           "Detailní nápověda k převádění"
