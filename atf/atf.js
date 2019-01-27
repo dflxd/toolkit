@@ -555,7 +555,7 @@ var atf = new Vue({
           atf.loadingText = true;
           atf.location = "main";
           $.ajax({
-            url: 'http://api.blabot.net?scount=100',
+            url: 'https://cors.io/?http://api.blabot.net?scount=100',
             type: 'GET',
             success: function(data) {
               var d = JSON.parse(data);
@@ -665,7 +665,7 @@ var atf = new Vue({
       clearInterval(this.autoInterval);
       var that = this;
       if (this.settReward) {
-        $.getJSON("http://api.flickr.com/services/feeds/photos_public.gne?jsoncallback=?", {
+        $.getJSON("https://api.flickr.com/services/feeds/photos_public.gne?jsoncallback=?", {
             tags: that.settRewardKeyword,
             tagmode: "all",
             format: "json"
