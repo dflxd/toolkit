@@ -555,7 +555,7 @@ var atf = new Vue({
           atf.loadingText = true;
           atf.location = "main";
           $.ajax({
-            url: 'https://cors.io/?http://randomtextgenerator.com/',
+            url: 'https://cors.io/?https://randomtextgenerator.com/',
             type: 'GET',
             success: function(data) {
               var parser = new DOMParser();
