@@ -96,7 +96,7 @@
             <input type="radio" @input="saveSettings" name="settSource" id="s3" v-model="settSource" value="3" :disabled="inputDisabled">
             <label for="s3" class="desc">
               <div>
-                <span class="description">blábot</span>
+                <span class="description">náhodný text</span>
               </div>
             </label>
           </div>
@@ -107,7 +107,7 @@
             <input type="text" @input="saveSettings" placeholder="RSS URL" v-model="sourceRSS">
           </div>
           <div v-if="settSource==3">
-            <span>Náhodný text prostřednictvím nástroje <a href="http://cs.blabot.net/#o-mne" target="_blank">blábot.cz</a></span>
+            <span>Náhodný (anglický) text prostřednictvím nástroje <a href="https://randomtextgenerator.com" target="_blank">randomtextgenerator.com</a></span>
           </div>
         </div>
         <div class="inputs filters" :style="{ 'opacity': inputDisabled ? 0.5 : 1.0 }" v-show="page=='filters'">

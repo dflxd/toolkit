@@ -555,11 +555,12 @@ var atf = new Vue({
           atf.loadingText = true;
           atf.location = "main";
           $.ajax({
-            url: 'https://cors.io/?http://api.blabot.net?scount=100',
+            url: 'https://cors.io/?http://randomtextgenerator.com/',
             type: 'GET',
             success: function(data) {
-              var d = JSON.parse(data);
-              atf.text = d.blabot.result[0];
+              var parser = new DOMParser();
+              var htmlDoc = parser.parseFromString(data, 'text/html');
+              atf.text = $("#generatedtext",htmlDoc).text();
               atf.loadingText = false;
               atf.$nextTick(() => {
                 atf.calcTextLines();
@@ -567,7 +568,7 @@ var atf = new Vue({
               });
             },
             error: function() {
-              alert("Chyba při čtení dat z api.blabot.net.");
+              alert("Chyba při načítání zdroje textu.");
               clearInterval(this.autoInterval);
               atf.loadingText = false;
               atf.inputDisabled = false;
