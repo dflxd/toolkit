@@ -6,7 +6,12 @@ var intro = new Vue({
         color: "#3498DB",
         link: "https://techen.herokuapp.com/",
         icon: "english-language",
-        description: []
+        description: [
+          "Procvičování slovíček z oboru IT",
+          "Lepsí verze E-learningu",
+          "Administrátorská stránka",
+          "Slovníček"
+        ]
       },
       {
         name: "Subnetting",
