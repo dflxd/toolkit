@@ -4,7 +4,7 @@ var intro = new Vue({
     apps: [{ //data o jednotlivých podaplikacích
         name: "Technická angličtina",
         color: "#3498DB",
-        link: "tech-en.php",
+        link: "https://techen.herokuapp.com/",
         icon: "english-language",
         description: []
       },
