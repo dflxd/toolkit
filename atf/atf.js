@@ -505,11 +505,12 @@ var atf = new Vue({
         case 2: //rss
           atf.loadingText = true;
           atf.location = "main";
-          $.ajax("https://cors.io/?" + atf.sourceRSS, {
+          $.ajax("https://cors-anywhere.herokuapp.com/" + atf.sourceRSS, {
             accepts: {
               xml: "application/rss+xml"
             },
             dataType: "xml",
+            beforeSend: setHeader,
             success: function(data) {
               var items;
               var text = "";
@@ -555,8 +556,10 @@ var atf = new Vue({
           atf.loadingText = true;
           atf.location = "main";
           $.ajax({
-            url: 'https://cors.io/?https://randomtextgenerator.com/',
+            url: 'https://cors-anywhere.herokuapp.com/https://randomtextgenerator.com/',
             type: 'GET',
+            dataType: 'html',
+            beforeSend: setHeader,
             success: function(data) {
               var parser = new DOMParser();
               var htmlDoc = parser.parseFromString(data, 'text/html');
@@ -858,4 +861,7 @@ function simulateKeyPress(character) {
   e.keyCode = character.charCodeAt(0);
   e.key = character;
   $(document).trigger(e);
+}
+function setHeader(xhr) {
+  xhr.setRequestHeader('Text');
 }
