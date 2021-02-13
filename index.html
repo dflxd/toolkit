@@ -22,40 +22,42 @@
 </head>
 
 <body>
-  <div id="intro" v-cloak>
-    <div class="box">
-      <div class="apps" @mouseleave="active = false">
-        <a :href="item.link" v-for="item, index in apps" @mousemove="update($event, index)" @mouseover="hover(item);active = true;item.active = true" :style="{'border-color': item.color}">
-          <span>{{item.name}}</span>
-          <img :src="'img/app-icons/'+item.icon+'.svg'" class="icon">
-          <div class="background" :style="{'border-color': item.color,'transform': translate}" :class="{'active': item.active}"></div>
-        </a>
-      </div>
-      <div class="about">
-        <img src="img/toolkitLogo.png" class="logo">
-        <h1 class="hide">ToolkIT</h1>
-        <h2>Pomocník každého studenta IT</h2>
-        <div class="delimiter">
-          <div class="overlay" :style="{'background': itemActive.color}" :class="{'active': active}"></div>
+  <div id="introBox">
+    <div id="intro" v-cloak>
+      <div class="box">
+        <div class="apps" @mouseleave="active = false">
+          <a :href="item.link" v-for="item, index in apps" @mousemove="update($event, index)" @mouseover="hover(item);active = true;item.active = true" :style="{'border-color': item.color}">
+            <span>{{item.name}}</span>
+            <img :src="'img/app-icons/'+item.icon+'.svg'" class="icon">
+            <div class="background" :style="{'border-color': item.color,'transform': translate}" :class="{'active': item.active}"></div>
+          </a>
         </div>
-        <div class="description" v-if="!active">
-          <div>
-            Soubor nástrojů pro procvičování IT dovedností s rozsáhlými možnostmi přizpůsobení.
-            Pracujeme s cookies k ukládání nastavení - používáním aplikací s tím souhlasíte.
-            <a href="https://goo.gl/forms/n0B8riYEMuKcxfXx2" target="_blank">Nahlásit bug / zpětná vazba</a>.
+        <div class="about">
+          <img src="img/toolkitLogo.png" class="logo">
+          <h1 class="hide">ToolkIT</h1>
+          <h2>Pomocník každého studenta IT</h2>
+          <div class="delimiter">
+            <div class="overlay" :style="{'background': itemActive.color}" :class="{'active': active}"></div>
           </div>
-          <div class="credits">
-            <b>Matěj Motl</b><span>&</span><b>Andrea Kozáková</b>
+          <div class="description" v-if="!active">
+            <div>
+              Soubor nástrojů pro procvičování IT dovedností s rozsáhlými možnostmi přizpůsobení.
+              Pracujeme s cookies k ukládání nastavení - používáním aplikací s tím souhlasíte.
+              <a href="https://goo.gl/forms/n0B8riYEMuKcxfXx2" target="_blank">Nahlásit bug / zpětná vazba</a>.
+            </div>
+            <div class="credits">
+              <b>Matěj Motl</b><span>&</span><b>Andrea Kozáková</b>
+            </div>
+            <div class="made">
+              v roce <span>2019</span> na <a href="https://infis.cz" target="_blank"><img src="img/infisLogo.png"></a>
+            </div>
           </div>
-          <div class="made">
-            v roce <span>2019</span> na <a href="https://infis.cz" target="_blank"><img src="img/infisLogo.png"></a>
+          <div class="appsDescription" v-else>
+            <h3 :style="{'color': itemActive.color}">{{itemActive.name}}</h3>
+            <ul>
+              <li v-for="line in itemActive.description">{{line}}</li>
+            </ul>
           </div>
-        </div>
-        <div class="appsDescription" v-else>
-          <h3 :style="{'color': itemActive.color}">{{itemActive.name}}</h3>
-          <ul>
-            <li v-for="line in itemActive.description">{{line}}</li>
-          </ul>
         </div>
       </div>
     </div>
